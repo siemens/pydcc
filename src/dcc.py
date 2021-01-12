@@ -17,6 +17,7 @@ class dcc:
         self.xml_file_name = xml_file_name#
         self.administrative_data = None
         self.measurement_results = None
+        self.valid_signature = False
 
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)
@@ -32,3 +33,13 @@ class dcc:
             print(child.tag)
         for child in self.measurement_results[0]:
             print(child.tag)
+
+        self.valid_signature = verify_dcc_xml_file(xml_file_name)
+
+    ''' Verify DCC file '''
+    def verify_dcc_xml_file(self, xml_file_name):
+        # DCC signature is not defined in GEMIMEG yet
+
+    ''' Is the loaded DCC valid? '''
+    def is_signature_valid(self):
+        return self.valid_signature
