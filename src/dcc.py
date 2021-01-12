@@ -10,6 +10,7 @@
 # and has been maintained as open source project.
 
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
 class dcc:
     ''' Initialize object '''
@@ -18,6 +19,7 @@ class dcc:
         self.administrative_data = None
         self.measurement_results = None
         self.valid_signature = False
+        self.datetime_file_loaded = datetime.datetime.now()
 
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)
@@ -43,3 +45,6 @@ class dcc:
     ''' Is the loaded DCC valid? '''
     def is_signature_valid(self):
         return self.valid_signature
+
+
+time.strptime(ts, '%Y-%m-%d %H:%M:%S' )
