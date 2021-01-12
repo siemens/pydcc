@@ -1,8 +1,8 @@
 # Python library for handling digital calibration certificates (DCC) 
 
-Library for handling DCCs according to the official release [1].
+Library for handling DCCs according to the official DCC release [1].
 
-This project is a joint initiative driven by the project GEMIMEG-II.
+This project is a joint initiative driven by the project [GEMIMEG-II.}(https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
 Maintainer Andreas Tobola (Siemens)
 
@@ -27,7 +27,7 @@ dcci = dcc.dcc(xml_file_name) # Load DCC from file
 
 
 ```python
-
+beginPerformanceDate
 ```
 
 ## References
