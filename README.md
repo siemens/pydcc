@@ -31,7 +31,7 @@ dcci = dcc.dcc(xml_file_name) # Load DCC from file
 
 ## Library API
 
-Check if DCC was loaded successfully
+Returns True, if the DCC was loaded successfully.
 ```python
 is_loaded()
 ```
@@ -41,22 +41,22 @@ Verify DCC file according to the official XML shema [2]
 verify_dcc_xml_file()
 ```
 
-Is the DCC signed?
+Retruns True, if the DCC was signed?
 ```python
 is_signed()
 ```
 
-Is DCC signature valid?
+Retruns True, if DCC signature valid?
 ```python
 is_signature_valid()
 ```
 
-Return calibration date (endPerformanceDate)
+Returns calibration date as datetime object. Note that the DCC defines the start date (beginPerformanceDate) and the end date (endPerformanceDate) of calibration. The date retured by this API reffers to the end of calibration (endPerformanceDate).
 ```python
 calibration_date()
 ```
 
-Return number of days since calibration (endPerformanceDate). Usefull for checking against your quality management system requirements.
+Returns the number of days since calibration (endPerformanceDate). This function was designed for checking the calibration date against the requirements of a quality management system (QMS). A QMS may define a maximum number of days until a device has to be calibrated.
 ```python
 days_since_calibration()
 ```
