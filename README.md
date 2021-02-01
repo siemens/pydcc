@@ -2,7 +2,7 @@
 
 Library for handling DCCs according to the official DCC release [1].
 
-This project is a joint initiative driven by the project [GEMIMEG-II.}(https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
+This project is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
 Maintainer: Andreas Tobola (Siemens)
 
@@ -12,7 +12,7 @@ License: [Apache 2.0](LICENSE.md) (proposal)
 
 ## Background to DCC
 
-The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was releasd by the   Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure and consists of regulated areas, whose information must meet certain requirements. The DCC exists in Extensible Markup Language (XML). 
+The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was releasd by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure and consists of regulated areas, whose information must meet certain requirements. The DCC exists in Extensible Markup Language (XML). 
 ## Aim of this software library
 
 Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilitie of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
@@ -20,7 +20,7 @@ Python is a programming language widly used in science and cloud computing appli
 
 ## Usage
 
-DCCs are XML files. The code below loads an example provided by the PTB. By loading the XML file will be loaded and translated to an object structure.
+DCCs were defined as XML files [1]. The code below loads an example provided by the PTB. By loading the XML file will be loaded and translated to an object structure.
 
 ```python
 import dcc
@@ -35,7 +35,7 @@ Check if DCC was loaded successfully
 is_loaded()
 ```
 
-Verify DCC file according to the official XLS 
+Verify DCC file according to the official XML shema [2] 
 ```python
 verify_dcc_xml_file()
 ```
