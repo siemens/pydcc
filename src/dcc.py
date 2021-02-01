@@ -45,7 +45,7 @@ class dcc:
         self.valid_signature = self.verify_dcc_xml_file()
         self.signed = False
 
-    ''' DCC was loaded '''
+    ''' Check if DCC was loaded successfully'''
     def is_loaded(self):
         dcc_loaded = not self.root == None
         return dcc_loaded
@@ -55,7 +55,7 @@ class dcc:
         # DCC signature is not defined in GEMIMEG yet
         return False
 
-    ''' Is DCC signed? '''
+    ''' Is the DCC signed? '''
     def is_signed(self):
         return self.signed
 
