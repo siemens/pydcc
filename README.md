@@ -31,6 +31,13 @@ beginPerformanceDate
 ```
 
 
+## Unit tests
+
+```bash
+cd tests
+python unit_test.py
+```
+
 ## References
 
 
