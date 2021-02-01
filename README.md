@@ -4,9 +4,9 @@ Library for handling DCCs according to the official DCC release [1].
 
 This project is a joint initiative driven by the project [GEMIMEG-II.}(https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
-Maintainer Andreas Tobola (Siemens)
+Maintainer: Andreas Tobola (Siemens)
 
-Contributors: -
+Contributors: Contributors will be listed here
 
 License: [Apache 2.0](LICENSE.md) (proposal)
 
@@ -29,6 +29,7 @@ dcci = dcc.dcc(xml_file_name) # Load DCC from file
 ```python
 beginPerformanceDate
 ```
+
 
 ## References
 
