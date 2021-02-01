@@ -7,7 +7,7 @@ This project is a joint initiative driven by the project [GEMIMEG-II.](https://w
 
 Maintainer: Andreas Tobola (Siemens)
 
-Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. We appreciate any contributions. Therefore, the workflow was defined in CONTRIBUTING.md.
+Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. We appreciate any contributions. The workflow was defined in the [contribution guide](CONTRIBUTING.md).
 
 License: [Apache 2.0](LICENSE.md) (proposal)
 
