@@ -1,12 +1,13 @@
 # Python library for handling digital calibration certificates (DCC) 
 
 Library for handling DCCs according to the official DCC release [1].
+## General Software Information
 
 This project is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
 Maintainer: Andreas Tobola (Siemens)
 
-Contributors: Contributors will be listed here
+Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. We appreciate any contributions. Therefore, the workflow was defined in CONTRIBUTING.md.
 
 License: [Apache 2.0](LICENSE.md) (proposal)
 
@@ -62,6 +63,8 @@ days_since_calibration()
 
 
 ## Unit tests
+
+Unit tests were defined for every API function.
 
 ```bash
 cd tests
