@@ -11,7 +11,7 @@ Contributors: Contributors will be listed here. If you want to be listed, contac
 
 ## License
 
-In general, the software was licensed under the [The MIT license](LICENSE). Therefore, see the LICENSE file in the top-level directory.
+In general, the software was licensed under the [MIT License](LICENSE). Therefore, see the LICENSE file in the top-level directory.
 
 [Data examples](data) included in this repository may contain other licenses. Please reffer to the license decalrations within the data examples.
 

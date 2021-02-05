@@ -8,7 +8,7 @@
 # Authors:
 #  Andreas Tobola <andreas.tobola@siemens.com>
 #
-# This work is licensed under the terms of the MIT license. 
+# This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
 
