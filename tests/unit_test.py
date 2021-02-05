@@ -9,7 +9,7 @@
 #  Andreas Tobola <andreas.tobola@siemens.com>
 #
 # This work is licensed under the terms of the MIT license. 
-# See the LICENSE.md file in the top-level directory.
+# See the LICENSE file in the top-level directory.
 #
 import sys
 sys.path.append("../src/")
