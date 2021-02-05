@@ -1,13 +1,16 @@
-# Python module for processing digital calibration certificates (DCC)
+# PyDCC
+#
+# Python module for processing of digital calibration certificates (DCC)
 # according to https://www.ptb.de/dcc/
-# 
-# Supported DCC version v2.4.0
 #
-# This software was licensed under Apache 2.0 
-# https://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) Siemens AG, 2021
 #
-# This project was started in December 23th, 2020 by Siemens AG
-# and has been maintained as open source project.
+# Authors:
+#  Andreas Tobola <andreas.tobola@siemens.com>
+#
+# This work is licensed under the terms of the MIT license. 
+# See the LICENSE.md file in the top-level directory.
+#
 
 import xml.etree.ElementTree as ET
 import datetime

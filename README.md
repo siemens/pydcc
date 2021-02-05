@@ -9,7 +9,11 @@ Maintainer: Andreas Tobola (Siemens)
 
 Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. We appreciate any contributions. The workflow was defined in the [contribution guide](CONTRIBUTING.md).
 
-License: [Apache 2.0](LICENSE.md) (proposal)
+## License
+
+In general, the software was licensed under the [The MIT license](LICENSE.md). Therefore, see the LICENSE.md file in the top-level directory.
+#
+[Data examples](data) included in this repository may contain other licenses. Please reffer to the license decalrations within the data examples.
 
 ## Background to DCC
 

@@ -1,13 +1,21 @@
 # Unit tests for PyDCC
-# 
-# This software was licensed under Apache 2.0 
-# https://www.apache.org/licenses/LICENSE-2.0
 #
-import unittest
+# Python module for processing of digital calibration certificates (DCC)
+# according to https://www.ptb.de/dcc/
+#
+# Copyright (c) Siemens AG, 2021
+#
+# Authors:
+#  Andreas Tobola <andreas.tobola@siemens.com>
+#
+# This work is licensed under the terms of the MIT license. 
+# See the LICENSE.md file in the top-level directory.
+#
 import sys
 sys.path.append("../src/")
 import dcc
 import datetime
+import unittest
 
 xml_file_name = '../data/siliziumkugel.xml' # Example from PTB
 dcco = dcc.dcc(xml_file_name)
