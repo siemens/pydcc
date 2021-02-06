@@ -25,6 +25,7 @@ class dcc:
         self.root = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
+        self.name_space = {'dcc': 'https://ptb.de/dcc'}
 
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)
@@ -34,17 +35,9 @@ class dcc:
         tree = ET.parse(xml_file_name)
         self.root = tree.getroot()
         self.administrative_data = self.root[0] 
-        #self.administrative_data = root.findall("./{https://ptb.de/dcc}administrativeData")
+        #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
         self.measurement_results = self.root[1]
- 
-        #for child in self.administrative_data:
-        #    print(child.tag)
-        #    print(child.tag.find("coreData") )
-        #    if child.tag.find("coreData") > -1:
-        #        print("*")
-        #for child in self.measurement_results[0]:
-        #    print(child.tag)
-
+        self.dcc_version = self.root.attrib['schemaVersion']
         self.valid_signature = self.verify_dcc_xml_file()
         self.signed = False
 
@@ -67,9 +60,9 @@ class dcc:
         return self.valid_signature
 
     ''' Return calibration date (endPerformanceDate) '''
-    def calibration_date(self):
-        elem = self.root.findall("./{https://ptb.de/dcc}administrativeData/{https://ptb.de/dcc}coreData/{https://ptb.de/dcc}endPerformanceDate")
-        date_string = elem[0].text
+    def calibration_date(self):       
+        elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:endPerformanceDate", self.name_space)
+        date_string = elem.text
         daytime_obj = datetime.datetime.strptime(date_string, '%Y-%m-%d')
         return daytime_obj
 
