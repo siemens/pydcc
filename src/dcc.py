@@ -74,3 +74,8 @@ class dcc:
         days_since_calibration = diff_obj.days
         return days_since_calibration
         
+    ''' Return unique ID '''
+    def uid(self):       
+        elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
+        uid_string = elem.text        
+        return uid_string

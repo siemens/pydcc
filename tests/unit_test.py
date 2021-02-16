@@ -44,6 +44,10 @@ class TestBaseFunctions(unittest.TestCase):
         days = dcco.days_since_calibration()
         self.assertTrue(days > 842)
 
+    def test_uid(self):
+        uid = dcco.uid()
+        self.assertEqual(uid, "PTB - 11129 18")
+
 if __name__ == '__main__':
     unittest.main()
 
