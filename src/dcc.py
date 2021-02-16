@@ -26,9 +26,10 @@ class dcc:
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = {'dcc': 'https://ptb.de/dcc'}
+        self.UID = None
 
         if not xml_file_name is None:
-            self.load_dcc_from_xml_file(xml_file_name)
+            self.load_dcc_from_xml_file(xml_file_name)             
 
     ''' Load DCC from file '''
     def load_dcc_from_xml_file(self, xml_file_name):
@@ -39,6 +40,7 @@ class dcc:
         self.measurement_results = self.root[1]
         self.dcc_version = self.root.attrib['schemaVersion']
         self.valid_signature = self.verify_dcc_xml_file()
+        self.UID = self.uid()
         self.signed = False
 
     ''' Check if DCC was loaded successfully'''
