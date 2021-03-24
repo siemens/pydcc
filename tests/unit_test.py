@@ -27,7 +27,7 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(dcco.is_loaded())
 
     def test_verify_dcc_xml_file(self):
-        self.assertFalse(dcco.verify_dcc_xml_file())
+        self.assertTrue(dcco.verify_dcc_xml())
         
     def test_is_signed(self):
         self.assertFalse(dcco.is_signed())
@@ -47,6 +47,11 @@ class TestBaseFunctions(unittest.TestCase):
     def test_uid(self):
         uid = dcco.uid()
         self.assertEqual(uid, "PTB - 11129 18")
+
+    def test_version(self):
+        version = dcco.version()
+        print(version)
+        self.assertEqual(version, "2.4.0")
 
 if __name__ == '__main__':
     unittest.main()

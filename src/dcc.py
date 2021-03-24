@@ -13,6 +13,7 @@
 #
 
 import xml.etree.ElementTree as ET
+import xmlschema
 import datetime
 import time
 
@@ -27,6 +28,7 @@ class dcc:
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = {'dcc': 'https://ptb.de/dcc'}
         self.UID = None
+        self.xsd_file_path = '../data/dcc_2_4_0.xsd'
 
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)             
@@ -39,7 +41,7 @@ class dcc:
         #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
         self.measurement_results = self.root[1]
         self.dcc_version = self.root.attrib['schemaVersion']
-        self.valid_signature = self.verify_dcc_xml_file()
+        self.valid_xml = self.verify_dcc_xml()
         self.UID = self.uid()
         self.signed = False
 
@@ -49,9 +51,12 @@ class dcc:
         return dcc_loaded
 
     ''' Verify DCC file '''
-    def verify_dcc_xml_file(self):
-        # DCC signature is not defined in GEMIMEG yet
-        return False
+    def verify_dcc_xml(self):
+        try:
+            xmlschema.validate(self.xml_file_name, self.xsd_file_path)
+            return True
+        except:            
+            return False
 
     ''' Is the DCC signed? '''
     def is_signed(self):
@@ -81,3 +86,8 @@ class dcc:
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
         uid_string = elem.text        
         return uid_string
+
+        
+    ''' Return DCC version '''
+    def version(self):       
+        return self.dcc_version
