@@ -27,7 +27,7 @@ class dcc:
         self.root = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
-        self.name_space = {'dcc': 'https://ptb.de/dcc'}
+        self.name_space = {'dcc': 'https://ptb.de/dcc',  'si':'https://ptb.de/si'}
         self.UID = None
         self.xsd_file_path = '../data/dcc_2_4_0.xsd'
 
@@ -103,4 +103,17 @@ class dcc:
         return self.dcc_version
 
 
+    def uncertainty_list(self):       
+        # Derive uncertainty from DCC
+        results = self.root.find("dcc:measurementResults/dcc:measurementResult/dcc:results", self.name_space)
+        unc_list = []
+        for result in results:
+            result_name = result.find("dcc:name/dcc:content", self.name_space)
+            result_data_list = result.find("dcc:data/dcc:list", self.name_space)            
+            for result_data in result_data_list:
+                real_val = result_data.find("si:real/si:value", self.name_space)
+                unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
+                if not real_val == None:
+                    unc_list.append([result_name.text, unc.text])
+        return unc_list
     
