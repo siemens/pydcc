@@ -18,8 +18,9 @@ import datetime
 import time
 
 class dcc:
-    ''' Initialize object '''
+    
     def __init__(self, xml_file_name = None):
+        ''' Initialize object '''
         self.xml_file_name = xml_file_name#
         self.administrative_data = None
         self.measurement_results = None
@@ -33,8 +34,9 @@ class dcc:
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)             
 
-    ''' Load DCC from file '''
+    
     def load_dcc_from_xml_file(self, xml_file_name):
+        # Load DCC from file
         tree = ET.parse(xml_file_name)
         self.root = tree.getroot()
         self.administrative_data = self.root[0] 
@@ -45,49 +47,60 @@ class dcc:
         self.UID = self.uid()
         self.signed = False
 
-    ''' Check if DCC was loaded successfully'''
+    
     def is_loaded(self):
+        # Check if DCC was loaded successfully
         dcc_loaded = not self.root == None
         return dcc_loaded
 
-    ''' Verify DCC file '''
+    
     def verify_dcc_xml(self):
+        # Verify DCC file 
         try:
             xmlschema.validate(self.xml_file_name, self.xsd_file_path)
             return True
         except:            
             return False
 
-    ''' Is the DCC signed? '''
+
     def is_signed(self):
+        # Is the DCC signed?
         return self.signed
 
-    ''' Is DCC signature valid? '''
+    
     def is_signature_valid(self):
+        # Is DCC signature valid? 
         return self.valid_signature
 
-    ''' Return calibration date (endPerformanceDate) '''
+    
     def calibration_date(self):       
+        # Return calibration date (endPerformanceDate) 
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:endPerformanceDate", self.name_space)
         date_string = elem.text
         daytime_obj = datetime.datetime.strptime(date_string, '%Y-%m-%d')
         return daytime_obj
 
-    ''' Return number of days since calibration (endPerformanceDate) '''
+    
     def days_since_calibration(self):
+        # Return number of days since calibration (endPerformanceDate) 
         dt_now = datetime.datetime.now()
         dt_calibration = self.calibration_date()
         diff_obj = dt_now - dt_calibration
         days_since_calibration = diff_obj.days
         return days_since_calibration
         
-    ''' Return unique ID '''
+    
     def uid(self):       
+        # Return unique ID 
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
         uid_string = elem.text        
         return uid_string
 
         
-    ''' Return DCC version '''
+    
     def version(self):       
+        # Return DCC version
         return self.dcc_version
+
+
+    
