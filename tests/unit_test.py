@@ -50,8 +50,11 @@ class TestBaseFunctions(unittest.TestCase):
 
     def test_version(self):
         version = dcco.version()
-        print(version)
         self.assertEqual(version, "2.4.0")
+
+    def test_uncertainty_list(self):
+        uncertainty_list = dcco.uncertainty_list()
+        self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
 
 if __name__ == '__main__':
     unittest.main()
