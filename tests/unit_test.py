@@ -20,21 +20,13 @@ import unittest
 xml_file_name = '../data/siliziumkugel.xml' # Example from PTB
 dcco = dcc.dcc(xml_file_name)
 
+
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
         #dcco = dcc.dcc(xml_file_name) # Load DCC and crate DCC object
         self.assertTrue(dcco.is_loaded())
-
-    def test_verify_dcc_xml_file(self):
-        self.assertTrue(dcco.verify_dcc_xml())
-        
-    def test_is_signed(self):
-        self.assertFalse(dcco.is_signed())
-
-    def test_is_signature_valid(self):
-        self.assertFalse(dcco.is_signature_valid())
-
+      
     def test_calibration_date(self):
         calib_date = dcco.calibration_date()        
         ref_date = datetime.datetime(2018, 10, 12, 0, 0)
@@ -55,6 +47,24 @@ class TestBaseFunctions(unittest.TestCase):
     def test_uncertainty_list(self):
         uncertainty_list = dcco.uncertainty_list()
         self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
+
+    def test_verify_correct_dcc_xml(self):
+        self.assertTrue(dcco.verify_dcc_xml())
+
+    def test_verify_incorrect_dcc_xml(self):
+        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
+        dcco_wrong_schema = dcc.dcc(xml_file_name_wrong_schema)        
+        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
+
+    # Work in progress
+
+    def test_is_signed(self):
+        self.assertFalse(dcco.is_signed())
+
+    def test_is_signature_valid(self):
+        self.assertFalse(dcco.is_signature_valid())
+
+
 
 if __name__ == '__main__':
     unittest.main()

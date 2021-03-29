@@ -20,7 +20,7 @@ import time
 class dcc:
     
     def __init__(self, xml_file_name = None):
-        ''' Initialize object '''
+        # Initialize DCC object  
         self.xml_file_name = xml_file_name#
         self.administrative_data = None
         self.measurement_results = None
@@ -43,7 +43,7 @@ class dcc:
         #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
         self.measurement_results = self.root[1]
         self.dcc_version = self.root.attrib['schemaVersion']
-        self.valid_xml = self.verify_dcc_xml()
+        #self.valid_xml = self.verify_dcc_xml()
         self.UID = self.uid()
         self.signed = False
 
@@ -56,11 +56,8 @@ class dcc:
     
     def verify_dcc_xml(self):
         # Verify DCC file 
-        try:
-            xmlschema.validate(self.xml_file_name, self.xsd_file_path)
-            return True
-        except:            
-            return False
+        valid_xml = xmlschema.is_valid(self.xml_file_name, self.xsd_file_path)
+        return valid_xml
 
 
     def is_signed(self):
@@ -95,7 +92,6 @@ class dcc:
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
         uid_string = elem.text        
         return uid_string
-
         
     
     def version(self):       
