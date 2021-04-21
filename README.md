@@ -1,9 +1,9 @@
 # Python library for handling digital calibration certificates (DCC) 
 
-Library for handling DCCs according to the official DCC release [1].
+Library for handling digital calibration certificates (DCCs) according to the official DCC release [1]. 
 ## General Software Information
 
-This project is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
+This software module is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
 Maintainer: [Andreas Tobola](mailto:andreas.tobola@siemens.com), Siemens AG
 
