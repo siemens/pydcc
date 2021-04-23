@@ -22,49 +22,7 @@ The digital calibration certificate (DCC) is the machine-readable counterpart of
 
 Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilitie of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
 
-
-## Usage
-
-DCCs were defined as XML files [1]. The code below loads an example provided by the PTB. By loading the XML file will be loaded and translated to an object structure.
-
-```python
-import dcc
-xml_file_name = '../data/siliziumkugel.xml' # Example file
-dcci = dcc.dcc(xml_file_name) # Load DCC from file
-```
-
-## Library API
-
-Returns True, if the DCC was loaded successfully.
-```python
-is_loaded()
-```
-
-Verify DCC file according to the official XML shema [2] 
-```python
-verify_dcc_xml_file()
-```
-
-Retruns True, if the DCC was signed?
-```python
-is_signed()
-```
-
-Retruns True, if DCC signature valid?
-```python
-is_signature_valid()
-```
-
-Returns calibration date as datetime object. Note that the DCC defines the start date (beginPerformanceDate) and the end date (endPerformanceDate) of calibration. The date retured by this API reffers to the end of calibration (endPerformanceDate).
-```python
-calibration_date()
-```
-
-Returns the number of days since calibration (endPerformanceDate). This function was designed for checking the calibration date against the requirements of a quality management system (QMS). A QMS may define a maximum number of days until a device has to be calibrated.
-```python
-days_since_calibration()
-```
-
+For more details concider reading the [user guide](doc/pydcc.md]).
 
 ## Unit tests
 
