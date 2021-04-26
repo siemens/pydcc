@@ -19,7 +19,7 @@ python unit_test.py
 ## Additional Workflow when Changing the API
 
 In case of new API features it is mendatory to
-* Add a new entry to the README.md in the section API
+* Add a new entry to the dos/mydcc.md in the section API
 * Add a unit test to tests/unit_test.py
 * Implement your new API function.
 * Make sure passing your test.

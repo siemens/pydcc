@@ -1,2 +1,3 @@
 include LICENSE
-exclude README.md
+include README.md
+graft doc

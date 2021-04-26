@@ -4,21 +4,27 @@ User guide for those who want to use PyDCC for their application.
 
 ## Installing the PyDCC library
 
-
-This is how it would usually work.
+Usually, we would use PyPi for distributing and isntalling our open source software. 
 ```python
 python install pydcc
 ```
 
-Hoever, we did not publish our module yet on PiPy. Thus, we have to use this:
+However, we decided to pospone the publication of our software module. Thus, we have to use this alternateve.
 ```python
-python setup.by bdist
+git pull
+git checkout <version>
+python setup.py bdist
 pip install -e .
 ```
 
+Explanation of the steps:
+- Make sure beeing in the root from the git repository.
+- git pull to get the latest changes.
+- git checkout followed by the version you want to install. Versions are declared in the README.md.
+- python setup.py bdist to build the projects. You will need to install setuptools therefore: pip install setuptools
+- pip install -e . to install pydcc on a local machine.
 
 ## Loading an DCC from file
-
 
 DCCs were defined as XML files [1]. The code below loads an example provided by the PTB. By loading the XML file will be loaded and translated to an object structure.
 

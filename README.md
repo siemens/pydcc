@@ -22,19 +22,11 @@ The digital calibration certificate (DCC) is the machine-readable counterpart of
 
 Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilitie of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
 
-For more details concider reading the [user guide](doc/pydcc.md]).
+For more details including API documentation concider reading the [user guide](doc/pydcc.md]).
 
-## Unit tests
-
-Unit tests were defined for every API function.
-
-```bash
-cd tests
-python unit_test.py
-```
+Further, the [contibution guide](CONTRIBUTING.md]) explains how one can contibute to this software module.
 
 ## References
-
 
 [1] Official release of the digital calibration certificate (DCC) https://www.ptb.de/dcc/v2.4.0/de/
 
