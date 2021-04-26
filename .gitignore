@@ -3,3 +3,7 @@ src/pydcc.egg-info
 pydcc.egg-info
 .pypirc
 data/dcc
+build
+*.code-workspace
+*.pyc
+.vscode
