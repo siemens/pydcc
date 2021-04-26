@@ -19,13 +19,13 @@ with open('README.md') as file:
 
 setup(
     name = "pydcc",
-    version = "0.0.1",
+    version = "0.2.1",
     author = "Andreas Tobola",
     author_email = "andreas.tobola@siemens.com",
     description = ("Library for handling digital calibration certificates (DCC). "),
     license = "MIT License",
     keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
-    url = "https://www.ptb.de/dcc",
+    url = "https://gitlab.com/gemimeg/pydcc",
     package_dir={'': 'src'},
     long_description=long_description,
     long_description_content_type="text/markdown",
