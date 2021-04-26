@@ -39,6 +39,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-   'xmlschema ~= 1.6.1',
+   'xmlschema > 1.5',
     ]
 )
