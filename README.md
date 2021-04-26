@@ -13,16 +13,16 @@ Contributors: Contributors will be listed here. If you want to be listed, contac
 
 In general, the software was licensed under the [MIT License](LICENSE). Therefore, see the LICENSE file in the top-level directory.
 
-[Data examples](data) included in this repository may contain other licenses. Please reffer to the license decalrations within the data examples.
+[Data examples](data) included in this repository may contain other licenses. Please refer to the license decalrations within the data examples.
 
 ## Background to DCC
 
-The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was releasd by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure and consists of regulated areas, whose information must meet certain requirements. The DCC exists in Extensible Markup Language (XML). 
+The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was released by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure and consists of regulated areas, whose information must meet certain requirements. The DCC exists in Extensible Markup Language (XML). 
 ## Aim of this software library
 
-Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilitie of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
+Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilities of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
 
-For more details including API documentation concider reading the [user guide](doc/pydcc.md).
+For more details including API documentation consider reading the [user guide](doc/pydcc.md).
 
 Further, the [contibution guide](CONTRIBUTING.md) explains how one can contibute to this software module.
 
