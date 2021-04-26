@@ -13,20 +13,32 @@
 #
 import sys
 sys.path.append("../src/")
-import dcc
+from dcc import dcc
 import datetime
 import unittest
 
 xml_file_name = '../data/siliziumkugel.xml' # Example from PTB
-dcco = dcc.dcc(xml_file_name)
+dcco = dcc(xml_file_name)
 
 
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
-        #dcco = dcc.dcc(xml_file_name) # Load DCC and crate DCC object
-        self.assertTrue(dcco.is_loaded())
-      
+        dcc_from_file = dcc(xml_file_name) # Load DCC and crate DCC object
+        self.assertTrue(dcc_from_file.is_loaded())
+
+    def test_loading_byte_array(self):        
+        with open(xml_file_name, "rb") as f:
+            dcc_byte_array = f.read()
+        dcc_from_byte_array = dcc(byte_array = dcc_byte_array) # Load DCC and crate DCC object
+        self.assertTrue(dcc_from_byte_array.is_loaded())
+
+    def test_loading_compressed_byte_array(self):        
+        with open("../data/siliziumkugel_compressed.pydcc", "rb") as f:
+            dcc_compressed = f.read()
+        dcc_from_compresed_byte_array = dcc(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
+        self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
+
     def test_calibration_date(self):
         calib_date = dcco.calibration_date()        
         ref_date = datetime.datetime(2018, 10, 12, 0, 0)
@@ -48,21 +60,29 @@ class TestBaseFunctions(unittest.TestCase):
         uncertainty_list = dcco.uncertainty_list()
         self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
 
-    def test_verify_correct_dcc_xml(self):
-        self.assertTrue(dcco.verify_dcc_xml())
+    def test_empty_dcc_init_error_detection(self):
+        exception_rised = False
+        try:
+            dcc_empty = dcc()
+        except Exception:
+            exception_rised = True     
+        self.assertTrue(exception_rised)
 
-    def test_verify_incorrect_dcc_xml(self):
-        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
-        dcco_wrong_schema = dcc.dcc(xml_file_name_wrong_schema)        
-        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
+#    def test_verify_correct_dcc_xml(self):
+#        self.assertTrue(dcco.verify_dcc_xml())
+
+#    def test_verify_incorrect_dcc_xml(self):
+#        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
+#        dcco_wrong_schema = dcc(xml_file_name_wrong_schema)        
+#        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
     # Work in progress
 
-    def test_is_signed(self):
-        self.assertFalse(dcco.is_signed())
+    #def test_is_signed(self):
+    #    self.assertFalse(dcco.is_signed())
 
-    def test_is_signature_valid(self):
-        self.assertFalse(dcco.is_signature_valid())
+    #def test_is_signature_valid(self):
+    #    self.assertFalse(dcco.is_signature_valid())
 
 
 

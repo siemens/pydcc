@@ -20,9 +20,9 @@ import zlib
 
 class dcc:
     
-    def __init__(self, xml_file_name = None):
+    def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None):
         # Initialize DCC object  
-        self.xml_file_name = xml_file_name#
+        self.xml_file_name = xml_file_name
         self.administrative_data = None
         self.measurement_results = None
         self.root = None
@@ -31,24 +31,51 @@ class dcc:
         self.name_space = {'dcc': 'https://ptb.de/dcc',  'si':'https://ptb.de/si'}
         self.UID = None
         self.xsd_file_path = '../data/dcc_2_4_0.xsd'
-        self.schema_sources = [open('../data/dcc_2_4_0.xsd'), open('../data/SI_Format_1_3_1.xsd')]
+
+        self.schema_sources = []
+        with open('../data/dcc_2_4_0.xsd', "r") as f:
+            self.schema_sources.append(f.read())
+        with open('../data/SI_Format_1_3_1.xsd', "r") as f:
+            self.schema_sources.append(f.read())                 
 
         if not xml_file_name is None:
-            self.load_dcc_from_xml_file(xml_file_name)             
+            self.load_dcc_from_xml_file(xml_file_name)
+        elif not byte_array is None:
+            self.load_dcc_from_byte_array(byte_array)
+        elif not compressed_dcc is None:            
+            self.load_compressed_dcc(compressed_dcc)
+        else:
+            raise Exception('PyDCC: DCC object created without giving an XML source.')
 
-    
+        if not self.root == None:            
+            self.administrative_data = self.root[0] 
+            #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
+            self.measurement_results = self.root[1]
+            self.dcc_version = self.root.attrib['schemaVersion']
+            #self.valid_xml = self.verify_dcc_xml()
+            self.UID = self.uid()
+            self.signed = False    
+
     def load_dcc_from_xml_file(self, xml_file_name):
         # Load DCC from file
-        tree = ET.parse(xml_file_name)
-        self.root = tree.getroot()
-        self.administrative_data = self.root[0] 
-        #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
-        self.measurement_results = self.root[1]
-        self.dcc_version = self.root.attrib['schemaVersion']
-        #self.valid_xml = self.verify_dcc_xml()
-        self.UID = self.uid()
-        self.signed = False
+        #tree = ET.parse(xml_file_name)
+        #self.root = tree.getroot()
+        with open(self.xml_file_name, "rb") as f:
+            self.load_dcc_from_byte_array(f.read())            
 
+
+    def load_dcc_from_byte_array(self, byte_array):
+        # Load DCC from file
+        self.dcc_xml_raw_data = byte_array
+        self.root = ET.fromstring(byte_array)
+
+
+    def load_compressed_dcc(self, byte_array):
+        # Load compressed DCC
+        self.dcc_xml_raw_data = zlib.decompress(byte_array)
+        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)        
+        dcc_crc32 = zlib.crc32(self.dcc_xml_raw_data) & 0xffffffff 
+        
     
     def is_loaded(self):
         # Check if DCC was loaded successfully
@@ -118,41 +145,39 @@ class dcc:
     
     def generate_compressed_dcc(self):
         # Convert DCC to C header file for DCC integration on constraint devices
-        with open(self.xml_file_name, "rb") as f:
-            dcc_xml_raw_data = f.read()
-            dcc_xml_raw_data_compressed = zlib.compress(dcc_xml_raw_data)
-            bytes_uncompressed = len(dcc_xml_raw_data)
-            bytes_compressed = len(dcc_xml_raw_data_compressed)
-            compression_ratio = bytes_compressed/bytes_uncompressed
-            
-            # CRC32: crc32(data) & 0xffffffff to generate the same numeric value across all Python versions and platforms.
-            dcc_crc32 = zlib.crc32(dcc_xml_raw_data) & 0xffffffff 
 
-            ret_dict = dict(); 
-            ret_dict['bytes_uncompressed'] = bytes_uncompressed
-            ret_dict['bytes_compressed'] = bytes_compressed
-            ret_dict['compression_ratio'] = compression_ratio
-            ret_dict['dcc_xml_raw_data_compressed'] = dcc_xml_raw_data_compressed
-            ret_dict['crc32'] = dcc_crc32 
-            
-            compressed_dcc_data_in_c = "const uint8_t compressed_dcc[%d] = {" % bytes_compressed
-            k = 0
-            for byte in dcc_xml_raw_data_compressed:
-                k += 1
-                hex_str = format( byte, '02x')
-                hex_str_with_preamble = "0x" + hex_str 
-                compressed_dcc_data_in_c += hex_str_with_preamble
-                if not k == bytes_compressed:
-                    compressed_dcc_data_in_c += ", "
-                if k % 20 == 0:
-                    compressed_dcc_data_in_c += "\n"
-            compressed_dcc_data_in_c += "};"
-            
-            compressed_dcc_data_in_c += "\n"
-            compressed_dcc_data_in_c += "const uint32_t compressed_dcc_crc32= 0x%x;\n" % dcc_crc32
-            compressed_dcc_data_in_c += "const uint32_t compressed_dcc_size = %u; // size in byte\n" % bytes_compressed
-            compressed_dcc_data_in_c += "const uint32_t uncompressed_dcc_size = %u; // size in byte\n" % bytes_uncompressed
+        dcc_xml_raw_data_compressed = zlib.compress(self.dcc_xml_raw_data)
+        bytes_uncompressed = len(self.dcc_xml_raw_data)
+        bytes_compressed = len(dcc_xml_raw_data_compressed)
+        compression_ratio = bytes_compressed/bytes_uncompressed
+        
+        # CRC32: crc32(data) & 0xffffffff to generate the same numeric value across all Python versions and platforms.
+        dcc_crc32 = zlib.crc32(self.dcc_xml_raw_data) & 0xffffffff 
 
-            ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
-            return ret_dict
+        ret_dict = dict(); 
+        ret_dict['bytes_uncompressed'] = bytes_uncompressed
+        ret_dict['bytes_compressed'] = bytes_compressed
+        ret_dict['compression_ratio'] = compression_ratio
+        ret_dict['dcc_xml_raw_data_compressed'] = dcc_xml_raw_data_compressed
+        ret_dict['crc32'] = dcc_crc32 
+        
+        compressed_dcc_data_in_c = "const uint8_t compressed_dcc[%d] = {" % bytes_compressed
+        k = 0
+        for byte in dcc_xml_raw_data_compressed:
+            k += 1
+            hex_str = format( byte, '02x')
+            hex_str_with_preamble = "0x" + hex_str 
+            compressed_dcc_data_in_c += hex_str_with_preamble
+            if not k == bytes_compressed:
+                compressed_dcc_data_in_c += ", "
+            if k % 10 == 0:
+                compressed_dcc_data_in_c += "\n"
+        compressed_dcc_data_in_c += "};"
+        
+        compressed_dcc_data_in_c += "\n"
+        compressed_dcc_data_in_c += "const uint32_t compressed_dcc_crc32  = 0x%x; // CRC32 according to python module zlib\n" % dcc_crc32
+        compressed_dcc_data_in_c += "const uint32_t compressed_dcc_size   = %u; // size in bytes\n" % bytes_compressed
+        compressed_dcc_data_in_c += "const uint32_t uncompressed_dcc_size = %u; // size in bytes\n" % bytes_uncompressed
 
+        ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
+        return ret_dict
