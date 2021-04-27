@@ -32,10 +32,6 @@ test:
   - pip install -e .    
   - cd tests
   - python unit_test.py
-  - git config user.email "cipipeline@gitlab.com"
-  - git config user.name "CI Pipeline"
-  - git add next_version.txt
-  - git commit -m "Increment for next version."
 
 vincr:
   stage: Version Increment
