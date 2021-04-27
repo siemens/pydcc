@@ -20,6 +20,7 @@ before_script:
 stages:
 #  - Static Analysis
   - Unit Tests
+  - Version Increment
 
 #pylint:
 #  stage: Static Analysis
@@ -31,3 +32,8 @@ test:
   script:
   - cd tests
   - python unit_test.py
+
+vincr:
+  stage: Version Increment
+  script:
+  - python increase_version.py
