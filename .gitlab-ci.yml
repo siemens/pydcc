@@ -14,17 +14,17 @@ image: "python:3.7"
 
 before_script:
   - python --version
-  - pip install pylint
+#  - pip install pylint
   - pip install -e .
 
 stages:
-  - Static Analysis
+#  - Static Analysis
   - Unit Tests
 
-pylint:
-  stage: Static Analysis
-  script:
-  - pylint src/*.py
+#pylint:
+#  stage: Static Analysis
+#  script:
+#  - pylint src/*.py
 
 test:
   stage: Unit Tests
