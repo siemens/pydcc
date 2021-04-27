@@ -68,6 +68,16 @@ class TestBaseFunctions(unittest.TestCase):
             exception_rised = True     
         self.assertTrue(exception_rised)
 
+    def test_is_not_signed(self):
+        self.assertFalse(dcco.is_signed())
+
+    def test_is_signed(self):
+        xml_file_name = '../data/dcc/signed_siliziumkugel.xml' # Example from PTB and signed by T-Systems
+        dcc_signed = dcc(xml_file_name)        
+        self.assertTrue(dcc_signed.is_signed())
+
+
+
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())
 
@@ -77,9 +87,6 @@ class TestBaseFunctions(unittest.TestCase):
 #        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
     # Work in progress
-
-    #def test_is_signed(self):
-    #    self.assertFalse(dcco.is_signed())
 
     #def test_is_signature_valid(self):
     #    self.assertFalse(dcco.is_signature_valid())

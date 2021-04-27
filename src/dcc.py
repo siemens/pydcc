@@ -28,9 +28,11 @@ class dcc:
         self.root = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
-        self.name_space = {'dcc': 'https://ptb.de/dcc',  'si':'https://ptb.de/si'}
+        self.name_space = {'dcc': 'https://ptb.de/dcc',  'si':'https://ptb.de/si', 'ds':'http://www.w3.org/2000/09/xmldsig#'}
         self.UID = None
         self.xsd_file_path = '../data/dcc_2_4_0.xsd'
+        self.signature_section = None
+        self.signed = False
 
         self.schema_sources = []
         with open('../data/schema/dcc_2_4_0.xsd', "r") as f:
@@ -53,8 +55,7 @@ class dcc:
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
             #self.valid_xml = self.verify_dcc_xml()
-            self.UID = self.uid()
-            self.signed = False    
+            self.UID = self.uid()            
 
     def load_dcc_from_xml_file(self, xml_file_name):
         # Load DCC from file
@@ -89,7 +90,10 @@ class dcc:
 
 
     def is_signed(self):
-        # Is the DCC signed?
+        # Is the DCC signed?        
+        elem = self.root.find("ds:Signature", self.name_space)        
+        self.signed = not elem == None
+        self.signature_section = elem
         return self.signed
 
     
