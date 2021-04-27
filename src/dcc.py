@@ -58,10 +58,9 @@ class dcc:
 
     def load_dcc_from_xml_file(self, xml_file_name):
         # Load DCC from file
-        #tree = ET.parse(xml_file_name)
-        #self.root = tree.getroot()
         with open(self.xml_file_name, "rb") as f:
-            self.load_dcc_from_byte_array(f.read())            
+            byte_array = f.read()
+            self.load_dcc_from_byte_array(byte_array)
 
 
     def load_dcc_from_byte_array(self, byte_array):
