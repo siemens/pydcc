@@ -33,9 +33,9 @@ class dcc:
         self.xsd_file_path = '../data/dcc_2_4_0.xsd'
 
         self.schema_sources = []
-        with open('../data/dcc_2_4_0.xsd', "r") as f:
+        with open('../data/schema/dcc_2_4_0.xsd', "r") as f:
             self.schema_sources.append(f.read())
-        with open('../data/SI_Format_1_3_1.xsd', "r") as f:
+        with open('../data/schema/SI_Format_1_3_1.xsd', "r") as f:
             self.schema_sources.append(f.read())                 
 
         if not xml_file_name is None:

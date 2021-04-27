@@ -2,7 +2,7 @@ test-env
 src/pydcc.egg-info
 pydcc.egg-info
 .pypirc
-data/dcc
+data/xml-tool
 build
 *.code-workspace
 *.pyc

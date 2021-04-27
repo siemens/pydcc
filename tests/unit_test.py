@@ -17,7 +17,7 @@ from dcc import dcc
 import datetime
 import unittest
 
-xml_file_name = '../data/siliziumkugel.xml' # Example from PTB
+xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
 dcco = dcc(xml_file_name)
 
 

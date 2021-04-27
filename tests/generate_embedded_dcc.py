@@ -16,7 +16,7 @@ from dcc import dcc
 
 
 # (1) Load DCC from XML file
-xml_file_name = '../data/siliziumkugel.xml' # Example from PTB
+xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
 dcco = dcc(xml_file_name) # Load DCC and crate DCC object
 calib_date = dcco.calibration_date()
 print("Embedded DCC generation for constraint devices")
