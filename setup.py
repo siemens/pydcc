@@ -1,6 +1,4 @@
-# PyDCC
-#
-# Setup script for generating PyDCC package
+# PyDCC setup script for generating PyDCC package
 #
 # Copyright (c) Siemens AG, 2021
 #
@@ -15,11 +13,13 @@ from setuptools import setup
 
 with open('README.md') as file:
     long_description = file.read()
-#long_description = "Library for handling digital calibration certificates (DCCs)."
+
+with open('next_version.txt', 'r') as file:
+    current_version = file.read()
 
 setup(
     name = "pydcc",
-    version = "0.2.1",
+    version = current_version,
     author = "Andreas Tobola",
     author_email = "andreas.tobola@siemens.com",
     description = ("Library for handling digital calibration certificates (DCC). "),
@@ -42,3 +42,5 @@ setup(
    'xmlschema > 1.5',
     ]
 )
+
+

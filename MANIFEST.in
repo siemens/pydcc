@@ -1,3 +1,4 @@
 include LICENSE
 include README.md
+graft data/schema
 graft doc
