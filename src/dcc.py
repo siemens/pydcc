@@ -28,17 +28,20 @@ class dcc:
         self.root = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
-        self.name_space = {'dcc': 'https://ptb.de/dcc',  'si':'https://ptb.de/si', 'ds':'http://www.w3.org/2000/09/xmldsig#'}
+        self.name_space = dict()
         self.UID = None
-        self.xsd_file_path = '../data/dcc_2_4_0.xsd'
         self.signature_section = None
         self.signed = False
-
         self.schema_sources = []
-        with open('../data/schema/dcc_2_4_0.xsd', "r") as f:
-            self.schema_sources.append(f.read())
-        with open('../data/schema/SI_Format_1_3_1.xsd', "r") as f:
-            self.schema_sources.append(f.read())                 
+
+        # Set default DCC namespaces
+        self.add_namespace('dcc', 'https://ptb.de/dcc')
+        self.add_namespace('si', 'https://ptb.de/si')
+        self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
+
+        # Load default schema files
+        #self.add_shema_file('../data/schema/dcc_2_4_0.xsd')
+        #self.add_shema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if not xml_file_name is None:
             self.load_dcc_from_xml_file(xml_file_name)
@@ -57,10 +60,11 @@ class dcc:
             #self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()            
 
+
     def load_dcc_from_xml_file(self, xml_file_name):
         # Load DCC from file
-        with open(self.xml_file_name, "rb") as f:
-            byte_array = f.read()
+        with open(self.xml_file_name, "rb") as file:
+            byte_array = file.read()
             self.load_dcc_from_byte_array(byte_array)
 
 
@@ -82,7 +86,18 @@ class dcc:
         dcc_loaded = not self.root == None
         return dcc_loaded
 
-    
+
+    def add_namespace(self, name_space_label, name_space_url):
+        # Add namespace
+        self.name_space[name_space_label] = name_space_url
+
+
+    def add_shema_file(self, file_name):
+        # Add SML schema file
+        with open(file_name, "r") as file:
+            self.schema_sources.append(file.read())
+
+
     def verify_dcc_xml(self):
         # Verify DCC file 
         valid_xml = xmlschema.is_valid(self.xml_file_name, self.schema_sources)
@@ -124,12 +139,10 @@ class dcc:
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
         uid_string = elem.text        
         return uid_string
-        
     
     def version(self):       
         # Return DCC version        
         return self.dcc_version
-
 
     def uncertainty_list(self):       
         # Derive uncertainty from DCC
