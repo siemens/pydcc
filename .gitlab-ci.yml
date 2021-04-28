@@ -35,7 +35,7 @@ test:
   - cd tests
   - pytest --cov=dcc unit_test.py
 
-vincr:
-  stage: Version Increment
-  script:
-  - python increase_version.py
+#vincr:
+#  stage: Version Increment
+#  script:
+#  - python increase_version.py
