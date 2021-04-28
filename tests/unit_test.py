@@ -81,6 +81,9 @@ class TestBaseFunctions(unittest.TestCase):
         crc32 = comp_dcc['crc32']
         self.assertEqual(crc32, 4022442000)
 
+    def test_previous_report_not_available(self):
+        self.assertFalse(dcco.has_previous_report())
+
  
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())

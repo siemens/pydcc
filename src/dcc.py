@@ -77,8 +77,7 @@ class dcc:
     def load_compressed_dcc(self, byte_array):
         # Load compressed DCC
         self.dcc_xml_raw_data = zlib.decompress(byte_array)
-        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)        
-        dcc_crc32 = zlib.crc32(self.dcc_xml_raw_data) & 0xffffffff 
+        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)                
         
     
     def is_loaded(self):
@@ -158,7 +157,15 @@ class dcc:
                     unc_list.append([result_name.text, unc.text])
         return unc_list
     
+
+    def has_previous_report(self):
+        # Check for previous report
+        # Returns true if available
+        self.previous_report = self.root.find("dcc:administrativeData/dcc:coreData/dcc:previousReport", self.name_space)
+        previous_report_available = not self.previous_report == None
+        return previous_report_available
     
+
     def generate_compressed_dcc(self):
         # Convert DCC to C header file for DCC integration on constraint devices
 
