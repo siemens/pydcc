@@ -94,6 +94,29 @@ Returns the number of days since calibration (endPerformanceDate). This function
 dcco.days_since_calibration()
 ```
 
+
+CRC32 of raw data: efc19810
+
+## Links to other documents
+
+Return true if a link to a previous DCC exists.
+```python
+dcco.has_previous_report()
+```
+
+
+
+## Uncertainty
+
+A basic list of all uncertainties was implemented so far.
+```python
+dcco.uncertainty_list()
+```
+
+[['Masse', '0.00000005'], ['Volumen', '0.000018']]
+
+
+
 ## Compressed DCC
 
 With this examle a compressed DCC was generated. 
@@ -113,13 +136,3 @@ Compression results:
 The original DCC size for Siliziumkugel.xml in version 2.4.0 was 30926 bytes.
 The compressed DCC size was 5324 bytes.
 DCC compression ratio 17.2%.
-CRC32 of raw data: efc19810
-
-## Uncertainty
-
-A basic list of all uncertainties was implemented so far.
-```python
-dcco.uncertainty_list()
-```
-
-[['Masse', '0.00000005'], ['Volumen', '0.000018']]
