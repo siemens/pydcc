@@ -46,7 +46,7 @@ class TestBaseFunctions(unittest.TestCase):
 
     def test_days_since_calibration(self):
         days = dcco.days_since_calibration()
-        self.assertTrue(days > 842)
+        self.assertTrue(days > 900)
 
     def test_uid(self):
         uid = dcco.uid()
@@ -76,8 +76,12 @@ class TestBaseFunctions(unittest.TestCase):
         dcc_signed = dcc(xml_file_name)        
         self.assertTrue(dcc_signed.is_signed())
 
+    def test_embedded_dcc(self):
+        comp_dcc = dcco.generate_compressed_dcc()
+        crc32 = comp_dcc['crc32']
+        self.assertEqual(crc32, 4022442000)
 
-
+ 
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())
 
