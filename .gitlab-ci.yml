@@ -19,7 +19,7 @@ before_script:
 stages:
 #  - Static Analysis
   - Unit Tests
-  - Version Increment
+#  - Version Increment
 
 #pylint:
 #  stage: Static Analysis
@@ -29,9 +29,11 @@ stages:
 test:
   stage: Unit Tests
   script:
-  - pip install -e .    
+  - pip install -e .  
+  - pip install pytest
+  - pip install pytest-cov
   - cd tests
-  - python unit_test.py
+  - pytest --cov=dcc unit_test.py
 
 vincr:
   stage: Version Increment
