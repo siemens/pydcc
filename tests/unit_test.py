@@ -76,10 +76,15 @@ class TestBaseFunctions(unittest.TestCase):
         dcc_signed = dcc(xml_file_name)        
         self.assertTrue(dcc_signed.is_signed())
 
-    def test_embedded_dcc(self):
+    def test_compressed_dcc_crc(self):
         comp_dcc = dcco.generate_compressed_dcc()
         crc32 = comp_dcc['crc32']
         self.assertEqual(crc32, 4022442000)
+
+    def test_compressed_dcc_size(self):
+        comp_dcc = dcco.generate_compressed_dcc()
+        bytes_compressed = comp_dcc['bytes_compressed']
+        self.assertEqual(bytes_compressed, 5324)
 
     def test_previous_report_not_available(self):
         self.assertFalse(dcco.has_previous_report())
