@@ -1,6 +1,9 @@
-# Python library for handling digital calibration certificates (DCC) 
+# Python library for reading and evaluating digital calibration certificates (DCC) 
 
-Library for handling digital calibration certificates (DCCs) according to the official DCC release [1]. 
+Library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC version 2.4.0 [1]. Version 3.0.0 [3] is not supported yet.
+
+Out of scope: PyDCC is not inteded to modify or generate DCCs.
+
 ## General Software Information
 
 This software module is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
@@ -28,7 +31,9 @@ Further, the [contibution guide](CONTRIBUTING.md) explains how one can contibute
 
 ## References
 
-[1] Official release of the digital calibration certificate (DCC) https://www.ptb.de/dcc/v2.4.0/de/
+[1] Official release of the digital calibration certificate (DCC) in version 2.4.0 https://www.ptb.de/dcc/v2.4.0/de/
 
 [2] XML shema for DCCs https://www.ptb.de/dcc/dcc.xsd
+
+[3] Official release of the digital calibration certificate (DCC) in version 3.0.0 https://www.ptb.de/dcc/v3.0.0/
 
