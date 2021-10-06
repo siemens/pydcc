@@ -17,6 +17,7 @@ import xml.etree.ElementTree as ET
 import datetime
 import time
 import zlib
+import requests
 
 class dcc:
     
@@ -74,11 +75,20 @@ class dcc:
         self.root = ET.fromstring(byte_array)
 
 
+    def load_dcc_from_public_server(self, server_url, server_port = 443, item_id = None):
+        # Load DCC from server (PROTOTYPE)
+        query = {'item_id': item_id, 'date':'latest'}
+        query_address = 'https://dcc.siemens.com/dcc-server.json'	
+        response = requests.get(query_address, params=query)
+        print(response)
+        return False
+
+
     def load_compressed_dcc(self, byte_array):
         # Load compressed DCC
         self.dcc_xml_raw_data = zlib.decompress(byte_array)
-        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)                
-        
+        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)   
+       
     
     def is_loaded(self):
         # Check if DCC was loaded successfully
