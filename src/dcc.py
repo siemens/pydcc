@@ -75,11 +75,12 @@ class dcc:
         self.root = ET.fromstring(byte_array)
 
 
-    def load_dcc_from_public_server(self, server_url, server_port = 443, item_id = None):
+    def load_dcc_from_public_server(self, server_url, server_port = 443, dcc_id = None, item_id = None):
         # Load DCC from server (PROTOTYPE)
-        query = {'item_id': item_id, 'date':'latest'}
-        query_address = 'https://dcc.siemens.com/dcc-server.json'	
-        response = requests.get(query_address, params=query)
+        #query = {'dcc_id': item_id, 'date':'latest'}
+        query_address = 'http://127.0.0.1/dcc/' + dcc_id # URL encode, special chars
+        # response = requests.get(query_address, params=query)
+        response = requests.get(query_address)
         print(response)
         return False
 
