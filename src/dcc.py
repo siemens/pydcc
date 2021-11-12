@@ -21,7 +21,7 @@ import requests
 
 class dcc:
     
-    def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None):
+    def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None, url = None):
         # Initialize DCC object  
         self.xml_file_name = xml_file_name
         self.administrative_data = None
@@ -50,6 +50,8 @@ class dcc:
             self.load_dcc_from_byte_array(byte_array)
         elif not compressed_dcc is None:            
             self.load_compressed_dcc(compressed_dcc)
+        elif not url is None:
+            self.load_dcc_from_public_server(url)
         else:
             raise Exception('PyDCC: DCC object created without giving an XML source.')
 
@@ -75,14 +77,16 @@ class dcc:
         self.root = ET.fromstring(byte_array)
 
 
-    def load_dcc_from_public_server(self, server_url, server_port = 443, dcc_id = None, item_id = None):
+    def load_dcc_from_public_server(self, server_url, server_port = 8085, dcc_id = None, item_id = None):
+        success = False
         # Load DCC from server (PROTOTYPE)
-        #query = {'dcc_id': item_id, 'date':'latest'}
-        query_address = 'http://127.0.0.1/dcc/' + dcc_id # URL encode, special chars
-        # response = requests.get(query_address, params=query)
+        query_address = server_url # + dcc_id # URL encode, special chars
         response = requests.get(query_address)
-        print(response)
-        return False
+        if (response.status_code == 200):
+        	byte_array = response.content
+        	self.load_dcc_from_byte_array(byte_array)
+        	success = True
+        return success
 
 
     def load_compressed_dcc(self, byte_array):
