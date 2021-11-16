@@ -55,7 +55,7 @@ class dcc:
         else:
             raise Exception('PyDCC: DCC object created without giving an XML source.')
 
-        if not self.root == None:            
+        if self.root is not None:
             self.administrative_data = self.root[0] 
             #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
