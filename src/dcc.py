@@ -146,7 +146,14 @@ class dcc:
         diff_obj = dt_now - dt_calibration
         days_since_calibration = diff_obj.days
         return days_since_calibration
-        
+
+
+    def calibration_laboratory_name(self):       
+        # Return calibration lab name 
+        elem = self.root.find("dcc:administrativeData/dcc:calibrationLaboratory/dcc:contact/dcc:name/dcc:content", self.name_space)
+        return elem.text        
+    
+
     
     def uid(self):       
         # Return unique ID 

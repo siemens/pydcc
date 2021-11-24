@@ -48,6 +48,11 @@ class TestBaseFunctions(unittest.TestCase):
         days = dcco.days_since_calibration()
         self.assertTrue(days > 900)
 
+    def test_calibration_laboratory_name(self):
+        calib_lab_name = dcco.calibration_laboratory_name()        
+        ref_lab_name = 'Physikalisch-Technische Bundesanstalt (PTB)'
+        self.assertEqual(calib_lab_name, ref_lab_name)       
+
     def test_uid(self):
         uid = dcco.uid()
         self.assertEqual(uid, "PTB - 11129 18")
