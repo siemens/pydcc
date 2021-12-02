@@ -1,0 +1,8 @@
+# Prevent eol conversion
+
+data/dcc/*.xml -text
+data/dcc/*.xsd -text
+data/schema/*.xml -text
+data/schema/*.xsd -text
+data/*.xml -text
+data/*.xsd -text
