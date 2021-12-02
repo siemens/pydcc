@@ -7,3 +7,5 @@ build
 *.code-workspace
 *.pyc
 .vscode
+.idea
+data/temp
