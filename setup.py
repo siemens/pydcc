@@ -10,6 +10,7 @@
 #
 
 from setuptools import setup
+import setuptools
 
 with open('README.md') as file:
     long_description = file.read()
@@ -27,6 +28,9 @@ setup(
     keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
     url = "https://gitlab.com/gemimeg/pydcc",
     package_dir={'': 'src'},
+    packages=['dcc'],
+    py_modules=['dcc'],
+    include_package_data=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[

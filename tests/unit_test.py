@@ -12,7 +12,7 @@
 # See the LICENSE file in the top-level directory.
 #
 import sys
-sys.path.append("../src/")
+sys.path.append("../src/dcc")
 from dcc import dcc
 import datetime
 import unittest
