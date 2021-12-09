@@ -44,18 +44,18 @@ class dcc:
         #self.add_shema_file('../data/schema/dcc_2_4_0.xsd')
         #self.add_shema_file('../data/schema/SI_Format_1_3_1.xsd')
 
-        if not xml_file_name is None:
+        if xml_file_name is not None:
             self.load_dcc_from_xml_file(xml_file_name)
-        elif not byte_array is None:
+        elif byte_array is not None:
             self.load_dcc_from_byte_array(byte_array)
-        elif not compressed_dcc is None:            
+        elif compressed_dcc is not None:
             self.load_compressed_dcc(compressed_dcc)
-        elif not url is None:
+        elif url is not None:
             self.load_dcc_from_public_server(url)
         else:
             raise Exception('PyDCC: DCC object created without giving an XML source.')
 
-        if not self.root == None:            
+        if self.root is not None:
             self.administrative_data = self.root[0] 
             #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
@@ -146,7 +146,14 @@ class dcc:
         diff_obj = dt_now - dt_calibration
         days_since_calibration = diff_obj.days
         return days_since_calibration
-        
+
+
+    def calibration_laboratory_name(self):       
+        # Return calibration lab name 
+        elem = self.root.find("dcc:administrativeData/dcc:calibrationLaboratory/dcc:contact/dcc:name/dcc:content", self.name_space)
+        return elem.text        
+    
+
     
     def uid(self):       
         # Return unique ID 
