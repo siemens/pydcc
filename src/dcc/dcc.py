@@ -19,7 +19,7 @@ import time
 import zlib
 import requests
 
-class dcc:
+class DCC:
     
     def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None, url = None):
         # Initialize DCC object  
@@ -226,3 +226,6 @@ class dcc:
 
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
+        
+class dcc(DCC):
+	pass
