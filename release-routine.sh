@@ -15,7 +15,7 @@ pip install -e .
 python3 setup.py bdist_egg
 
 cd tests
-pytest --cov dcc --cov-branch --cov-report term-missing
+pytest --cov dcc --cov-branch --cov-report term-missing --cov-report html
 cd ..
 
 cd examples
