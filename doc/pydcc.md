@@ -100,7 +100,7 @@ CRC32 of raw data: efc19810
 
 ## Calibration Laboratory Name
 
-Returns the name of the calibration labratory
+Returns the name of the calibration laboratory.
 ```python
 dcco.calibration_laboratory_name()
 ```
