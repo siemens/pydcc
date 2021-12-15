@@ -46,7 +46,7 @@ class dcc:
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
-            self.load_dcc_from_xml_file(xml_file_name)
+            self.load_dcc_from_xml_file()
         elif byte_array is not None:
             self.load_dcc_from_byte_array(byte_array)
         elif compressed_dcc is not None:
@@ -211,3 +211,21 @@ class dcc:
 
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
+
+    def item_id(self):
+        #Retrieve list of items in DCC
+        item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
+        print('================================================')
+        print('List of available identification types')
+        print('================================================')
+        #iterate through individual items and return identification type with value
+        for elem in item_list.iter(tag='{' + self.name_space['dcc'] + '}' + 'identifications'):
+            for subelem in elem.iter():
+                textpart = subelem.text
+                if textpart.strip():
+                    if subelem.attrib:
+                        print('{}: {}, {}: {}'.format(subelem.tag.rpartition('}')[2], textpart,
+                                                                        subelem.items()[0][0], subelem.items()[0][1]))
+                    else:
+                        print('{}: {}'.format(subelem.tag.rpartition('}')[2], textpart))
+        return
