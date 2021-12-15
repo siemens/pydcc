@@ -97,6 +97,15 @@ dcco.days_since_calibration()
 
 CRC32 of raw data: efc19810
 
+
+## Calibration Laboratory Name
+
+Returns the name of the calibration labratory
+```python
+dcco.calibration_laboratory_name()
+```
+
+
 ## Links to other documents
 
 Return true if a link to a previous DCC exists.
