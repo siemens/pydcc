@@ -13,7 +13,7 @@
 #
 
 import xml.etree.ElementTree as ET
-#import xmlschema
+# import xmlschema
 import datetime
 import time
 import zlib
@@ -213,19 +213,23 @@ class dcc:
         return ret_dict
 
     def item_id(self):
-        #Retrieve list of items in DCC
+        # Retrieve list of items in DCC
         item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
         print('================================================')
         print('List of available identification types')
         print('================================================')
-        #iterate through individual items and return identification type with value
+        elem_dict = {}
+        # iterate through individual items and return identification type with value
         for elem in item_list.iter(tag='{' + self.name_space['dcc'] + '}' + 'identifications'):
             for subelem in elem.iter():
                 textpart = subelem.text
                 if textpart.strip():
+                    # checks if additional attributes like language are available
                     if subelem.attrib:
                         print('{}: {}, {}: {}'.format(subelem.tag.rpartition('}')[2], textpart,
-                                                                        subelem.items()[0][0], subelem.items()[0][1]))
+                                                      subelem.items()[0][0], subelem.items()[0][1]))
+                        elem_dict[subelem.tag.rpartition('}')[2]] = [textpart, {subelem.items()[0][0]:subelem.items()[0][1]}]
                     else:
                         print('{}: {}'.format(subelem.tag.rpartition('}')[2], textpart))
-        return
+                        elem_dict[subelem.tag.rpartition('}')[2]] = textpart
+        return elem_dict
