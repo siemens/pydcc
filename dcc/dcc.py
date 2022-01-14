@@ -17,7 +17,8 @@ import xml.etree.ElementTree as ET
 import datetime
 import time
 import zlib
-import requests
+#import requests
+
 
 class DCC:
 
@@ -34,6 +35,7 @@ class DCC:
         self.signature_section = None
         self.signed = False
         self.schema_sources = []
+
 
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
@@ -62,6 +64,7 @@ class DCC:
             self.dcc_version = self.root.attrib['schemaVersion']
             #self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
+
 
 
     def load_dcc_from_xml_file(self, xml_file_name):
@@ -175,7 +178,8 @@ class DCC:
             for result_data in result_data_list:
                 real_val = result_data.find("si:real/si:value", self.name_space)
                 unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
-                if not real_val == None:
+                if not unc == None:
+                    #if not real_val == None:
                     unc_list.append([result_name.text, unc.text])
         return unc_list
 
