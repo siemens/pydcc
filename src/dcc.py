@@ -17,7 +17,8 @@ import xml.etree.ElementTree as ET
 import datetime
 import time
 import zlib
-import requests
+#import requests
+
 
 class dcc:
     
@@ -34,6 +35,7 @@ class dcc:
         self.signature_section = None
         self.signed = False
         self.schema_sources = []
+
 
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
@@ -62,6 +64,7 @@ class dcc:
             self.dcc_version = self.root.attrib['schemaVersion']
             #self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()            
+
 
 
     def load_dcc_from_xml_file(self, xml_file_name):
@@ -153,10 +156,133 @@ class dcc:
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:uniqueIdentifier", self.name_space)
         uid_string = elem.text        
         return uid_string
-    
+
+    def mandatoryLang(self):
+        # Return mandatory Language Code
+        elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
+        mandatoryLang = elem.text
+        return mandatoryLang
+
     def version(self):       
         # Return DCC version        
         return self.dcc_version
+
+    def some_function(self):
+        print('some_function')
+
+    def __another_function(self):
+        print('another_function')
+
+    def experimental_func(self):
+        self.__another_function()
+        print('macht gerade nix')
+
+
+    def __read_content(self, node, list, language = None):
+        for cont in node:
+            if language == cont.attrib['lang']:
+                list.append(cont.text)
+            elif language == None:
+                list.append(cont.text)
+
+    def __read_name(self, node, list , language):
+        name = node.find("dcc:name", self.name_space)
+        self.__read_content(name, list, language)
+
+    def names_of_measurement_results(self, lang = None):
+        meas_result_name_list = []
+        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+        for meas_result in meas_results:
+            self.__read_name(meas_result, meas_result_name_list, lang)
+        return meas_result_name_list
+
+    def names_of_all_results_and_measurement_results(self, lang = None):
+        result_name_list = []
+        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+        for meas_result in meas_results:
+            self.__read_name(meas_result, result_name_list, lang)
+            results = meas_result.find("dcc:results", self.name_space)
+            for res in results:
+                self.__read_name(res, result_name_list, lang)
+        return result_name_list
+
+    def __read_si_real(self, node, resultname, Us):
+        label = node.find("{https://ptb.de/si}label")
+        value = node.find("{https://ptb.de/si}value")
+        unit = node.find("{https://ptb.de/si}unit")
+        exp_unc = node.find("{https://ptb.de/si}expandedUnc")
+        cov_int = node.find("{https://ptb.de/si}coverageInterval")
+        if not exp_unc == None:
+            unc_ex = exp_unc.find("{https://ptb.de/si}uncertainty")
+            if not unc_ex == None:
+                Us.append([resultname, 'Expanded uncertainty', unc_ex.text, unit.text])
+        elif not cov_int == None:
+            unc_st = cov_int.find("{https://ptb.de/si}standardUnc")
+            if not unc_st == None:
+                Us.append([resultname, 'Standard uncertainty', unc_st.text, unit.text])
+        else:
+            Us.append([resultname, 'si real without info on U', ':-(', ':-('])
+
+    def __which_si_list(self, node, resultname):
+        for next_node in node:
+            if next_node.tag == '{https://ptb.de/si}list':
+                self.__which_si_list(next_node, resultname)
+            elif next_node.tag == '{https://ptb.de/si}realList':
+                print('TODO: take care of  realList')
+            elif next_node.tag == '{https://ptb.de/si}complexList':
+                print('TODO: take care of complexList')
+
+    def __which_si_element(self, node, resultname, Us):
+        if node.tag == '{https://ptb.de/si}real':
+            self.__read_si_real(node, resultname, Us)
+        elif node.tag == '{https://ptb.de/si}list':
+            print('TODO take care of si list')
+            self.__which_si_list(node, resultname)
+        elif node.tag == '{https://ptb.de/si}hybrid':
+            print('TODO take care of hybrid')
+        elif node.tag == '{https://ptb.de/si}complex':
+            print('TODO take care of complex')
+        elif node.tag == '{https://ptb.de/si}constant':
+            print('TODO take care of constant')
+
+    def __quantity_or_list(self, node, result_name, Us, lang = None):
+        if node.tag == '{https://ptb.de/dcc}quantity':
+            namenode = node.find("dcc:name", self.name_space)
+            quantity_name = []
+            quantity_name.append(result_name)
+            if namenode is not None:
+                 name=[]
+                 self.__read_content(namenode, name, lang)
+                 quantity_name.append(name)
+
+            for nextnode in node:
+                self.__which_si_element(nextnode, quantity_name, Us)
+        elif node.tag == '{https://ptb.de/dcc}list':
+            for nextnode in node:
+                self.__quantity_or_list(nextnode, result_name, Us, lang)
+
+
+    def uncertainty_list_KJ(self, lang = None):
+        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+        unc_list = []
+        for meas_result in meas_results:
+            list1 = []
+            self.__read_name(meas_result, list1, lang)
+
+            results = meas_result.find("dcc:results", self.name_space)
+            for result in results:
+                list2 = []
+                list2.append(list1)
+
+
+                result_name = result.find("dcc:name", self.name_space)
+                self.__read_content(result_name, list2, lang)
+
+                result_data = result.find("dcc:data", self.name_space)
+                for node in result_data:
+                    self.__quantity_or_list(node, list2, unc_list,lang)
+        return unc_list
+
 
     def uncertainty_list(self):       
         # Derive uncertainty from DCC
@@ -168,7 +294,8 @@ class dcc:
             for result_data in result_data_list:
                 real_val = result_data.find("si:real/si:value", self.name_space)
                 unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
-                if not real_val == None:
+                if not unc == None:
+                    #if not real_val == None:
                     unc_list.append([result_name.text, unc.text])
         return unc_list
     
