@@ -170,13 +170,17 @@ class dcc:
     def some_function(self):
         print('some_function')
 
-    def __another_function(self):
-        print('another_function')
+    def __another_function(self, elem):
+        print(elem.tag)
+        nextelem = elem.find("dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
+        print(nextelem.tag)
+        return nextelem
 
     def experimental_func(self):
-        self.__another_function()
-        print('macht gerade nix')
-
+        elem = self.root.find("dcc:administrativeData", self.name_space)
+        another_elem = self.__another_function(elem)
+        print('gibt vll ein element zurück?')
+        print(another_elem.tag)
 
     def __read_content(self, node, list, language = None):
         for cont in node:
@@ -185,9 +189,10 @@ class dcc:
             elif language == None:
                 list.append(cont.text)
 
-    def __read_name(self, node, list , language):
+    def __read_name(self, node, list , language = None):
         name = node.find("dcc:name", self.name_space)
-        self.__read_content(name, list, language)
+        if name is not None:
+            self.__read_content(name, list, language)
 
     def names_of_measurement_results(self, lang = None):
         meas_result_name_list = []
@@ -195,6 +200,25 @@ class dcc:
         for meas_result in meas_results:
             self.__read_name(meas_result, meas_result_name_list, lang)
         return meas_result_name_list
+
+    def names_of_all_quantities(self, lang = None):
+        quantity_name_list = []
+        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+        for meas_result in meas_results:
+            #self.__read_name(meas_result, result_name_list, lang)
+            results = meas_result.find("dcc:results", self.name_space)
+            for res in results:
+                data = res.find("dcc:data", self.name_space)
+                # ab hier eigentlich die Unterscheidung list/quant
+                for node in data:
+                     if(node.tag == '{https://ptb.de/dcc}list'):
+                          for nextnode in node:
+                              if (nextnode.tag == '{https://ptb.de/dcc}quantity'):
+                                   self.__read_name(nextnode, quantity_name_list, lang)
+        return quantity_name_list
+
+
+
 
     def names_of_all_results_and_measurement_results(self, lang = None):
         result_name_list = []
@@ -254,12 +278,59 @@ class dcc:
                  name=[]
                  self.__read_content(namenode, name, lang)
                  quantity_name.append(name)
-
             for nextnode in node:
                 self.__which_si_element(nextnode, quantity_name, Us)
+
         elif node.tag == '{https://ptb.de/dcc}list':
             for nextnode in node:
-                self.__quantity_or_list(nextnode, result_name, Us, lang)
+                namenode = node.find("dcc:name", self.name_space)
+                list_name = []
+                list_name.append(result_name)
+                if namenode is not None:
+                    name = []
+                    self.__read_content(namenode, name, lang)
+                    list_name.append(name)
+                self.__quantity_or_list(nextnode, list_name, Us, lang)
+
+    def __find_quantities_in_lists(self, node, quantity_nodes, lang=None):
+        if node.tag == '{https://ptb.de/dcc}quantity':
+            quantity_nodes.append(node)
+        elif node.tag == '{https://ptb.de/dcc}list':
+            for nextnode in node:
+                self.__find_quantities_in_lists(nextnode,quantity_nodes,lang)
+
+    def meas_res_list(self, lang = None):
+        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+        list = []
+        for meas_result in meas_results:
+            results = meas_result.find("dcc:results", self.name_space)
+            for result in results:
+                result_data = result.find("dcc:data", self.name_space)
+                for node in result_data:
+                    quantity_nodes=[]
+                    self.__find_quantities_in_lists(node, quantity_nodes, lang)
+                    for quantity in quantity_nodes:
+                        quantity_prop = []
+                        self.__read_name(quantity, quantity_prop)
+                        real = quantity.find("si:real", self.name_space)
+                        if real is not None:
+                           value = real.find("si:value", self.name_space)
+                           unit = real.find("si:unit",  self.name_space)
+                           quantity_prop.append(value.text)
+                           quantity_prop.append(unit.text)
+                           expUnc = real.find("si:expandedUnc", self.name_space)
+                           if expUnc is not None:
+                               unc = expUnc.find("si:uncertainty", self.name_space)
+                               k = expUnc.find("si:coverageFactor", self.name_space)
+                               p = expUnc.find("si:coverageProbability", self.name_space)
+                               quantity_prop.append("U = ")
+                               quantity_prop.append(unc.text)
+                               quantity_prop.append("k = ")
+                               quantity_prop.append(k.text)
+                               quantity_prop.append("CovProb = ")
+                               quantity_prop.append(p.text)
+                        list.append(quantity_prop)
+        return list
 
 
     def uncertainty_list_KJ(self, lang = None):
@@ -268,19 +339,25 @@ class dcc:
         for meas_result in meas_results:
             list1 = []
             self.__read_name(meas_result, list1, lang)
-
             results = meas_result.find("dcc:results", self.name_space)
             for result in results:
                 list2 = []
                 list2.append(list1)
-
-
-                result_name = result.find("dcc:name", self.name_space)
-                self.__read_content(result_name, list2, lang)
-
+                self.__read_name(result, list2, lang)
                 result_data = result.find("dcc:data", self.name_space)
                 for node in result_data:
-                    self.__quantity_or_list(node, list2, unc_list,lang)
+                    self.__quantity_or_list(node, list2, unc_list, lang)
+                    quantity_nodes=[]
+                    self.__find_quantities_in_lists(node, quantity_nodes, lang)
+                    for j in quantity_nodes:
+                        name = []
+                        self.__read_name(j, name)
+                    #    print(name)
+                    #if not quantity == None:
+                    #    print(quantity.tag);
+                    #    list=[]
+                    #    self.__read_name(quantity, list)
+                    #    print(list)
         return unc_list
 
 
