@@ -27,9 +27,7 @@ setup(
     license = "MIT License",
     keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
     url = "https://gitlab.com/gemimeg/pydcc",
-    package_dir={'': 'src/dcc'},
-    #packages=['dcc'],
-    #py_modules=[''],
+    packages=['dcc'],
     include_package_data=False,
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -43,7 +41,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-   'xmlschema > 1.5', 'requests', 
+   'xmlschema > 1.5', 'requests',
     ]
 )
 
