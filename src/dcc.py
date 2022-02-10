@@ -213,7 +213,7 @@ class dcc:
         return ret_dict
 
     def item_id(self):
-        # Retrieve list of items in DCC
+        # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
         print('================================================')
         print('List of available identification types')
