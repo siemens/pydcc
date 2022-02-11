@@ -226,3 +226,9 @@ class DCC:
 
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
+
+
+
+class dcc(DCC):
+    """DEPRECATED compatibility class: please use dcc.DCC"""
+    pass
