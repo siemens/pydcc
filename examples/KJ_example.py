@@ -16,35 +16,18 @@ from dcc import dcc
 # (1) Load DCC and create the DCC object (dcco)
 #dcco = dcc('../data/Uncertainty5_PyDCC.xml')
 #dcco=dcc('../data/Kugelnormal_ExpUnc_DKD_min_ID.xml')
-dcco = dcc('../data/MFC_2022_01_20.xml')
-#dcco = dcc('../data/PMM-G_2021-09-15.xml')
+#dcco = dcc('../data/MFC_2022_02_09.xml')
+dcco = dcc('../data/PMM-G_2021-09-15.xml')
 # (2) Get some Uncertainties of the DCC from DCC object
 #list_with_uncertainties = dcco.uncertainty_list()
 
 list_with_uncertainties = dcco.uncertainty_list_KJ()
-#list_meas_res_names = dcco.names_of_measurement_results()
-#list_meas_res_and_res_names = dcco.names_of_all_results_and_measurement_results()
-#list_quant_names = dcco.names_of_all_quantities()
-meas_res_list = dcco.meas_res_list()
 mandLang = dcco.mandatoryLang()
 
 
 # (N) Print data
 print('mandatory language %s' % mandLang)
 
-
-#dcco.experimental_func()
-
-for i in meas_res_list:
-    print(i)
-
-#for j in list_meas_res_names:
-#    print(j)
-#for j in list_meas_res_and_res_names:
-#    print(j)
-
-#for j in list_quant_names:
-#    print(j)
-#for j in list_with_uncertainties:
-#    print(j)
+for j in list_with_uncertainties:
+    print(j)
 
