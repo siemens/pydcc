@@ -215,21 +215,17 @@ class dcc:
     def item_id(self):
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
-        print('================================================')
-        print('List of available identification types')
-        print('================================================')
         elem_dict = {}
         # iterate through individual items and return identification type with value
         for elem in item_list.iter(tag='{' + self.name_space['dcc'] + '}' + 'identifications'):
             for subelem in elem.iter():
                 textpart = subelem.text
                 if textpart.strip():
-                    # checks if additional attributes like language are available
+                    # checks if additional attributes like language are available and adds it to result list
                     if subelem.attrib:
-                        print('{}: {}, {}: {}'.format(subelem.tag.rpartition('}')[2], textpart,
-                                                      subelem.items()[0][0], subelem.items()[0][1]))
-                        elem_dict[subelem.tag.rpartition('}')[2]] = [textpart, {subelem.items()[0][0]:subelem.items()[0][1]}]
+                        elem_dict[subelem.tag.rpartition('}')[2] + ' ' + '('+subelem.items()[0][0] + ': '
+                                                                               + subelem.items()[0][1] + ')'] = textpart
                     else:
-                        print('{}: {}'.format(subelem.tag.rpartition('}')[2], textpart))
                         elem_dict[subelem.tag.rpartition('}')[2]] = textpart
+
         return elem_dict
