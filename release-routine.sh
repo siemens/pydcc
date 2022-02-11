@@ -9,10 +9,12 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+set -eux    # abort on error
+
 python3 increase_version.py
 pip install -e .
 
-python3 setup.py bdist_egg
+python3 setup.py bdist_wheel
 
 cd tests
 pytest --cov dcc --cov-branch --cov-report term-missing --cov-report html

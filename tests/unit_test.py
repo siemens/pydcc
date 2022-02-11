@@ -8,39 +8,37 @@
 # Authors:
 #  Andreas Tobola <andreas.tobola@siemens.com>
 #
-# This work is licensed under the terms of the MIT License. 
+# This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
-import sys
-sys.path.append("../src/dcc")
-from dcc import dcc
+from dcc import DCC
 import datetime
 import unittest
 
 xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
-dcco = dcc(xml_file_name)
+dcco = DCC(xml_file_name)
 
 
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
-        dcc_from_file = dcc(xml_file_name) # Load DCC and crate DCC object
+        dcc_from_file = DCC(xml_file_name) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_file.is_loaded())
 
-    def test_loading_byte_array(self):        
+    def test_loading_byte_array(self):
         with open(xml_file_name, "rb") as f:
             dcc_byte_array = f.read()
-        dcc_from_byte_array = dcc(byte_array = dcc_byte_array) # Load DCC and crate DCC object
+        dcc_from_byte_array = DCC(byte_array = dcc_byte_array) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_byte_array.is_loaded())
 
-    def test_loading_compressed_byte_array(self):        
+    def test_loading_compressed_byte_array(self):
         with open("../data/siliziumkugel_compressed.pydcc", "rb") as f:
             dcc_compressed = f.read()
-        dcc_from_compresed_byte_array = dcc(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
+        dcc_from_compresed_byte_array = DCC(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
 
     def test_calibration_date(self):
-        calib_date = dcco.calibration_date()        
+        calib_date = dcco.calibration_date()
         ref_date = datetime.datetime(2018, 10, 12, 0, 0)
         self.assertEqual(calib_date, ref_date)
 
@@ -49,9 +47,9 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(days > 900)
 
     def test_calibration_laboratory_name(self):
-        calib_lab_name = dcco.calibration_laboratory_name()        
+        calib_lab_name = dcco.calibration_laboratory_name()
         ref_lab_name = 'Physikalisch-Technische Bundesanstalt (PTB)'
-        self.assertEqual(calib_lab_name, ref_lab_name)       
+        self.assertEqual(calib_lab_name, ref_lab_name)
 
     def test_uid(self):
         uid = dcco.uid()
@@ -68,9 +66,9 @@ class TestBaseFunctions(unittest.TestCase):
     def test_empty_dcc_init_error_detection(self):
         exception_rised = False
         try:
-            dcc_empty = dcc()
+            dcc_empty = DCC()
         except Exception:
-            exception_rised = True     
+            exception_rised = True
         self.assertTrue(exception_rised)
 
     def test_is_not_signed(self):
@@ -78,7 +76,7 @@ class TestBaseFunctions(unittest.TestCase):
 
     def test_is_signed(self):
         xml_file_name = '../data/dcc/signed_siliziumkugel.xml' # Example from PTB and signed by T-Systems
-        dcc_signed = dcc(xml_file_name)        
+        dcc_signed = DCC(xml_file_name)
         self.assertTrue(dcc_signed.is_signed())
 
     def test_compressed_dcc_crc(self):
@@ -94,13 +92,13 @@ class TestBaseFunctions(unittest.TestCase):
     def test_previous_report_not_available(self):
         self.assertFalse(dcco.has_previous_report())
 
- 
+
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())
 
 #    def test_verify_incorrect_dcc_xml(self):
 #        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
-#        dcco_wrong_schema = dcc(xml_file_name_wrong_schema)        
+#        dcco_wrong_schema = dcc(xml_file_name_wrong_schema)
 #        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
     # Work in progress
