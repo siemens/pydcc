@@ -19,6 +19,11 @@ import time
 import zlib
 #import requests
 
+class real:
+    def __init__(self):
+        self.label = None
+        self.value = None
+        self.unit = None
 
 class dcc:
     
@@ -167,69 +172,6 @@ class dcc:
         # Return DCC version        
         return self.dcc_version
 
-    def some_function(self):
-        print('some_function')
-
-    def __another_function(self, elem):
-        print(elem.tag)
-        nextelem = elem.find("dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
-        print(nextelem.tag)
-        return nextelem
-
-    def experimental_func(self):
-        elem = self.root.find("dcc:administrativeData", self.name_space)
-        another_elem = self.__another_function(elem)
-        print('gibt vll ein element zurück?')
-        print(another_elem.tag)
-
-    def __read_content(self, node, list, language = None):
-        for cont in node:
-            if language == cont.attrib['lang']:
-                list.append(cont.text)
-            elif language == None:
-                list.append(cont.text)
-
-    def __read_name(self, node, list , language = None):
-        name = node.find("dcc:name", self.name_space)
-        if name is not None:
-            self.__read_content(name, list, language)
-
-    def names_of_measurement_results(self, lang = None):
-        meas_result_name_list = []
-        meas_results = self.root.find("dcc:measurementResults", self.name_space)
-        for meas_result in meas_results:
-            self.__read_name(meas_result, meas_result_name_list, lang)
-        return meas_result_name_list
-
-    def names_of_all_quantities(self, lang = None):
-        quantity_name_list = []
-        meas_results = self.root.find("dcc:measurementResults", self.name_space)
-        for meas_result in meas_results:
-            #self.__read_name(meas_result, result_name_list, lang)
-            results = meas_result.find("dcc:results", self.name_space)
-            for res in results:
-                data = res.find("dcc:data", self.name_space)
-                # ab hier eigentlich die Unterscheidung list/quant
-                for node in data:
-                     if(node.tag == '{https://ptb.de/dcc}list'):
-                          for nextnode in node:
-                              if (nextnode.tag == '{https://ptb.de/dcc}quantity'):
-                                   self.__read_name(nextnode, quantity_name_list, lang)
-        return quantity_name_list
-
-
-
-
-    def names_of_all_results_and_measurement_results(self, lang = None):
-        result_name_list = []
-        meas_results = self.root.find("dcc:measurementResults", self.name_space)
-        for meas_result in meas_results:
-            self.__read_name(meas_result, result_name_list, lang)
-            results = meas_result.find("dcc:results", self.name_space)
-            for res in results:
-                self.__read_name(res, result_name_list, lang)
-        return result_name_list
-
     def __read_si_real(self, node, resultname, Us):
         label = node.find("{https://ptb.de/si}label")
         value = node.find("{https://ptb.de/si}value")
@@ -246,6 +188,18 @@ class dcc:
                 Us.append([resultname, 'Standard uncertainty', unc_st.text, unit.text])
         else:
             Us.append([resultname, 'si real without info on U', ':-(', ':-('])
+
+    def __read_si_realListXMLList(self, node, resultname, Us):
+        labels = node.find("{https://ptb.de/si}labelXMLList")
+        values = node.find("{https://ptb.de/si}valueXMLList")
+        units = node.find("{https://ptb.de/si}unitXMLList")
+        exp_uncs =node.find("{https://ptb.de/si}expandedUncXMLList")
+        if exp_uncs is not None:
+            uncs_ex = exp_uncs.find("{https://ptb.de/si}uncertaintyXMLList")
+            if uncs_ex is not None:
+                Us.append([resultname, 'Expanded uncertainty', uncs_ex.text, units.text])
+            else:
+                Us.append([resultname, 'si realXMLlist without info on U', ':-(', ':-('])
 
     def __which_si_list(self, node, resultname):
         for next_node in node:
@@ -268,98 +222,31 @@ class dcc:
             print('TODO take care of complex')
         elif node.tag == '{https://ptb.de/si}constant':
             print('TODO take care of constant')
+        elif node.tag == '{https://ptb.de/si}realListXMLList':
+            self.__read_si_realListXMLList(node, resultname, Us)
 
-    def __quantity_or_list(self, node, result_name, Us, lang = None):
-        if node.tag == '{https://ptb.de/dcc}quantity':
-            namenode = node.find("dcc:name", self.name_space)
-            quantity_name = []
-            quantity_name.append(result_name)
-            if namenode is not None:
-                 name=[]
-                 self.__read_content(namenode, name, lang)
-                 quantity_name.append(name)
-            for nextnode in node:
-                self.__which_si_element(nextnode, quantity_name, Us)
-
-        elif node.tag == '{https://ptb.de/dcc}list':
-            for nextnode in node:
-                namenode = node.find("dcc:name", self.name_space)
-                list_name = []
-                list_name.append(result_name)
-                if namenode is not None:
-                    name = []
-                    self.__read_content(namenode, name, lang)
-                    list_name.append(name)
-                self.__quantity_or_list(nextnode, list_name, Us, lang)
-
-    def __find_quantities_in_lists(self, node, quantity_nodes, lang=None):
-        if node.tag == '{https://ptb.de/dcc}quantity':
-            quantity_nodes.append(node)
-        elif node.tag == '{https://ptb.de/dcc}list':
-            for nextnode in node:
-                self.__find_quantities_in_lists(nextnode,quantity_nodes,lang)
-
-    def meas_res_list(self, lang = None):
-        meas_results = self.root.find("dcc:measurementResults", self.name_space)
-        list = []
-        for meas_result in meas_results:
-            results = meas_result.find("dcc:results", self.name_space)
-            for result in results:
-                result_data = result.find("dcc:data", self.name_space)
-                for node in result_data:
-                    quantity_nodes=[]
-                    self.__find_quantities_in_lists(node, quantity_nodes, lang)
-                    for quantity in quantity_nodes:
-                        quantity_prop = []
-                        self.__read_name(quantity, quantity_prop)
-                        real = quantity.find("si:real", self.name_space)
-                        if real is not None:
-                           value = real.find("si:value", self.name_space)
-                           unit = real.find("si:unit",  self.name_space)
-                           quantity_prop.append(value.text)
-                           quantity_prop.append(unit.text)
-                           expUnc = real.find("si:expandedUnc", self.name_space)
-                           if expUnc is not None:
-                               unc = expUnc.find("si:uncertainty", self.name_space)
-                               k = expUnc.find("si:coverageFactor", self.name_space)
-                               p = expUnc.find("si:coverageProbability", self.name_space)
-                               quantity_prop.append("U = ")
-                               quantity_prop.append(unc.text)
-                               quantity_prop.append("k = ")
-                               quantity_prop.append(k.text)
-                               quantity_prop.append("CovProb = ")
-                               quantity_prop.append(p.text)
-                        list.append(quantity_prop)
-        return list
-
-
-    def uncertainty_list_KJ(self, lang = None):
-        meas_results = self.root.find("dcc:measurementResults", self.name_space)
+    def uncertainty_list_KJ(self):
         unc_list = []
-        for meas_result in meas_results:
-            list1 = []
-            self.__read_name(meas_result, list1, lang)
-            results = meas_result.find("dcc:results", self.name_space)
-            for result in results:
-                list2 = []
-                list2.append(list1)
-                self.__read_name(result, list2, lang)
-                result_data = result.find("dcc:data", self.name_space)
-                for node in result_data:
-                    self.__quantity_or_list(node, list2, unc_list, lang)
-                    quantity_nodes=[]
-                    self.__find_quantities_in_lists(node, quantity_nodes, lang)
-                    for j in quantity_nodes:
-                        name = []
-                        self.__read_name(j, name)
-                    #    print(name)
-                    #if not quantity == None:
-                    #    print(quantity.tag);
-                    #    list=[]
-                    #    self.__read_name(quantity, list)
-                    #    print(list)
+        measresults_node = self.root.find("dcc:measurementResults", self.name_space)
+        for measresult_node in measresults_node:
+            for results_node in measresult_node.iter('{https://ptb.de/dcc}results'):
+                for result_node in results_node.findall('{https://ptb.de/dcc}result'):
+                    data_node = result_node.find('{https://ptb.de/dcc}data')
+                    for quantity_node in data_node.iter('{https://ptb.de/dcc}quantity'):
+                        real_node = quantity_node.find('{https://ptb.de/si}real')
+                        if real_node is not None:
+                            #TODO: ab hier Unterscheidung der SI-Elemente
+                            unit = real_node.find('{https://ptb.de/si}unit')
+                            expu_node = real_node.find('{https://ptb.de/si}expandedUnc')
+                            if expu_node is not None:
+                                u = expu_node.find('si:uncertainty', self.name_space)
+                                unc_list.append(['Expanded U', u.text, unit.text])
+                            else:
+                                covInt_node = real_node.find('{https://ptb.de/si}coverageInterval')
+                                if covInt_node is not None:
+                                    u = covInt_node.find('si:standardUnc', self.name_space)
+                                    unc_list.append(['Standard U', u.text, unit.text])
         return unc_list
-
 
     def uncertainty_list(self):       
         # Derive uncertainty from DCC
