@@ -94,6 +94,10 @@ class TestBaseFunctions(unittest.TestCase):
     def test_previous_report_not_available(self):
         self.assertFalse(dcco.has_previous_report())
 
+    def test_item_id(self):
+        id_dict = {'issuer': 'manufacturer', 'value': 'Si28kg_03_a', 'content (lang: de)': 'Kennnummer',
+                   'content (lang: en)': 'Serial No.'}
+        self.assertEqual(dcco.item_id(), id_dict)
  
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())
