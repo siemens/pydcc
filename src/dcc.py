@@ -216,7 +216,7 @@ class dcc:
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
         elem_dict = {}
-        # iterate through individual items and return identification type with value
+        # iterate through individual items and subelements and return identification type with value
         for elem in item_list.iter(tag='{' + self.name_space['dcc'] + '}' + 'identifications'):
             for subelem in elem.iter():
                 textpart = subelem.text
