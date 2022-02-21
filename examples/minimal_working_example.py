@@ -11,11 +11,11 @@
 # See the LICENSE file in the top-level directory.
 #
 import sys
-sys.path.append("../src/")
-from dcc import dcc
+sys.path.append("../dcc")
+from dcc import DCC
 
 # (1) Load DCC and create the DCC object (dcco)
-dcco = dcc('../data/dcc/siliziumkugel_2_4_0.xml') 
+dcco = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
 
 # (2) Get UID of the DCC from DCC object
 uid = dcco.uid()

@@ -8,15 +8,15 @@
 # Authors:
 #  Andreas Tobola <andreas.tobola@siemens.com>
 #
-# This work is licensed under the terms of the MIT License. 
+# This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
 import sys
-sys.path.append("../src/")
-from dcc import dcc
+sys.path.append("../dcc")
+from dcc import DCC
 
 xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
-dcco = dcc(xml_file_name) # Load DCC and crate DCC object
+dcco = DCC(xml_file_name) # Load DCC and crate DCC object
 #try:
     #if dcco.verify_dcc_xml():
     #    print("XML schema is valid.")
