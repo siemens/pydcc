@@ -12,22 +12,25 @@
 import sys
 sys.path.append("../src/")
 from dcc import dcc
-
 # (1) Load DCC and create the DCC object (dcco)
-#dcco = dcc('../data/Uncertainty5_PyDCC.xml')
-#dcco=dcc('../data/Kugelnormal_ExpUnc_DKD_min_ID.xml')
+dcco = dcc('../data/Uncertainty5_PyDCC.xml')
+#dcco = dcc('../data/Kugelnormal_ExpUnc_DKD_min_ID.xml')
 #dcco = dcc('../data/MFC_2022_02_09.xml')
-dcco = dcc('../data/PMM-G_2021-09-15.xml')
+#dcco = dcc('../data/PMM-G_2021-09-15.xml')
 # (2) Get some Uncertainties of the DCC from DCC object
 #list_with_uncertainties = dcco.uncertainty_list()
-
-list_with_uncertainties = dcco.uncertainty_list_KJ()
-mandLang = dcco.mandatoryLang()
-
-
+list_with_uncertainties_KJ = dcco.uncertainty_list_KJ()
 # (N) Print data
-print('mandatory language %s' % mandLang)
 
-for j in list_with_uncertainties:
+#res = dcco.get_calibration_result_by_quantity_id("DR_M_1")
+#print(res)
+
+#print("result of existing uncertainty_list method")
+#for j in list_with_uncertainties:
+#    print(j)
+
+
+#print("result of uncertainty_list_KJ method")
+for j in list_with_uncertainties_KJ:
     print(j)
 
