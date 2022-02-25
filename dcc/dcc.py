@@ -199,7 +199,7 @@ class DCC:
         # CRC32: crc32(data) & 0xffffffff to generate the same numeric value across all Python versions and platforms.
         dcc_crc32 = zlib.crc32(self.dcc_xml_raw_data) & 0xffffffff
 
-        ret_dict = dict();
+        ret_dict = dict()
         ret_dict['bytes_uncompressed'] = bytes_uncompressed
         ret_dict['bytes_compressed'] = bytes_compressed
         ret_dict['compression_ratio'] = compression_ratio
