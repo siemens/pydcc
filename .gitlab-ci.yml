@@ -33,7 +33,7 @@ test:
   - pip install pytest
   - pip install pytest-cov
   - cd tests
-  - pytest --cov=dcc unit_test.py
+  - pytest --cov=dcc -cov-branch --cov-report term-missing 
 
 #vincr:
 #  stage: Version Increment

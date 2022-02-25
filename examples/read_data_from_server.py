@@ -10,10 +10,12 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
-from dcc import dcc
+import sys
+sys.path.append("../dcc")
+from dcc import DCC
 
 # (1) Load DCC and create the DCC object (dcco)
-dcco = dcc(url="http://127.0.0.1:8085/dcc/123") 
+dcco = DCC(url="http://127.0.0.1:8085/dcc/123")
 
 # (2) Get UID of the DCC from DCC object
 uid = dcco.uid()

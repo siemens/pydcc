@@ -10,6 +10,7 @@
 #
 
 from setuptools import setup
+import setuptools
 
 with open('README.md') as file:
     long_description = file.read()
@@ -26,7 +27,8 @@ setup(
     license = "MIT License",
     keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
     url = "https://gitlab.com/gemimeg/pydcc",
-    package_dir={'': 'src'},
+    packages=['dcc'],
+    include_package_data=False,
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
@@ -39,7 +41,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-   'xmlschema > 1.5', 'requests', 
+   'xmlschema > 1.5', 'requests',
     ]
 )
 
