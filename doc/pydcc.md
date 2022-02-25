@@ -136,3 +136,19 @@ Compression results:
 The original DCC size for Siliziumkugel.xml in version 2.4.0 was 30926 bytes.
 The compressed DCC size was 5324 bytes.
 DCC compression ratio 17.2%.
+
+
+
+## List of identifications
+The available identifications of all the items described by the DCC can be returned using
+```python
+dcco.item_id()
+```
+which returns the dictionary with the identification types along with any attributes (eg. language)
+as keys and the identifications themselves as values
+```
+{'issuer': 'manufacturer',
+ 'value': 'Si28kg_03_a',
+ 'content (lang: de)': 'Kennnummer',
+ 'content (lang: en)': 'Serial No.'}
+```
