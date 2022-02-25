@@ -373,7 +373,7 @@
 						<dcc:content lang="de">MEAS_RES1_res1</dcc:content>
 					</dcc:name>
 					<dcc:data>
-						<dcc:quantity>
+						<dcc:quantity id ="blubber">
 							<si:real>
 								<si:value>1</si:value>
 								<si:unit>\metre</si:unit>
@@ -386,7 +386,7 @@
 							</si:real>
 						</dcc:quantity>
 						<dcc:list>
-							<dcc:quantity>
+							<dcc:quantity id ="blub">
 								<si:real>
 									<si:value>1</si:value>
 									<si:unit>\metre</si:unit>
