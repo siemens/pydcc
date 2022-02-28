@@ -23,20 +23,20 @@ dcco = DCC(xml_file_path)
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
-        dcc_from_file = DCC(xml_file_path)  # Load DCC and crate DCC object
+        dcc_from_file = DCC(xml_file_path) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_file.is_loaded())
 
     def test_loading_byte_array(self):
         with open(xml_file_path, "rb") as f:
             dcc_byte_array = f.read()
-        dcc_from_byte_array = DCC(byte_array=dcc_byte_array)  # Load DCC and crate DCC object
+        dcc_from_byte_array = DCC(byte_array = dcc_byte_array) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_byte_array.is_loaded())
 
     def test_loading_compressed_byte_array(self):
         compressed_file = xml_file_name.split('.')
         with open("../data/compressed_dcc/" + compressed_file[0] + ".pydcc", "rb") as f:
             dcc_compressed = f.read()
-        dcc_from_compresed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
+        dcc_from_compresed_byte_array = DCC(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
 
     def test_calibration_date(self):
@@ -49,9 +49,9 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(days > 40)
 
     def test_calibration_laboratory_name(self):
-        calib_lab_name = dcco.calibration_laboratory_name()
+        calib_lab_name = dcco.calibration_laboratory_name()        
         ref_lab_name = 'Kalibrierlab XXXXXXXXX'
-        self.assertEqual(calib_lab_name, ref_lab_name)
+        self.assertEqual(calib_lab_name, ref_lab_name)       
 
     def test_uid(self):
         uid = dcco.uid()
@@ -61,12 +61,14 @@ class TestBaseFunctions(unittest.TestCase):
         version = dcco.version()
         self.assertEqual(version, "3.0.0")
 
+
     """
     def test_uncertainty_list(self):
         uncertainty_list = dcco.uncertainty_list()
         self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
        
     """
+ 
 
     def test_empty_dcc_init_error_detection(self):
         exception_rised = False
@@ -94,8 +96,8 @@ class TestBaseFunctions(unittest.TestCase):
         bytes_compressed = comp_dcc['bytes_compressed']
         self.assertEqual(bytes_compressed, 7826)
 
-    def test_previous_report_not_available(self):
-        self.assertFalse(dcco.has_previous_report())
+    def test_previous_report_available(self):
+        self.assertTrue(dcco.has_previous_report())
 
     def test_item_id(self):
         id_dict_v2 = {'issuer': 'manufacturer', 'value': 'Si28kg_03_a', 'content (lang: de)': 'Kennnummer',
@@ -127,3 +129,5 @@ class TestBaseFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
