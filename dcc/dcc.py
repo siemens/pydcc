@@ -231,8 +231,195 @@ class DCC:
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
 
+    def mandatoryLang(self):
+        return self.root.find('dcc:administrativeData/dcc:coreData/dcc:mandatoryLangCodeISO639_1', self.name_space).text
+       # nicht menschen-lesbare, aber momentan richtige Adresse  der Sprache
+       # je nach dem ob die Position innerhalb des Baums  oder
+       # der Name der Tags sich ändert, ist die eine oder andere Variante überlebensfähiger
+       # return self.root[0][1][3].text
+
+    def __read_si_complex(self, node):
+        # das ist auch nur eine der beiden Arten der komplexen Zahlen :-(
+        mr = SiComplex()
+        mr.kind = 'complex'
+        mr.valueRe = node.find("si:valueReal", self.name_space).text
+        mr.valueIm = node.find("si:valueImag", self.name_space).text
+        mr.unit = node.find("si:unit", self.name_space).text
+        return mr
+
+    def __read_exp_U(self,node):
+        exp_u = ExpandedU()
+        exp_u.kind = 'expU'
+        exp_u.U = node.find("si:uncertainty", self.name_space).text
+        exp_u.k = node.find("si:coverageFactor", self.name_space).text
+        exp_u.coverage = node.find("si:coverageProbability", self.name_space).text
+        return exp_u
+
+    def __read_covInt(self, node):
+        cov_int_u = CoverageInt()
+        cov_int_u.kind = "covInt"
+        cov_int_u.standard_u = node.find("si:standardUnc", self.name_space).text
+        cov_int_u.int_min = node.find("si:intervalMin", self.name_space).text
+        cov_int_u.int_max = node.find("si:intervalMax", self.name_space).text
+        cov_int_u.coverage = node.find("si:coverageProbability", self.name_space).text
+        return cov_int_u
+
+    def __read_si_real(self, node):
+        mr = SiReal()
+        mr.kind = 'real'
+        mr.value = node.find("si:value", self.name_space).text
+        mr.unit = node.find("si:unit", self.name_space).text
+        u_node = node.find("si:expandedUnc", self.name_space)
+        if u_node is not None:
+            mr.unc = self.__read_exp_U(u_node)
+        else:
+            u_node = node.find("si:coverageInterval", self.name_space)
+            if u_node is not None:
+                mr.unc = self.__read_covInt(u_node)
+            else:
+                mr.unc = None
+        return mr
+
+    def __read_si_element(self, node):
+        mr = []
+        if node.tag == '{https://ptb.de/si}real':
+            mr = self.__read_si_real(node);
+        elif node.tag == '{https://ptb.de/si}list':
+            print('TODO take care of list')
+        elif node.tag == '{https://ptb.de/si}hybrid':
+            print('TODO take care of hybrid')
+        elif node.tag == '{https://ptb.de/si}complex':
+            mr = self.__read_si_complex(node);
+        elif node.tag == '{https://ptb.de/si}constant':
+            print('TODO take care of constant')
+        elif node.tag == '{https://ptb.de/si}realListXMLList':
+            print('TODO take care of realListXMLList')
+        return mr
+
+    def __report_si_real(self, mr):
+        real_res = []
+        real_res.append(mr.value)
+        real_res.append(mr.unit)
+        if mr.unc is not None:
+            if mr.unc.kind == 'expU':
+                real_res.append(' expanded uncertainty:')
+                real_res.append(mr.unc.U)
+                real_res.append(' k:')
+                real_res.append(mr.unc.k)
+            elif mr.unc.kind == 'covInt':
+                real_res.append(' standard uncertainty')
+                real_res.append(mr.unc.standard_u)
+        return real_res
+
+    def __report_si_complex(self, mr):
+        complex_res =[]
+        complex_res.append('Re')
+        complex_res.append(mr.valueRe)
+        complex_res.append('Im')
+        complex_res.append(mr.valueIm)
+        complex_res.append(mr.unit)
+        return complex_res
+
+    def __report_si_element(self, mr):
+        res = []
+        if mr.kind == 'real':
+            res = self.__report_si_real(mr)
+        elif mr.kind == 'complex':
+            res = self.__report_si_complex(mr)
+        else:
+            res = "not ready to read some si result"
+        return res
+
+    def get_calibration_result_by_quantity_id(self, result_id):
+        node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" + result_id + "\'" + ']')
+        res = []
+        if node is not None:
+            si_nodes = node.findall('./{https://ptb.de/si}*')
+            for si_node in si_nodes:
+                mr = self.__read_si_element(si_node)
+                res = self.__report_si_element(mr)
+        else:
+            res = "quantity with id: " + result_id + "not found in DCC"
+        return res
+
+    def __read_name(self, node, name, lang):
+        local_name = node.find('dcc:name/dcc:content[@lang=' + "\'" + lang + "\'" + ']', self.name_space)
+        if local_name is not None:
+            name = name + '  ' + local_name.text
+        else:
+            local_name = node.find('dcc:name/dcc:content', self.name_space)
+            if local_name is not None:
+                name = name + '  ' + local_name.text
+        return name
+
+    def __find_quantities_in_lists(self, node, quant, name, lang):
+        name = self.__read_name(node, name, lang)
+        if node.tag == '{https://ptb.de/dcc}quantity':
+            quant.append([node, name])
+        elif node.tag == '{https://ptb.de/dcc}list':
+            for next_node in node:
+                self.__find_quantities_in_lists(next_node, quant, name, lang)
+
+    def get_calibration_results(self, lang=' '):
+        res = []
+        quantities = []
+        name = ''
+        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result', self.name_space)
+        for result in result_nodes:
+            name = self.__read_name(result, name, lang)
+            data_node = result.find('dcc:data', self.name_space)
+            for nodes in data_node:
+                self.__find_quantities_in_lists(nodes, quantities, name, lang)
+
+        for quant in quantities:
+            si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
+            if si_node is not None:
+                mr = self.__read_si_element(si_node)
+                local_res = [quant[1], self.__report_si_element(mr)]
+                res.append(local_res)
+        return res
+
+
+class U:
+    def _init__(self):
+        self.kind = None
+        self.coverage =None
+        self.distribution =None
+
+
+class CoverageInt(U):
+    def _init__(self):
+        self.standard_u = None
+        self.int_min = None
+        self.int_max = None
+
+
+class ExpandedU(U):
+    def _init__(self):
+        self.U = None
+        self.k = None
+
+
+class SI:
+    def __init__(self):
+        self.label = None
+        self.kind = None
+        self.unit = None
+
+
+class SiReal(SI):
+    def __init__(self):
+        self.value = None
+        self.unc = None
+
+
+class SiComplex(SI):
+    def __init__(self):
+        self.valueRe = None
+        self.valueIm = None
 
 
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""
     pass
+

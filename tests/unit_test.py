@@ -39,6 +39,21 @@ class TestBaseFunctions(unittest.TestCase):
         dcc_from_compresed_byte_array = DCC(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
 
+    def test_mandatoryLang(self):
+        lang = dcco.mandatoryLang()
+        self.assertEqual(lang, 'de')
+
+    def test_get_calibration_result_by_quantity_id(self):
+        dccno = DCC('../data/Uncertainty2_PyDCC.xml')
+        res = dccno.get_calibration_result_by_quantity_id('MeasRes1_res1_quant1')
+        self.assertEqual(res, ['11111', '\\milli\\metre', ' expanded uncertainty:', '0.11111', ' k:', '2.0'])
+
+    def test_get_calibration_results(self):
+        dccno = DCC('../data/Uncertainty2_PyDCC.xml')
+        res = dccno.get_calibration_results()
+        self.assertEqual(res[0], ['  MEAS_RES1_res1', ['11111', '\\milli\\metre', ' expanded uncertainty:', '0.11111', ' k:', '2.0']])
+        self.assertEqual(res[1], ['  MEAS_RES1_res1', ['22222', '\\milli\\metre', ' expanded uncertainty:', '0.22222', ' k:', '2.0']])
+
     def test_calibration_date(self):
         calib_date = dcco.calibration_date()
         ref_date = datetime.datetime(2021, 10, 27, 0, 0)
