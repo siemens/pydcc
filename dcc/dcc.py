@@ -363,9 +363,10 @@ class DCC:
     def get_calibration_results(self, lang=' '):
         res = []
         quantities = []
-        name = ''
+
         result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result', self.name_space)
         for result in result_nodes:
+            name = ''
             name = self.__read_name(result, name, lang)
             data_node = result.find('dcc:data', self.name_space)
             for nodes in data_node:
