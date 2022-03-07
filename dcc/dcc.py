@@ -280,20 +280,35 @@ class DCC:
                 mr.unc = None
         return mr
 
+    def __read_si_hybrid(self, node):
+        mr = SiHybrid()
+        mr.kind = 'hybrid'
+        return mr
+
+    def __read_si_list(self, node):
+        mr = SiList()
+        mr.kind = 'list'
+        return mr
+
+    def __read_si_realListXMLList(self, node):
+        mr = SiRealListXMLList()
+        mr.kind = 'realListXMLList'
+        return mr
+
     def __read_si_element(self, node):
         mr = []
         if node.tag == '{https://ptb.de/si}real':
-            mr = self.__read_si_real(node);
+            mr = self.__read_si_real(node)
         elif node.tag == '{https://ptb.de/si}list':
-            print('TODO take care of list')
+            mr = self.__read_si_list(node)
         elif node.tag == '{https://ptb.de/si}hybrid':
-            print('TODO take care of hybrid')
+            mr = self.__read_si_hybrid(node)
         elif node.tag == '{https://ptb.de/si}complex':
-            mr = self.__read_si_complex(node);
+            mr = self.__read_si_complex(node)
         elif node.tag == '{https://ptb.de/si}constant':
             print('TODO take care of constant')
         elif node.tag == '{https://ptb.de/si}realListXMLList':
-            print('TODO take care of realListXMLList')
+            mr = self.__read_si_realListXMLList(node)
         return mr
 
     def __report_si_real(self, mr):
@@ -320,12 +335,28 @@ class DCC:
         complex_res.append(mr.unit)
         return complex_res
 
+    def __report_si_hybrid(self, mr):
+        hybrid_res = ['reading hybrid not implemented']
+        return hybrid_res
+
+    def __report_si_list(self, mr):
+        list_res = ['reading silist not implemented']
+        return list_res
+
+    def __report_si_realListXMLList(self, mr):
+        xml_real_list_res = ['reading realListXMLList not implemented']
+        return xml_real_list_res
+
     def __report_si_element(self, mr):
         res = []
         if mr.kind == 'real':
             res = self.__report_si_real(mr)
         elif mr.kind == 'complex':
             res = self.__report_si_complex(mr)
+        elif mr.kind == 'hybrid':
+            res = self.__report_si_hybrid(mr)
+        elif mr.kind == 'realListXMLList':
+            res = self.__report_si_realListXMLList(mr)
         else:
             res = "not ready to read some si result"
         return res
@@ -419,6 +450,23 @@ class SiComplex(SI):
         self.valueRe = None
         self.valueIm = None
 
+
+class SiHybrid(SI):
+    def __init__(self):
+        self.value = None
+        self.unc = None
+
+class SiList(SI):
+    def __init__(self):
+        self.values = None
+        self.uncs = None
+
+
+
+class SiRealListXMLList(SI):
+    def __init__(self):
+        self.values = None
+        self.uncs = None
 
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""
