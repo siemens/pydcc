@@ -212,7 +212,6 @@ class dcc:
 
     def __which_si_element(self, node, resultname, Us):
         if node.tag == '{https://ptb.de/si}real':
-            print("gefunden")
             self.__read_si_real(node, resultname, Us)
         elif node.tag == '{https://ptb.de/si}list':
             print('TODO take care of si list')
@@ -225,35 +224,6 @@ class dcc:
             print('TODO take care of constant')
         elif node.tag == '{https://ptb.de/si}realListXMLList':
             self.__read_si_realListXMLList(node, resultname, Us)
-
-
-
-    def get_calibration_result_by_quantity_id(self, result_id):
-        node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" +result_id + "\'" +']')
-        res = []
-        if node is not None:
-            name="blub"
-            si_nodes = node.findall('./{https://ptb.de/si}*')
-            for si_node in si_nodes:
-                self.__which_si_element(si_node, name, res)
-
-                #self.__which_si_element(self,si_node, resultname, Us):
-
-            si = node.find("si:real", self.name_space)
-            si_value = si.find("si:value", self.name_space)
-            si_unit = si.find("si:unit", self.name_space)
-            si_u = si.find("si:expandedUnc", self.name_space)
-            res = si_value.text + '\t' + si_unit.text
-
-            if si_u is not None:
-                res = res + '\t' + si_u[0].text
-            else:
-                si_cov = si.find("si:coverageInterval", self.name_space)
-                if si_cov is not None:
-                    res = res + '\t ' + si_cov[0].text
-        else:
-            res = 'No quantity with id ' + result_id + ' found in DCC.'
-        return res
 
     def uncertainty_list_KJ(self):
         unc_list = []
