@@ -11,11 +11,12 @@
 #
 import sys
 sys.path.append("../dcc/")
-from dcc import dcc
+from dcc import DCC
 # (1) Load DCC and create the DCC object (dcco)
-#dcco = dcc('../data/dcc/siliziumkugel_2_4_0.xml')
-dcco = dcc('../data/Uncertainty5_PyDCC.xml')
-#dcco = dcc('../data/TestDCCs/si_elements/si_complex1_PyDCC.xml')
+#dcco = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
+dcco = DCC('../data/Uncertainty5_PyDCC.xml')
+#dcco = DCC('../data/TestDCCs/si_elements/si_complex1_PyDCC.xml')
+#dcco =DCC('../data/KMT/Kugelnormal_ExpUnc_2022_03_02.xml')
 
 print("mandatory language")
 lang = dcco.mandatoryLang()
@@ -27,35 +28,17 @@ res = dcco.get_calibration_result_by_quantity_id("MeasRes1_res1_quant1")
 print(res)
 
 print("all results")
-res = dcco.get_calibration_results()
+res = dcco.get_calibration_results('en')
 for i in res:
    print(i)
 
-res = dcco.uncertainty_list()
-print('uncertainty list')
-for i in res:
-    print(i)
+#res = dcco.uncertainty_list()
+#print('uncertainty list')
+#for i in res:
+#    print(i)
 
 
 
 
 
-
-
-# (2) Get some Uncertainties of the DCC from DCC object
-#list_with_uncertainties = dcco.uncertainty_list()
-#list_with_uncertainties_KJ = dcco.uncertainty_list_KJ()
-# (N) Print data
-
-#res = dcco.get_calibration_result_by_quantity_id("DR_M_1")
-#print(res)
-
-#print("result of existing uncertainty_list method")
-#for j in list_with_uncertainties:
-#    print(j)
-
-
-#print("result of uncertainty_list_KJ method")
-#for j in list_with_uncertainties_KJ:
-#    print(j)
 
