@@ -111,10 +111,21 @@ class TestBaseFunctions(unittest.TestCase):
         bytes_compressed = comp_dcc['bytes_compressed']
         self.assertEqual(bytes_compressed, 7826)
 
-   
+    def test_previous_report_available(self):
+        self.assertTrue(dcco.has_previous_report())
 
-    # def test_previous_report_not_available(self):
-    #    self.assertFalse(dcco.has_previous_report())
+    def test_item_id(self):
+        id_dict_v2 = {'issuer': 'manufacturer', 'value': 'Si28kg_03_a', 'content (lang: de)': 'Kennnummer',
+                      'content (lang: en)': 'Serial No.'}
+
+        id_dict_v3 = {'issuer': 'manufacturer', 'value': 'itemManufacturer',
+                      'content (lang: de)': 'Fabrikat/Serien-Nr.', 'content (lang: en)': 'Serial number'}
+
+        if dcco.version() == '2.4.0':
+            self.assertEqual(dcco.item_id(), id_dict_v2)
+        elif dcco.version() == '3.0.0':
+            self.assertEqual(dcco.item_id(), id_dict_v3)
+
 
 
 #    def test_verify_correct_dcc_xml(self):
@@ -133,3 +144,5 @@ class TestBaseFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
