@@ -33,7 +33,15 @@ Further, the [contibution guide](CONTRIBUTING.md) explains how one can contibute
 
 [1] Official release of the digital calibration certificate (DCC) in version 2.4.0 https://www.ptb.de/dcc/v2.4.0/de/
 
-[2] XML shema for DCCs https://www.ptb.de/dcc/dcc.xsd
+[2] Current XML shema for DCCs https://www.ptb.de/dcc/dcc.xsd
 
 [3] Official release of the digital calibration certificate (DCC) in version 3.0.0 https://www.ptb.de/dcc/v3.0.0/
+
+## Links
+
+Main page to the DCC https://www.ptb.de/dcc
+
+Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
+Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
+
 
