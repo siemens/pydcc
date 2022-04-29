@@ -17,7 +17,13 @@ import xml.etree.ElementTree as ET
 import datetime
 import time
 import zlib
-import requests
+#import requests
+
+class real:
+    def __init__(self):
+        self.label = None
+        self.value = None
+        self.unit = None
 
 class DCC:
 
@@ -153,11 +159,202 @@ class DCC:
         uid_string = elem.text
         return uid_string
 
+    def mandatoryLang(self):
+        # Return mandatory Language Code
+        elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
+        mandatoryLang = elem.text
+        return mandatoryLang
+
+    def version(self):       
+        # Return DCC version        
+        return self.dcc_version
+
+    def __read_si_real(self, node, resultname, Us):
+        label = node.find("{https://ptb.de/si}label")
+        value = node.find("{https://ptb.de/si}value")
+        unit = node.find("{https://ptb.de/si}unit")
+        exp_unc = node.find("{https://ptb.de/si}expandedUnc")
+        cov_int = node.find("{https://ptb.de/si}coverageInterval")
+        if not exp_unc == None:
+            unc_ex = exp_unc.find("{https://ptb.de/si}uncertainty")
+            if not unc_ex == None:
+                Us.append([resultname, 'Expanded uncertainty', unc_ex.text, unit.text])
+        elif not cov_int == None:
+            unc_st = cov_int.find("{https://ptb.de/si}standardUnc")
+            if not unc_st == None:
+                Us.append([resultname, 'Standard uncertainty', unc_st.text, unit.text])
+        else:
+            Us.append([resultname, 'si real without info on U', ':-(', ':-('])
+
+    def __read_si_realListXMLList(self, node, resultname, Us):
+        labels = node.find("{https://ptb.de/si}labelXMLList")
+        values = node.find("{https://ptb.de/si}valueXMLList")
+        units = node.find("{https://ptb.de/si}unitXMLList")
+        exp_uncs =node.find("{https://ptb.de/si}expandedUncXMLList")
+        if exp_uncs is not None:
+            uncs_ex = exp_uncs.find("{https://ptb.de/si}uncertaintyXMLList")
+            if uncs_ex is not None:
+                Us.append([resultname, 'Expanded uncertainty', uncs_ex.text, units.text])
+            else:
+                Us.append([resultname, 'si realXMLlist without info on U', ':-(', ':-('])
+
+    def __which_si_list(self, node, resultname):
+        for next_node in node:
+            if next_node.tag == '{https://ptb.de/si}list':
+                self.__which_si_list(next_node, resultname)
+            elif next_node.tag == '{https://ptb.de/si}realList':
+                print('TODO: take care of  realList')
+            elif next_node.tag == '{https://ptb.de/si}complexList':
+                print('TODO: take care of complexList')
+
+    def __which_si_element(self, node, resultname, Us):
+        if node.tag == '{https://ptb.de/si}real':
+            print("gefunden")
+            self.__read_si_real(node, resultname, Us)
+        elif node.tag == '{https://ptb.de/si}list':
+            print('TODO take care of si list')
+            self.__which_si_list(node, resultname)
+        elif node.tag == '{https://ptb.de/si}hybrid':
+            print('TODO take care of hybrid')
+        elif node.tag == '{https://ptb.de/si}complex':
+            print('TODO take care of complex')
+        elif node.tag == '{https://ptb.de/si}constant':
+            print('TODO take care of constant')
+        elif node.tag == '{https://ptb.de/si}realListXMLList':
+            self.__read_si_realListXMLList(node, resultname, Us)
+
+    def get_calibration_result_by_quantity_id(self, result_id):
+        node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" +result_id + "\'" +']')
+        res = []
+        if node is not None:
+            name="blub"
+            si_nodes = node.findall('./{https://ptb.de/si}*')
+            for si_node in si_nodes:
+                self.__which_si_element(si_node, name, res)
+
+                #self.__which_si_element(self,si_node, resultname, Us):
+
+            si = node.find("si:real", self.name_space)
+            si_value = si.find("si:value", self.name_space)
+            si_unit = si.find("si:unit", self.name_space)
+            si_u = si.find("si:expandedUnc", self.name_space)
+            res = si_value.text + '\t' + si_unit.text
+
+            if si_u is not None:
+                res = res + '\t' + si_u[0].text
+            else:
+                si_cov = si.find("si:coverageInterval", self.name_space)
+                if si_cov is not None:
+                    res = res + '\t ' + si_cov[0].text
+        else:
+            res = 'No quantity with id ' + result_id + ' found in DCC.'
+        return res
+
+    def uncertainty_list_KJ(self):
+        unc_list = []
+        measresults_node = self.root.find("dcc:measurementResults", self.name_space)
+        for measresult_node in measresults_node:
+            for results_node in measresult_node.iter('{https://ptb.de/dcc}results'):
+                for result_node in results_node.findall('{https://ptb.de/dcc}result'):
+                    data_node = result_node.find('{https://ptb.de/dcc}data')
+                    for quantity_node in data_node.iter('{https://ptb.de/dcc}quantity'):
+                        real_node = quantity_node.find('{https://ptb.de/si}real')
+                        if real_node is not None:
+                            #TODO: ab hier Unterscheidung der SI-Elemente
+                            unit = real_node.find('{https://ptb.de/si}unit')
+                            expu_node = real_node.find('{https://ptb.de/si}expandedUnc')
+                            if expu_node is not None:
+                                u = expu_node.find('si:uncertainty', self.name_space)
+                                unc_list.append(['Expanded U', u.text, unit.text])
+                            else:
+                                covInt_node = real_node.find('{https://ptb.de/si}coverageInterval')
+                                if covInt_node is not None:
+                                    u = covInt_node.find('si:standardUnc', self.name_space)
+                                    unc_list.append(['Standard U', u.text, unit.text])
+        return unc_list
+
+
     def version(self):
         # Return DCC version
         return self.dcc_version
 
-    def uncertainty_list(self):
+    def __read_si_real(self, node, resultname, Us):
+        label = node.find("{https://ptb.de/si}label")
+        value = node.find("{https://ptb.de/si}value")
+        unit = node.find("{https://ptb.de/si}unit")
+        exp_unc = node.find("{https://ptb.de/si}expandedUnc")
+        cov_int = node.find("{https://ptb.de/si}coverageInterval")
+        if not exp_unc == None:
+            unc_ex = exp_unc.find("{https://ptb.de/si}uncertainty")
+            if not unc_ex == None:
+                Us.append([resultname, 'Expanded uncertainty', unc_ex.text, unit.text])
+        elif not cov_int == None:
+            unc_st = cov_int.find("{https://ptb.de/si}standardUnc")
+            if not unc_st == None:
+                Us.append([resultname, 'Standard uncertainty', unc_st.text, unit.text])
+        else:
+            Us.append([resultname, 'si real without info on U', ':-(', ':-('])
+
+    def __read_si_realListXMLList(self, node, resultname, Us):
+        labels = node.find("{https://ptb.de/si}labelXMLList")
+        values = node.find("{https://ptb.de/si}valueXMLList")
+        units = node.find("{https://ptb.de/si}unitXMLList")
+        exp_uncs =node.find("{https://ptb.de/si}expandedUncXMLList")
+        if exp_uncs is not None:
+            uncs_ex = exp_uncs.find("{https://ptb.de/si}uncertaintyXMLList")
+            if uncs_ex is not None:
+                Us.append([resultname, 'Expanded uncertainty', uncs_ex.text, units.text])
+            else:
+                Us.append([resultname, 'si realXMLlist without info on U', ':-(', ':-('])
+
+    def __which_si_list(self, node, resultname):
+        for next_node in node:
+            if next_node.tag == '{https://ptb.de/si}list':
+                self.__which_si_list(next_node, resultname)
+            elif next_node.tag == '{https://ptb.de/si}realList':
+                print('TODO: take care of  realList')
+            elif next_node.tag == '{https://ptb.de/si}complexList':
+                print('TODO: take care of complexList')
+
+    def __which_si_element(self, node, resultname, Us):
+        if node.tag == '{https://ptb.de/si}real':
+            self.__read_si_real(node, resultname, Us)
+        elif node.tag == '{https://ptb.de/si}list':
+            print('TODO take care of si list')
+            self.__which_si_list(node, resultname)
+        elif node.tag == '{https://ptb.de/si}hybrid':
+            print('TODO take care of hybrid')
+        elif node.tag == '{https://ptb.de/si}complex':
+            print('TODO take care of complex')
+        elif node.tag == '{https://ptb.de/si}constant':
+            print('TODO take care of constant')
+        elif node.tag == '{https://ptb.de/si}realListXMLList':
+            self.__read_si_realListXMLList(node, resultname, Us)
+
+    def uncertainty_list_KJ(self):
+        unc_list = []
+        measresults_node = self.root.find("dcc:measurementResults", self.name_space)
+        for measresult_node in measresults_node:
+            for results_node in measresult_node.iter('{https://ptb.de/dcc}results'):
+                for result_node in results_node.findall('{https://ptb.de/dcc}result'):
+                    data_node = result_node.find('{https://ptb.de/dcc}data')
+                    for quantity_node in data_node.iter('{https://ptb.de/dcc}quantity'):
+                        real_node = quantity_node.find('{https://ptb.de/si}real')
+                        if real_node is not None:
+                            #TODO: ab hier Unterscheidung der SI-Elemente
+                            unit = real_node.find('{https://ptb.de/si}unit')
+                            expu_node = real_node.find('{https://ptb.de/si}expandedUnc')
+                            if expu_node is not None:
+                                u = expu_node.find('si:uncertainty', self.name_space)
+                                unc_list.append(['Expanded U', u.text, unit.text])
+                            else:
+                                covInt_node = real_node.find('{https://ptb.de/si}coverageInterval')
+                                if covInt_node is not None:
+                                    u = covInt_node.find('si:standardUnc', self.name_space)
+                                    unc_list.append(['Standard U', u.text, unit.text])
+        return unc_list
+
+    def uncertainty_list(self):       
         # Derive uncertainty from DCC
         results = self.root.find("dcc:measurementResults/dcc:measurementResult/dcc:results", self.name_space)
         unc_list = []
@@ -167,7 +364,8 @@ class DCC:
             for result_data in result_data_list:
                 real_val = result_data.find("si:real/si:value", self.name_space)
                 unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
-                if not real_val == None:
+                if not unc == None:
+                    #if not real_val == None:
                     unc_list.append([result_name.text, unc.text])
         return unc_list
 
