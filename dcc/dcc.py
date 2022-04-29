@@ -233,18 +233,32 @@ class DCC:
         mr.unit = node.find("si:unit", self.name_space).text
         return mr
 
-    def __read_exp_U(self,node):
+    def __read_exp_U_List(self, node):
+        exp_u_list = ExpandedU()
+        unc_node = node.find("si:uncertaintyXMLList", self.name_space)
+        exp_u_list.U = unc_node.text
+        a = len('{https://ptb.de/si}')
+        exp_u_list.kind = node.tag[a:] + '->' + unc_node.tag[a:]
+        exp_u_list.k = node.find("si:coverageFactorXMLList", self.name_space).text
+        exp_u_list.coverage = node.find("si:coverageProbabilityXMLList", self.name_space).text
+        return exp_u_list
+
+    def __read_exp_U(self, node):
         exp_u = ExpandedU()
-        exp_u.kind = 'expU'
-        exp_u.U = node.find("si:uncertainty", self.name_space).text
+        unc_node = node.find("si:uncertainty", self.name_space)
+        exp_u.U = unc_node.text
+        a = len('{https://ptb.de/si}')
+        exp_u.kind = node.tag[a:] + '->' + unc_node.tag[a:]
         exp_u.k = node.find("si:coverageFactor", self.name_space).text
         exp_u.coverage = node.find("si:coverageProbability", self.name_space).text
         return exp_u
 
     def __read_covInt(self, node):
         cov_int_u = CoverageInt()
-        cov_int_u.kind = "covInt"
-        cov_int_u.standard_u = node.find("si:standardUnc", self.name_space).text
+        std_unc_node = node.find("si:standardUnc", self.name_space)
+        cov_int_u.standard_u = std_unc_node.text
+        a = len('{https://ptb.de/si}')
+        cov_int_u.kind = node.tag[a:] + '->' + std_unc_node.tag[a:]
         cov_int_u.int_min = node.find("si:intervalMin", self.name_space).text
         cov_int_u.int_max = node.find("si:intervalMax", self.name_space).text
         cov_int_u.coverage = node.find("si:coverageProbability", self.name_space).text
@@ -253,6 +267,11 @@ class DCC:
     def __read_si_real(self, node):
         mr = SiReal()
         mr.kind = 'real'
+        mr.label = None
+        label_node = node.find("si:label", self.name_space)
+        if label_node is not None:
+            mr.label = label_node.text
+
         mr.value = node.find("si:value", self.name_space).text
         mr.unit = node.find("si:unit", self.name_space).text
         u_node = node.find("si:expandedUnc", self.name_space)
@@ -269,6 +288,11 @@ class DCC:
     def __read_si_hybrid(self, node):
         mr = SiHybrid()
         mr.kind = 'hybrid'
+        mr.list = []
+        nodes = node.findall('{https://ptb.de/si}*', self.name_space)
+        for node2 in nodes:
+           mr2 = self.__read_si_element(node2)
+           mr.list.append(mr2)
         return mr
 
     def __read_si_list(self, node):
@@ -279,6 +303,17 @@ class DCC:
     def __read_si_realListXMLList(self, node):
         mr = SiRealListXMLList()
         mr.kind = 'realListXMLList'
+        mr.values = node.find("si:valueXMLList", self.name_space).text
+        mr.unit = node.find("si:unitXMLList", self.name_space).text
+        u_node = node.find("si:expandedUncXMLList", self.name_space)
+        if u_node is not None:
+            mr.uncs = self.__read_exp_U_List(u_node)
+        else:
+            u_node = node.find("si:coverageIntervalXMLList", self.name_space)
+            if u_node is not None:
+                mr.uncs = self.__read_covInt(u_node)
+            else:
+                mr.uncs = None
         return mr
 
     def __read_si_element(self, node):
@@ -299,16 +334,18 @@ class DCC:
 
     def __report_si_real(self, mr):
         real_res = []
+        if mr.label is not None:
+            real_res.append(mr.label)
+
         real_res.append(mr.value)
         real_res.append(mr.unit)
         if mr.unc is not None:
-            if mr.unc.kind == 'expU':
-                real_res.append(' expanded uncertainty:')
+            real_res.append(mr.unc.kind)
+            if mr.unc.kind == 'expandedUnc->uncertainty':
                 real_res.append(mr.unc.U)
                 real_res.append(' k:')
                 real_res.append(mr.unc.k)
-            elif mr.unc.kind == 'covInt':
-                real_res.append(' standard uncertainty')
+            elif mr.unc.kind == 'coverageInterval->standardUnc':
                 real_res.append(mr.unc.standard_u)
         return real_res
 
@@ -322,7 +359,9 @@ class DCC:
         return complex_res
 
     def __report_si_hybrid(self, mr):
-        hybrid_res = ['reading hybrid not implemented']
+        hybrid_res = []
+        for element in mr.list:
+             hybrid_res.append(self.__report_si_element(element))
         return hybrid_res
 
     def __report_si_list(self, mr):
@@ -330,7 +369,17 @@ class DCC:
         return list_res
 
     def __report_si_realListXMLList(self, mr):
-        xml_real_list_res = ['reading realListXMLList not implemented']
+        xml_real_list_res = []
+        xml_real_list_res.append(mr.values)
+        xml_real_list_res.append(mr.unit)
+        if mr.uncs is not None:
+            xml_real_list_res.append(mr.uncs.kind)
+            if mr.uncs.kind == 'expandedUncXMLList->uncertaintyXMLList':
+                xml_real_list_res.append(mr.uncs.U)
+                xml_real_list_res.append(' k:')
+                xml_real_list_res.append(mr.uncs.k)
+            elif mr.uncs.kind == 'coverageIntervalXMLList->standardUncXMLList':
+                xml_real_list_res.append(mr.unc.standard_u)
         return xml_real_list_res
 
     def __report_si_element(self, mr):
@@ -415,11 +464,16 @@ class DCC:
 
         return elem_dict
 
+    def some_function(self):
+       print("test some func")
+
+
+
 class U:
     def _init__(self):
         self.kind = None
-        self.coverage =None
-        self.distribution =None
+        self.coverage = None
+        self.distribution = None
 
 
 class CoverageInt(U):
@@ -456,8 +510,7 @@ class SiComplex(SI):
 
 class SiHybrid(SI):
     def __init__(self):
-        self.value = None
-        self.unc = None
+        self.list = None
 
 class SiList(SI):
     def __init__(self):
@@ -465,11 +518,11 @@ class SiList(SI):
         self.uncs = None
 
 
-
 class SiRealListXMLList(SI):
     def __init__(self):
         self.values = None
         self.uncs = None
+
 
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""
