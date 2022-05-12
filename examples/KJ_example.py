@@ -13,24 +13,41 @@ import sys
 sys.path.append("../dcc/")
 from dcc import DCC
 # (1) Load DCC and create the DCC object (dcco)
-#dcco = dcc('../data/Uncertainty5_PyDCC.xml')
-#dcco=dcc('../data/Kugelnormal_ExpUnc_DKD_min_ID.xml')
-#dcco = dcc('../data/MFC_2022_02_09.xml')
-dcco = dcc('../data/PMM-G_2021-09-15.xml')
-# (2) Get some Uncertainties of the DCC from DCC object
-#list_with_uncertainties = dcco.uncertainty_list()
+#dcco = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
+dcco = DCC('../data/Uncertainty4_PyDCC.xml')
+#dcco = DCC('../data/TestDCCs/si_elements/si_complex1_PyDCC.xml')
+#dcco =DCC('../data/KMT/Kugelnormal_ExpUnc_2022_03_02.xml')
+#dcco = DCC('../data/KMT/MFC_2022_05_06.xml')
+#dcco =DCC('../data/KMT/Kugelnormal_Vortrag_FB_Kolloquium_ID.xml')
+#dcco = DCC('../data/gp/dcc_gp_temperature_simplified_v12.xml')
+#dcco = DCC('../data/gp/dcc_gp_temperature_typical_v111.xml')
+#dcco = DCC('../data/gp/dcc_bp_temperature_minimal_v111.xml')
+#dcco = DCC('../data/gp/dcc_gp_temperature_extensive_v111.xml')
+#dcco = DCC('../data/gp/dcc_gp_temperature_resistance_v10.xml')
+#dcco = DCC('../data/gp/dcc_gp_temperatur_resistance_v111.xml')
 
-list_with_uncertainties = dcco.uncertainty_list_KJ()
-mandLang = dcco.mandatoryLang()
+print("mandatory language")
+lang = dcco.mandatoryLang()
+print(lang)
+print("single result")
+res = dcco.get_calibration_result_by_quantity_id("D_M_1")
+print(res)
 
 print("all results")
 res = dcco.get_calibration_results('de')
 for i in res:
    print(i)
 
-# (N) Print data
-print('mandatory language %s' % mandLang)
+#dcco.some_function()
 
-for j in list_with_uncertainties:
-    print(j)
+
+#res = dcco.uncertainty_list()
+#print('uncertainty list')
+#for i in res:
+#    print(i)
+
+
+
+
+
 
