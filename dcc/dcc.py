@@ -19,6 +19,7 @@ import time
 import zlib
 import requests
 
+
 class DCC:
 
     def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None, url = None):
@@ -34,7 +35,6 @@ class DCC:
         self.signature_section = None
         self.signed = False
         self.schema_sources = []
-
 
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
@@ -64,7 +64,6 @@ class DCC:
             #self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
 
-
     def load_dcc_from_xml_file(self):
         # Load DCC from file
         with open(self.xml_file_name, "rb") as file:
@@ -81,7 +80,7 @@ class DCC:
         # Load DCC from server (PROTOTYPE)
         query_address = server_url  # + dcc_id # URL encode, special chars
         response = requests.get(query_address)
-        if (response.status_code == 200):
+        if response.status_code == 200:
             byte_array = response.content
             self.load_dcc_from_byte_array(byte_array)
             success = True
@@ -91,7 +90,6 @@ class DCC:
         # Load compressed DCC
         self.dcc_xml_raw_data = zlib.decompress(byte_array)
         self.load_dcc_from_byte_array(self.dcc_xml_raw_data)
-
 
     def is_loaded(self):
         # Check if DCC was loaded successfully
@@ -119,11 +117,9 @@ class DCC:
         self.signature_section = elem
         return self.signed
 
-
     def is_signature_valid(self):
         # Is DCC signature valid?
         return self.valid_signature
-
 
     def calibration_date(self):
         # Return calibration date (endPerformanceDate)
@@ -131,7 +127,6 @@ class DCC:
         date_string = elem.text
         daytime_obj = datetime.datetime.strptime(date_string, '%Y-%m-%d')
         return daytime_obj
-
 
     def days_since_calibration(self):
         # Return number of days since calibration (endPerformanceDate)
@@ -506,6 +501,7 @@ class SiComplex(SI):
 class SiHybrid(SI):
     def __init__(self):
         self.list = None
+
 
 class SiList(SI):
     def __init__(self):
