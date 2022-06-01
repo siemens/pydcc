@@ -23,20 +23,20 @@ dcco = DCC(xml_file_path)
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
-        dcc_from_file = DCC(xml_file_path) # Load DCC and crate DCC object
+        dcc_from_file = DCC(xml_file_path)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_file.is_loaded())
 
     def test_loading_byte_array(self):
         with open(xml_file_path, "rb") as f:
             dcc_byte_array = f.read()
-        dcc_from_byte_array = DCC(byte_array = dcc_byte_array) # Load DCC and crate DCC object
+        dcc_from_byte_array = DCC(byte_array=dcc_byte_array)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_byte_array.is_loaded())
 
     def test_loading_compressed_byte_array(self):
         compressed_file = xml_file_name.split('.')
         with open("../data/compressed_dcc/" + compressed_file[0] + ".pydcc", "rb") as f:
             dcc_compressed = f.read()
-        dcc_from_compresed_byte_array = DCC(compressed_dcc = dcc_compressed) # Load DCC and crate DCC object
+        dcc_from_compresed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
 
     def test_mandatoryLang(self):
@@ -51,8 +51,10 @@ class TestBaseFunctions(unittest.TestCase):
     def test_get_calibration_results(self):
         dccno = DCC('../data/Uncertainty2_PyDCC.xml')
         res = dccno.get_calibration_results()
-        self.assertEqual(res[0], ['  MEAS_RES1_res1', ['11111', '\\milli\\metre', 'expandedUnc->uncertainty', '0.11111', ' k:', '2.0']])
-        self.assertEqual(res[1], ['  MEAS_RES1_res1', ['22222', '\\milli\\metre', 'expandedUnc->uncertainty', '0.22222', ' k:', '2.0']])
+        self.assertEqual(res[0], ['  MEAS_RES1_res1',
+                                  ['11111', '\\milli\\metre', 'expandedUnc->uncertainty', '0.11111', ' k:', '2.0']])
+        self.assertEqual(res[1], ['  MEAS_RES1_res1',
+                                  ['22222', '\\milli\\metre', 'expandedUnc->uncertainty', '0.22222', ' k:', '2.0']])
 
     def test_calibration_date(self):
         calib_date = dcco.calibration_date()
@@ -64,9 +66,9 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(days > 40)
 
     def test_calibration_laboratory_name(self):
-        calib_lab_name = dcco.calibration_laboratory_name()        
+        calib_lab_name = dcco.calibration_laboratory_name()
         ref_lab_name = 'Kalibrierlab XXXXXXXXX'
-        self.assertEqual(calib_lab_name, ref_lab_name)       
+        self.assertEqual(calib_lab_name, ref_lab_name)
 
     def test_uid(self):
         uid = dcco.uid()
@@ -76,14 +78,12 @@ class TestBaseFunctions(unittest.TestCase):
         version = dcco.version()
         self.assertEqual(version, "3.0.0")
 
-
     """
     def test_uncertainty_list(self):
         uncertainty_list = dcco.uncertainty_list()
         self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
        
     """
- 
 
     def test_empty_dcc_init_error_detection(self):
         exception_rised = False
@@ -115,17 +115,22 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(dcco.has_previous_report())
 
     def test_item_id(self):
-        id_dict_v2 = {'issuer': 'manufacturer', 'value': 'Si28kg_03_a', 'content (lang: de)': 'Kennnummer',
-                      'content (lang: en)': 'Serial No.'}
+        id_dict_v2 = {'identifications': {'identification': {'issuer': 'manufacturer', 'value': 'Si28kg_03_a',
+                                                             'description': {'content': [{'@lang': 'de', '#text':
+                                                                 'Kennnummer'}, {'@lang': 'en', '#text': 'Serial No.'}
+                                                                                         ]}}}}
 
-        id_dict_v3 = {'issuer': 'manufacturer', 'value': 'itemManufacturer',
-                      'content (lang: de)': 'Fabrikat/Serien-Nr.', 'content (lang: en)': 'Serial number'}
+        id_dict_v3 = {'identifications': {'identification': [{'issuer': 'other', 'value': 'XXXXXXXXX',
+                                                              'name': {'content': [{'@lang': 'de',
+                                                                                    '#text': 'Fabrikat/Serien-Nr.'},
+                                                                                   {'@lang': 'en',
+                                                                                    '#text': 'Serial number'}]}},
+                                                             {'issuer': 'manufacturer', 'value': 'itemManufacturer'}]}}
 
         if dcco.version() == '2.4.0':
             self.assertEqual(dcco.item_id(), id_dict_v2)
         elif dcco.version() == '3.0.0':
             self.assertEqual(dcco.item_id(), id_dict_v3)
-
 
 
 #    def test_verify_correct_dcc_xml(self):
@@ -144,5 +149,3 @@ class TestBaseFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
