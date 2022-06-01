@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!-- DIN EN ISO/IEC 17025:2018-03 7.8.2.1 a) Titel: Kalibrierschein -->
-<dcc:digitalCalibrationCertificate xmlns:dcc="https://ptb.de/dcc" schemaVersion="3.0.0" xmlns:si="https://ptb.de/si" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v3.0.0/dcc.xsd">
+<dcc:digitalCalibrationCertificate xmlns:dcc="https://ptb.de/dcc" schemaVersion="3.0.0" xmlns:si="https://ptb.de/si" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v3.0.0-rc.2/dcc.xsd">
 	<dcc:administrativeData>
 		<dcc:dccSoftware>		
 		  <dcc:software>
