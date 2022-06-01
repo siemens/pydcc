@@ -12,11 +12,12 @@
 # See the LICENSE file in the top-level directory.
 #
 
-import xml.etree.ElementTree as ET
 # import xmlschema
 import datetime
-import time
+import xml.etree.ElementTree as ET
 import zlib
+from collections import defaultdict
+
 import requests
 
 
@@ -440,23 +441,34 @@ class DCC:
                 res.append(local_res)
         return res
 
+    def etree_to_dict(self, t):
+        #method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
+        tkey = t.tag.rpartition('}')[2]
+        d = {tkey: {} if t.attrib else None}
+        children = list(t)
+        if children:
+            dd = defaultdict(list)
+            for dc in map(self.etree_to_dict, children):
+                for k, v in dc.items():
+                    dd[k].append(v)
+            d = {tkey: {k: v[0] if len(v) == 1 else v
+                        for k, v in dd.items()}}
+        if t.attrib:
+            d[tkey].update(('@' + k, v)
+                           for k, v in t.attrib.items())
+        if t.text:
+            text = t.text.strip()
+            if children or t.attrib:
+                if text:
+                    d[tkey]['#text'] = text
+            else:
+                d[tkey] = text
+        return d
+
     def item_id(self):
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
-        item_list = self.root.find("dcc:administrativeData/dcc:items", self.name_space)
-        elem_dict = {}
-        # iterate through individual items and subelements and return identification type with value
-        for elem in item_list.iter(tag='{' + self.name_space['dcc'] + '}' + 'identifications'):
-            for subelem in elem.iter():
-                textpart = subelem.text
-                if textpart.strip():
-                    # checks if additional attributes like language are available and adds it to result list
-                    if subelem.attrib:
-                        elem_dict[subelem.tag.rpartition('}')[2] + ' ' + '('+subelem.items()[0][0] + ': '
-                                                                               + subelem.items()[0][1] + ')'] = textpart
-                    else:
-                        elem_dict[subelem.tag.rpartition('}')[2]] = textpart
-
-        return elem_dict
+        id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
+        return self.etree_to_dict(id_list)
 
 
 class U:
