@@ -68,8 +68,8 @@ uncertainty95_actual = mres[3]
 
 print("Uncertainty requirement is a maximum of %.3f" % uncertainty95_requirement)
 print("Actual uncertainty is %.3f" % uncertainty95_actual)
-device_mmets_requirements = uncertainty95_actual <= uncertainty95_requirement 
-print('Device meets requirements:', device_mmets_requirements)
+device_meets_requirements = uncertainty95_actual <= uncertainty95_requirement 
+print('Device meets requirements:', device_meets_requirements)
 
 
 uncertainty_list = mres[0]
