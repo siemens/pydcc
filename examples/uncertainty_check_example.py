@@ -1,8 +1,8 @@
 # PyDCC
 #
-# Minimal working example
+# Automated uncertainty verification example
 #
-# Copyright (c) Siemens AG, 2021
+# Copyright (c) Siemens AG, 2022
 #
 # Authors:
 #     Andreas Tobola
