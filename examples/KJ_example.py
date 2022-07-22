@@ -10,44 +10,18 @@
 # See the LICENSE file in the top-level directory.
 #
 import sys
+import zlib
+
 sys.path.append("../dcc/")
 from dcc import DCC
 # (1) Load DCC and create the DCC object (dcco)
 #dcco = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
-dcco = DCC('../data/Uncertainty4_PyDCC.xml')
-#dcco = DCC('../data/TestDCCs/si_elements/si_complex1_PyDCC.xml')
-#dcco =DCC('../data/KMT/Kugelnormal_ExpUnc_2022_03_02.xml')
-#dcco = DCC('../data/KMT/MFC_2022_05_06.xml')
-#dcco =DCC('../data/KMT/Kugelnormal_Vortrag_FB_Kolloquium_ID.xml')
-#dcco = DCC('../data/gp/dcc_gp_temperature_simplified_v12.xml')
-#dcco = DCC('../data/gp/dcc_gp_temperature_typical_v111.xml')
-#dcco = DCC('../data/gp/dcc_bp_temperature_minimal_v111.xml')
-#dcco = DCC('../data/gp/dcc_gp_temperature_extensive_v111.xml')
-#dcco = DCC('../data/gp/dcc_gp_temperature_resistance_v10.xml')
-#dcco = DCC('../data/gp/dcc_gp_temperatur_resistance_v111.xml')
-
-print("mandatory language")
-lang = dcco.mandatoryLang()
-print(lang)
+#dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
+dcco= DCC('../data/dcc/dcc_ngp_temperature_typical_v12_refType2ID.xml')
 print("single result")
-res = dcco.get_calibration_result_by_quantity_id("D_M_1")
+res = dcco.get_calibration_result_by_quantity_id("basic_measurementError")
 print(res)
-
 print("all results")
 res = dcco.get_calibration_results('de')
 for i in res:
    print(i)
-
-#dcco.some_function()
-
-
-#res = dcco.uncertainty_list()
-#print('uncertainty list')
-#for i in res:
-#    print(i)
-
-
-
-
-
-

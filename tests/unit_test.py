@@ -15,68 +15,67 @@ from dcc import DCC
 import datetime
 import unittest
 
-xml_file_name = 'DCC_3_GrundstrukturPyDCC.xml'
-xml_file_path = '../data/dcc/' + xml_file_name
-dcco = DCC(xml_file_path)
+xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
+xml_file_path_gp = '../data/dcc/' + xml_file_name_gp
+dcco_gp = DCC(xml_file_path_gp)
 
 
 class TestBaseFunctions(unittest.TestCase):
 
     def test_loading_from_file(self):
-        dcc_from_file = DCC(xml_file_path)  # Load DCC and crate DCC object
+        dcc_from_file = DCC(xml_file_path_gp)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_file.is_loaded())
 
     def test_loading_byte_array(self):
-        with open(xml_file_path, "rb") as f:
+        with open(xml_file_path_gp, "rb") as f:
             dcc_byte_array = f.read()
         dcc_from_byte_array = DCC(byte_array=dcc_byte_array)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_byte_array.is_loaded())
 
     def test_loading_compressed_byte_array(self):
-        compressed_file = xml_file_name.split('.')
+        compressed_file = xml_file_name_gp.split('.')
         with open("../data/compressed_dcc/" + compressed_file[0] + ".pydcc", "rb") as f:
             dcc_compressed = f.read()
-        dcc_from_compresed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
-        self.assertTrue(dcc_from_compresed_byte_array.is_loaded())
+
+        dcc_from_compressed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
+        self.assertTrue(dcc_from_compressed_byte_array.is_loaded())
 
     def test_mandatoryLang(self):
-        lang = dcco.mandatoryLang()
+        lang = dcco_gp.mandatoryLang()
         self.assertEqual(lang, 'de')
 
     def test_get_calibration_result_by_quantity_id(self):
-        dccno = DCC('../data/Uncertainty2_PyDCC.xml')
-        res = dccno.get_calibration_result_by_quantity_id('MeasRes1_res1_quant1')
-        self.assertEqual(res, ['11111', '\\milli\\metre', 'expandedUnc->uncertainty', '0.11111', ' k:', '2.0'])
+        dcco = DCC('../data/dcc/dcc_ngp_temperature_typical_v12_refType2ID.xml')
+        res = dcco.get_calibration_result_by_quantity_id('basic_measurementError')
+        self.assertEqual(res, ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2'])
 
     def test_get_calibration_results(self):
-        dccno = DCC('../data/Uncertainty2_PyDCC.xml')
-        res = dccno.get_calibration_results()
-        self.assertEqual(res[0], ['  MEAS_RES1_res1',
-                                  ['11111', '\\milli\\metre', 'expandedUnc->uncertainty', '0.11111', ' k:', '2.0']])
-        self.assertEqual(res[1], ['  MEAS_RES1_res1',
-                                  ['22222', '\\milli\\metre', 'expandedUnc->uncertainty', '0.22222', ' k:', '2.0']])
+        res = dcco_gp.get_calibration_results()
+        self.assertEqual(res[0], ['  Messergebnisse  Bezugswert', [['306.248 373.121 448.253 523.319 593.154', '\\kelvin'], ['33.098 99.971 175.103 250.169 320.004', '\\degreecelsius']]])
+        self.assertEqual(res[1], ['  Messergebnisse  Angezeigter Messwert Kalibriergegenstand', [['306.32 373.21 448.36 523.31 593.07', '\\kelvin'], ['33.17 100.06 175.21 250.16 319.92', '\\degreecelsius']]])
+        self.assertEqual(res[2], ['  Messergebnisse  Messabweichung', ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2']])
 
     def test_calibration_date(self):
-        calib_date = dcco.calibration_date()
-        ref_date = datetime.datetime(2021, 10, 27, 0, 0)
+        calib_date = dcco_gp.calibration_date()
+        ref_date = datetime.datetime(1957, 8, 13, 0, 0)
         self.assertEqual(calib_date, ref_date)
 
     def test_days_since_calibration(self):
-        days = dcco.days_since_calibration()
+        days = dcco_gp.days_since_calibration()
         self.assertTrue(days > 40)
 
     def test_calibration_laboratory_name(self):
-        calib_lab_name = dcco.calibration_laboratory_name()
-        ref_lab_name = 'Kalibrierlab XXXXXXXXX'
+        calib_lab_name = dcco_gp.calibration_laboratory_name()
+        ref_lab_name = 'Kalibrierfirma GmbH'
         self.assertEqual(calib_lab_name, ref_lab_name)
 
     def test_uid(self):
-        uid = dcco.uid()
-        self.assertEqual(uid, "XXXXXXXXXXXX")
+        uid = dcco_gp.uid()
+        self.assertEqual(uid, "GP_DCC_temperature_typical_1.2")
 
     def test_version(self):
-        version = dcco.version()
-        self.assertEqual(version, "3.0.0")
+        version = dcco_gp.version()
+        self.assertEqual(version, "3.1.1")
 
     """
     def test_uncertainty_list(self):
@@ -94,7 +93,7 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(exception_rised)
 
     def test_is_not_signed(self):
-        self.assertFalse(dcco.is_signed())
+        self.assertFalse(dcco_gp.is_signed())
 
     def test_is_signed(self):
         xml_file_name = '../data/dcc/signed_siliziumkugel.xml'  # Example from PTB and signed by T-Systems
@@ -102,36 +101,40 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(dcc_signed.is_signed())
 
     def test_compressed_dcc_crc(self):
-        comp_dcc = dcco.generate_compressed_dcc()
+        comp_dcc = dcco_gp.generate_compressed_dcc()
         crc32 = comp_dcc['crc32']
-        self.assertEqual(crc32, 251633089)
+        self.assertEqual(crc32, 2189713291)
 
     def test_compressed_dcc_size(self):
-        comp_dcc = dcco.generate_compressed_dcc()
+        comp_dcc = dcco_gp.generate_compressed_dcc()
         bytes_compressed = comp_dcc['bytes_compressed']
-        self.assertEqual(bytes_compressed, 7826)
+        self.assertEqual(bytes_compressed, 4480)
 
     def test_previous_report_available(self):
-        self.assertTrue(dcco.has_previous_report())
+        self.assertFalse(dcco_gp.has_previous_report())
 
     def test_item_id(self):
+        dcco_v2 = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
+
         id_dict_v2 = {'identifications': {'identification': {'issuer': 'manufacturer', 'value': 'Si28kg_03_a',
                                                              'description': {'content': [{'@lang': 'de', '#text':
                                                                  'Kennnummer'}, {'@lang': 'en', '#text': 'Serial No.'}
                                                                                          ]}}}}
 
-        id_dict_v3 = {'identifications': {'identification': [{'issuer': 'other', 'value': 'XXXXXXXXX',
-                                                              'name': {'content': [{'@lang': 'de',
-                                                                                    '#text': 'Fabrikat/Serien-Nr.'},
-                                                                                   {'@lang': 'en',
-                                                                                    '#text': 'Serial number'}]}},
-                                                             {'issuer': 'manufacturer', 'value': 'itemManufacturer'}]}}
+        id_dict_v3 = {'identifications': {'identification': [{'issuer': 'manufacturer', 'value': 'string-manufacturer-item',
+                                                 'name': {'content': [{'@lang': 'de', '#text': 'Serien Nr.'},
+                                                                      {'@lang': 'en', '#text': 'Serial no.'}]}},
+                                                {'issuer': 'customer', 'value': 'string-customer-item', 'name': {
+                                                    'content': [{'@lang': 'de', '#text': 'Messmittel Nr.'},
+                                                                {'@lang': 'en',
+                                                                 '#text': 'Measurement equipment no.'}]}},
+                                                {'issuer': 'calibrationLaboratory',
+                                                 'value': 'string-calibrationLaboratory-item', 'name': {
+                                                    'content': [{'@lang': 'de', '#text': 'Equipment Nr.'},
+                                                                {'@lang': 'en', '#text': 'Equipment no.'}]}}]}}
 
-        if dcco.version() == '2.4.0':
-            self.assertEqual(dcco.item_id(), id_dict_v2)
-        elif dcco.version() == '3.0.0':
-            self.assertEqual(dcco.item_id(), id_dict_v3)
-
+        self.assertEqual(dcco_v2.item_id(), id_dict_v2)
+        self.assertEqual(dcco_gp.item_id(), id_dict_v3)
 
 #    def test_verify_correct_dcc_xml(self):
 #        self.assertTrue(dcco.verify_dcc_xml())
