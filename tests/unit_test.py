@@ -114,13 +114,6 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertFalse(dcco_gp.has_previous_report())
 
     def test_item_id(self):
-        dcco_v2 = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
-
-        id_dict_v2 = {'identifications': {'identification': {'issuer': 'manufacturer', 'value': 'Si28kg_03_a',
-                                                             'description': {'content': [{'@lang': 'de', '#text':
-                                                                 'Kennnummer'}, {'@lang': 'en', '#text': 'Serial No.'}
-                                                                                         ]}}}}
-
         id_dict_v3 = {'identifications': {'identification': [{'issuer': 'manufacturer', 'value': 'string-manufacturer-item',
                                                  'name': {'content': [{'@lang': 'de', '#text': 'Serien Nr.'},
                                                                       {'@lang': 'en', '#text': 'Serial no.'}]}},
@@ -133,7 +126,6 @@ class TestBaseFunctions(unittest.TestCase):
                                                     'content': [{'@lang': 'de', '#text': 'Equipment Nr.'},
                                                                 {'@lang': 'en', '#text': 'Equipment no.'}]}}]}}
 
-        self.assertEqual(dcco_v2.item_id(), id_dict_v2)
         self.assertEqual(dcco_gp.item_id(), id_dict_v3)
 
 #    def test_verify_correct_dcc_xml(self):
