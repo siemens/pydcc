@@ -113,9 +113,16 @@ def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, up
 		
 	print("%f %s %s" % ( measurement_error, passed, conditional ) )
 
+	return (passed, conditional)
+
+
+overall_passed = True
+overall_conditional = False
+for mse in measurement_error_array:	
+	passed, conditional = measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
+	overall_passed = overall_passed and passed 
+
 	
 
-
-for mse in measurement_error_array:
-	measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
-
+print(" ")
+print("Overall passed: %s" % (overall_passed ) )
