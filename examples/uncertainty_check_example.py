@@ -65,24 +65,18 @@ print(mres)
 
 
 measurement_error_array = mres[0]
-# Mean Squared Error
-investigated_sensor_mse = np.sum(np.power(measurement_error_array,2)) / len(measurement_error_array)
-
-
-print("Sensor Mean Squared Error %.4f K" % investigated_sensor_mse)
-
 laboratory_measurement_uncertainty = mres[3]
 
-print("Lab measurement uncertainty %.4f K" % laboratory_measurement_uncertainty)
+
+print(" ")
+print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
 
 # Verification of results
-measurement_error_requirement = 0.099
+measurement_error_requirement = 0.1
 
-#print("Total actual uncertainty is %.4f K" % uncertainty95_actual)
+print(" ")
+print("Total uncertainty limits are +/- %.4f K" % measurement_error_requirement)
 
-#print("Total uncertainty requirement is a maximum of %.4f K" % uncertainty95_requirement)
-#device_meets_requirements = uncertainty95_actual <= uncertainty95_requirement 
-#print('Device meets requirements:', device_meets_requirements)
 
 
 def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, upper_limit):
@@ -110,19 +104,24 @@ def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, up
 			conditional = False	
 		else:
 			conditional = True	
-		
-	print("%f %s %s" % ( measurement_error, passed, conditional ) )
 
 	return (passed, conditional)
 
 
 overall_passed = True
 overall_conditional = False
+print ("  MSE   Passed  Cond.") 
 for mse in measurement_error_array:	
 	passed, conditional = measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
+	print("%7.3f %5s  %5s" % ( mse, passed, conditional ) )
 	overall_passed = overall_passed and passed 
+	overall_conditional = overall_conditional or conditional
 
-	
 
 print(" ")
-print("Overall passed: %s" % (overall_passed ) )
+print("Overall passed:      %5s" % (overall_passed ) )
+print("Overall conditional: %5s" % (overall_conditional) )
+
+device_meets_requirements = overall_passed and not overall_conditional
+
+print('Device meets requirements:', device_meets_requirements)
