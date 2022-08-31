@@ -20,12 +20,6 @@ sys.path.append("../dcc/")
 from dcc import DCC
 import numpy as np
 
-# Load DCC and create the DCC object (dcco)
-dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
-
-#lang = dcco.mandatoryLang()
-
-
 
 
 def calibration_results_pre_processor(cres):
@@ -55,27 +49,6 @@ def print_results(cres):
    for i in cres:
       print(i)
 
-
-
-cres = dcco.get_calibration_results('en')
-print_results(cres)
-
-mres = search_calibration_results(cres, 'Measurement error')
-print(mres)
-
-
-measurement_error_array = mres[0]
-laboratory_measurement_uncertainty = mres[3]
-
-
-print(" ")
-print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
-
-# Verification of results
-measurement_error_requirement = 0.1
-
-print(" ")
-print("Total uncertainty limits are +/- %.4f K" % measurement_error_requirement)
 
 
 
@@ -108,20 +81,58 @@ def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, up
 	return (passed, conditional)
 
 
-overall_passed = True
-overall_conditional = False
-print ("  MSE   Passed  Cond.") 
-for mse in measurement_error_array:	
-	passed, conditional = measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
-	print("%7.3f %5s  %5s" % ( mse, passed, conditional ) )
-	overall_passed = overall_passed and passed 
-	overall_conditional = overall_conditional or conditional
+
+	
+def evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, measurement_error_requirement):
+
+	print(" ")
+	print(" ")
+	print("Evaluation with required limits at +/- %.3f K" % measurement_error_requirement)
+
+	overall_passed = True
+	overall_conditional = False
+	print ("  MSE   Passed  Cond.") 
+	for mse in measurement_error_array:	
+		passed, conditional = measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
+		print("%7.3f %5s  %5s" % ( mse, passed, conditional ) )
+		overall_passed = overall_passed and passed 
+		overall_conditional = overall_conditional or conditional
 
 
+	print(" ")
+	print("Overall passed:             %5s" % (overall_passed ) )
+	print("Overall conditional:        %5s" % (overall_conditional) )
+
+	device_meets_requirements = overall_passed and not overall_conditional
+
+	print('Device meets requirements:  %5s' % device_meets_requirements)
+ 
+	return device_meets_requirements
+
+
+
+# Load DCC and create the DCC object (dcco)
+dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
+
+#lang = dcco.mandatoryLang()
+
+# Get calibration results 
+cres = dcco.get_calibration_results('en')
+print_results(cres)
+
+# Select data set with measurement error 
+mres = search_calibration_results(cres, 'Measurement error')
+print(mres)
+
+# Select array with measurement results 
+measurement_error_array = mres[0]
+
+# Select meaasurement uncertainty
+laboratory_measurement_uncertainty = mres[3]
 print(" ")
-print("Overall passed:      %5s" % (overall_passed ) )
-print("Overall conditional: %5s" % (overall_conditional) )
+print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
 
-device_meets_requirements = overall_passed and not overall_conditional
-
-print('Device meets requirements:', device_meets_requirements)
+# Execute tests with different requirements
+evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.1)
+evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.16)
+evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.18)
