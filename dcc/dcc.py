@@ -398,6 +398,28 @@ class DCC:
             res = "not ready to read some si result"
         return res
 
+    def get_calibration_result_by_quantity_refType(self, result_refType):
+        res = []
+        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        for a_res_node in all_res_nodes:
+            quantities_with_required_reftype = a_res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
+
+        n = len(quantities_with_required_reftype)
+
+        if n > 0:
+            if n > 1:
+                res.append('more than one quantity has the required refType')
+
+            for quantity in quantities_with_required_reftype:
+                si_nodes = quantity.findall('./{https://ptb.de/si}*')
+                for si_node in si_nodes:
+                    mr = self.__read_si_element(si_node)
+                    res.append(self.__report_si_element(mr))
+        else:
+            res = "no quantity with refType: " + result_refType + " was found in quantities in a result of a DCC"
+
+        return res
+
     def get_calibration_result_by_quantity_id(self, result_id):
         node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" + result_id + "\'" + ']')
         res = []
