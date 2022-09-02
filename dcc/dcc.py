@@ -43,7 +43,8 @@ class DCC:
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
 
         # Load default schema files
-        # self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
+        self.add_schema_file('../data/schema/dcc_3_1_2.xsd')
+        #self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -106,7 +107,7 @@ class DCC:
         with open(file_name, "r") as file:
             self.schema_sources.append(file.read())
 
-    def verify_dcc_xml(self):
+    def verify_dcc_xml(self, xmlschema=None):
         # Verify DCC file
         valid_xml = xmlschema.is_valid(self.xml_file_name, self.schema_sources)
         return valid_xml
@@ -293,6 +294,12 @@ class DCC:
     def __read_si_list(self, node):
         mr = SiList()
         mr.kind = 'list'
+        lmr = []
+        rl = node.find("si:realList", self.name_space)
+        #TBD: festgestellt, dass die Struktuern nicht an den VCMM output passen erster Schritt in die Richtung
+        #TBD: wieder eine rekursive Struktur da si:list in einem si:list stecken kann
+        next_node = rl.find("si:real", self.name_space)
+        lmr = self.__read_si_real(next_node)
         return mr
 
     def __read_si_realListXMLList(self, node):

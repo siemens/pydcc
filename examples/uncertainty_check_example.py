@@ -18,7 +18,7 @@
 import sys
 sys.path.append("../dcc/")
 from dcc import DCC
-import numpy as np
+#import numpy as np
 
 # Load DCC and create the DCC object (dcco)
 dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
@@ -73,4 +73,4 @@ print('Device meets requirements:', device_meets_requirements)
 
 
 uncertainty_list = mres[0]
-print(np.std(uncertainty_list) * 2)
+#print(np.std(uncertainty_list) * 2)
