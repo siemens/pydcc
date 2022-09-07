@@ -18,7 +18,7 @@
 import sys
 sys.path.append("../dcc/")
 from dcc import DCC
-#import numpy as np
+import numpy as np
 
 # Load DCC and create the DCC object (dcco)
 dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
@@ -57,20 +57,29 @@ def print_results(cres):
 
 
 cres = dcco.get_calibration_results('en')
-#print_results(cres)
+print_results(cres)
 
 mres = search_calibration_results(cres, 'Measurement error')
 print(mres)
 
+
+measurement_error_array = mres[0]
+# Mean Squared Error
+investigated_sensor_mse = np.sum(np.power(measurement_error_array,2)) / len(measurement_error_array)
+
+
+print("Sensor Mean Squared Error %.4f K" % investigated_sensor_mse)
+
+laboratory_measurement_uncertainty = mres[3]
+
+print("Lab measurement uncertainty %.4f K" % laboratory_measurement_uncertainty)
+
 # Verification of results
 uncertainty95_requirement = 0.071
-uncertainty95_actual = mres[3]
+uncertainty95_actual = np.sqrt( laboratory_measurement_uncertainty ** 2  + investigated_sensor_mse ** 2 ) 
 
-print("Uncertainty requirement is a maximum of %.3f" % uncertainty95_requirement)
-print("Actual uncertainty is %.3f" % uncertainty95_actual)
+print("Total actual uncertainty is %.4f K" % uncertainty95_actual)
+
+print("Total uncertainty requirement is a maximum of %.4f K" % uncertainty95_requirement)
 device_meets_requirements = uncertainty95_actual <= uncertainty95_requirement 
 print('Device meets requirements:', device_meets_requirements)
-
-
-uncertainty_list = mres[0]
-#print(np.std(uncertainty_list) * 2)

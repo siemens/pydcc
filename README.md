@@ -1,6 +1,6 @@
 # Python library for reading and evaluating digital calibration certificates (DCC) 
 
-Library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC version 2.4.0 [1]. Version 3.0.0 [3] is not supported yet.
+Library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC version 3.0.0 [3]. This collaborative work was introduced by a talk given at the 2nd DCC conference [4].
 
 Out of scope: PyDCC is not inteded to modify or generate DCCs.
 
@@ -37,6 +37,8 @@ Further, the [contibution guide](CONTRIBUTING.md) explains how one can contibute
 
 [3] Official release of the digital calibration certificate (DCC) in version 3.0.0 https://www.ptb.de/dcc/v3.0.0/
 
+[4] Andreas Tobola, Introducing PyDCC – a Python module for the DCC, 2nd international DCC-Conference 01 - 03 March 2022 Proceedings, Publisher: Physikalisch-Technische Bundesanstalt (PTB), DOI 10.7795/820.20220411, 2022
+ 
 ## Links
 
 Main page to the DCC https://www.ptb.de/dcc
