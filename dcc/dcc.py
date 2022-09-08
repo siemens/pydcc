@@ -12,7 +12,7 @@
 # See the LICENSE file in the top-level directory.
 #
 
-# import xmlschema
+import xmlschema
 import datetime
 import xml.etree.ElementTree as ET
 import zlib
@@ -43,7 +43,7 @@ class DCC:
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
 
         # Load default schema files
-        # self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
+        self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:

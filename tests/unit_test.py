@@ -128,13 +128,13 @@ class TestBaseFunctions(unittest.TestCase):
 
         self.assertEqual(dcco_gp.item_id(), id_dict_v3)
 
-#    def test_verify_correct_dcc_xml(self):
-#        self.assertTrue(dcco.verify_dcc_xml())
+    def test_verify_correct_dcc_xml(self):
+        self.assertTrue(dcco_gp.verify_dcc_xml())
 
-#    def test_verify_incorrect_dcc_xml(self):
-#        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
-#        dcco_wrong_schema = dcc(xml_file_name_wrong_schema)
-#        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
+    def test_verify_incorrect_dcc_xml(self):
+        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
+        dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
+        self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
 # Work in progress
 

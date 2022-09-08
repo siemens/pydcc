@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<dcc:digitalCalibrationCertificate xmlns:dcc="https://ptb.de/dcc"
+<dcc:digitalCalibrationCertificate xmlns:dcc="dcc_3_0_0.xsd"
                                  	xmlns:si="https://ptb.de/si"
                                  	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                                  	schemaVersion="2.4.0"
-                                 	xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v2.4.0/dcc.xsd">
+                                 	xsi:schemaLocation="dcc_3_0_0.xsd dcc_3_0_0.xsd">
 	<!--
     Copyright (c) 2019 - Physikalisch-Technische Bundesanstalt, alle Rechte vorbehalten - all rights reserved
 
