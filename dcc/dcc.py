@@ -17,9 +17,11 @@ import datetime
 import xml.etree.ElementTree as ET
 import zlib
 from collections import defaultdict
+#import os
 
 import requests
 
+#os.chdir('C:\PyDCC\pydcc2\pydcc\dcc')
 
 class DCC:
 
@@ -45,10 +47,10 @@ class DCC:
         # Load default schema files
         #self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
 
-        self.add_schema_file('../data/schema/dcc_3_1_2.xsd')
+        #self.add_schema_file('../data/schema/dcc_3_1_2.xsd')
         #self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
         #self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
-        #self.add_schema_file('../data/schema/SI_Format_2.xsd')
+        self.add_schema_file('../data/schema/SI_Format_2.xsd')
 
         if xml_file_name is not None:
             self.load_dcc_from_xml_file()
@@ -110,7 +112,7 @@ class DCC:
         with open(file_name, "r") as file:
             self.schema_sources.append(file.read())
 
-    def verify_dcc_xml(self, xmlschema=None):
+    def verify_dcc_xml(self):
         # Verify DCC file
         valid_xml = xmlschema.is_valid(self.xml_file_name, self.schema_sources)
         return valid_xml
@@ -429,27 +431,61 @@ class DCC:
             res = "not ready to read some si result"
         return res
 
-    def get_calibration_result_by_quantity_refType(self, result_refType):
+    def get_calibration_result_by_quantity_refType3(self, result_refType):
         res = []
         #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
         all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
 
-        for a_res_node in all_res_nodes:
-            quantities_with_required_reftype = a_res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
-
-        n = len(quantities_with_required_reftype)
-
-        if n > 0:
-            if n > 1:
-                res.append('more than one quantity has the required refType')
-
-            for quantity in quantities_with_required_reftype:
-                si_nodes = quantity.findall('./{https://ptb.de/si}*')
+        for res_node in all_res_nodes:
+            quants = res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
+            for quant in quants:
+                si_nodes = quant.findall('./{https://ptb.de/si}*')
                 for si_node in si_nodes:
-                    mr = self.__read_si_element(si_node)
-                    res.append(self.__report_si_element(mr))
+                    res.append(self.etree_to_dict(si_node))
+
+        if len(res) > 1:
+            return ('more than one qantity has the refType ' + result_refType + '.')
         else:
-            res = "no quantity with refType: " + result_refType + " was found in quantities in a result of a DCC"
+            return (res)
+
+
+
+    def get_calibration_result_by_quantity_refType2(self, result_refType):
+        res = []
+        quants = self.root.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
+
+        if len(quants) > 1:
+            return ('more than one qantity has the refType ' + result_refType + '.')
+
+        else:
+            for quant in quants:
+                si_nodes = quant.findall('./{https://ptb.de/si}*')
+                for si_node in si_nodes:
+                    res.append(self.etree_to_dict(si_node))
+        return(res)
+
+    def get_calibration_result_by_quantity_refType(self, result_refType):
+        res = []
+        quantities_with_required_reftype = []
+        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
+
+        for a_res_node in all_res_nodes:
+            quantities_with_required_reftype += [a_res_node.find('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')]
+
+        for i in quantities_with_required_reftype:
+            n = len(i)
+            if n > 0:
+                if n > 1:
+                    res.append('more than one quantity has the required refType')
+                for quantity in i:
+                    si_nodes = quantity.findall('./{https://ptb.de/si}*')
+                    for si_node in si_nodes:
+                        #mr = self.__read_si_element(si_node)
+                        #res.append(self.__report_si_element(mr))
+                        res.append(self.etree_to_dict(si_node))
+            else:
+                res = "no quantity with refType: " + result_refType + " was found in quantities in a result of a DCC"
 
         return res
 
@@ -459,8 +495,9 @@ class DCC:
         if node is not None:
             si_nodes = node.findall('./{https://ptb.de/si}*')
             for si_node in si_nodes:
-                mr = self.__read_si_element(si_node)
-                res = self.__report_si_element(mr)
+                #mr = self.__read_si_element(si_node)
+                #res = self.__report_si_element(mr)
+                res = self.etree_to_dict(si_node)
         else:
             res = "quantity with id: " + result_id + "not found in DCC"
         return res
@@ -596,7 +633,6 @@ class dcc(DCC):
 
 #if __name__=='__main__':
     #dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
-    #dcco.get_calibration_result_by_quantity_refType('blup')
     #res = dcco.get_calibration_result_by_quantity_refType('basic_measurementError')
     #print("function that extracts information of a quantity with refType: basic_measurementError")
     #print(res)
