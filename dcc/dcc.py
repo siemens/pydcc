@@ -589,12 +589,3 @@ class SiRealListXMLList(SI):
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""
     pass
-
-if __name__=='__main__':
-    dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
-    dcco.get_calibration_result_by_quantity_refType('blup')
-    res = dcco.get_calibration_result_by_quantity_refType('basic_measurementError')
-    print("function that extracts information of a quantity with refType: basic_measurementError")
-    print(res)
-    print(dcco.verify_dcc_xml())
-    print('done')
