@@ -47,13 +47,28 @@ class TestBaseFunctions(unittest.TestCase):
     def test_get_calibration_result_by_quantity_id(self):
         dcco = DCC('../data/dcc/dcc_ngp_temperature_typical_v12_refType2ID.xml')
         res = dcco.get_calibration_result_by_quantity_id('basic_measurementError')
-        self.assertEqual(res, ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2'])
+        self.assertEqual(res, {'realListXMLList': {'valueXMLList': '0.072 0.089 0.107 -0.009 -0.084', 'unitXMLList': '\\kelvin',
+                             'expandedUncXMLList': {'uncertaintyXMLList': '0.061', 'coverageFactorXMLList': '2',
+                                                    'coverageProbabilityXMLList': '0.95',
+                                                    'distributionXMLList': 'normal'}}})
 
     def test_get_calibration_results(self):
         res = dcco_gp.get_calibration_results()
-        self.assertEqual(res[0], ['  Messergebnisse  Bezugswert', [['306.248 373.121 448.253 523.319 593.154', '\\kelvin'], ['33.098 99.971 175.103 250.169 320.004', '\\degreecelsius']]])
-        self.assertEqual(res[1], ['  Messergebnisse  Angezeigter Messwert Kalibriergegenstand', [['306.32 373.21 448.36 523.31 593.07', '\\kelvin'], ['33.17 100.06 175.21 250.16 319.92', '\\degreecelsius']]])
-        self.assertEqual(res[2], ['  Messergebnisse  Messabweichung', ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2']])
+        self.assertEqual(res[0], [' Messergebnisse Bezugswert', [['306.248 373.121 448.253 523.319 593.154', '\\kelvin'], ['33.098 99.971 175.103 250.169 320.004', '\\degreecelsius']]])
+        self.assertEqual(res[1], [' Messergebnisse Angezeigter Messwert Kalibriergegenstand', [['306.32 373.21 448.36 523.31 593.07', '\\kelvin'], ['33.17 100.06 175.21 250.16 319.92', '\\degreecelsius']]])
+        self.assertEqual(res[2], [' Messergebnisse Messabweichung', ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', 'k:', '2']])
+
+    def test_get_calibration_results2(self):
+        res = dcco_gp.get_calibration_results2('name')
+        self.assertEqual(res[0], [' Messergebnisse Bezugswert', {'hybrid': {'realListXMLList': [{'valueXMLList': '306.248 373.121 448.253 523.319 593.154', 'unitXMLList': '\\kelvin'}, {'valueXMLList': '33.098 99.971 175.103 250.169 320.004', 'unitXMLList': '\\degreecelsius'}]}}])
+        self.assertEqual(res[1], [' Messergebnisse Angezeigter Messwert Kalibriergegenstand', {'hybrid': {'realListXMLList': [{'valueXMLList': '306.32 373.21 448.36 523.31 593.07', 'unitXMLList': '\\kelvin'}, {'valueXMLList': '33.17 100.06 175.21 250.16 319.92', 'unitXMLList': '\\degreecelsius'}]}}])
+        self.assertEqual(res[2], [' Messergebnisse Messabweichung', {'realListXMLList': {'valueXMLList': '0.072 0.089 0.107 -0.009 -0.084', 'unitXMLList': '\\kelvin', 'expandedUncXMLList': {'uncertaintyXMLList': '0.061', 'coverageFactorXMLList': '2', 'coverageProbabilityXMLList': '0.95', 'distributionXMLList': 'normal'}}}])
+
+        res = dcco_gp.get_calibration_results2('refType')
+        self.assertEqual(res[0], [{'refType': 'basic_referenceValue'}, {'hybrid': {'realListXMLList': [{'valueXMLList': '306.248 373.121 448.253 523.319 593.154', 'unitXMLList': '\\kelvin'},{'valueXMLList': '33.098 99.971 175.103 250.169 320.004','unitXMLList': '\\degreecelsius'}]}}])
+        self.assertEqual(res[1], [{'refType': 'basic_measuredValue'}, {'hybrid': {'realListXMLList': [{'valueXMLList': '306.32 373.21 448.36 523.31 593.07', 'unitXMLList': '\\kelvin'},{'valueXMLList': '33.17 100.06 175.21 250.16 319.92', 'unitXMLList': '\\degreecelsius'}]}}])
+        self.assertEqual(res[2], [{'refType': 'basic_measurementError'}, {'realListXMLList': {'valueXMLList': '0.072 0.089 0.107 -0.009 -0.084', 'unitXMLList': '\\kelvin', 'expandedUncXMLList': {'uncertaintyXMLList': '0.061', 'coverageFactorXMLList': '2', 'coverageProbabilityXMLList': '0.95', 'distributionXMLList': 'normal'}}}])
+
 
     def test_calibration_date(self):
         calib_date = dcco_gp.calibration_date()

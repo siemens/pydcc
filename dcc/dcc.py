@@ -435,7 +435,6 @@ class DCC:
         res = []
         #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
         all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
-
         for res_node in all_res_nodes:
             quants = res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
             for quant in quants:
@@ -444,11 +443,9 @@ class DCC:
                     res.append(self.etree_to_dict(si_node))
 
         if len(res) > 1:
-            return ('more than one qantity has the refType ' + result_refType + '.')
+            return (['more than one qantity has the refType ' + result_refType + '.', res])
         else:
             return (res)
-
-
 
     def get_calibration_result_by_quantity_refType2(self, result_refType):
         res = []
@@ -467,8 +464,8 @@ class DCC:
     def get_calibration_result_by_quantity_refType(self, result_refType):
         res = []
         quantities_with_required_reftype = []
-        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
-        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
+        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
 
         for a_res_node in all_res_nodes:
             quantities_with_required_reftype += [a_res_node.find('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')]
@@ -509,7 +506,7 @@ class DCC:
         else:
             local_name = node.find('dcc:name/dcc:content', self.name_space)
             if local_name is not None:
-                name = name + '  ' + local_name.text
+                name = name + ' ' + local_name.text
         return name
 
     def __find_quantities_in_lists(self, node, quant, name, lang):
@@ -537,6 +534,28 @@ class DCC:
             if si_node is not None:
                 mr = self.__read_si_element(si_node)
                 local_res = [quant[1], self.__report_si_element(mr)]
+                res.append(local_res)
+        return res
+
+    def get_calibration_results2(self, type, lang=''):
+        quantities = []
+        res = []
+        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
+                                         self.name_space)
+        for result in result_nodes:
+            data_node = result.find('dcc:data', self.name_space)
+            name = ''
+            name = self.__read_name(result, name, lang)
+            for nodes in data_node:
+                self.__find_quantities_in_lists(nodes, quantities, name, lang)
+
+        for quant in quantities:
+            si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
+            if si_node is not None:
+                if type == 'refType':
+                    local_res = [quant[0].attrib, self.etree_to_dict(si_node)]
+                else:
+                    local_res = [quant[1], self.etree_to_dict(si_node)]
                 res.append(local_res)
         return res
 
