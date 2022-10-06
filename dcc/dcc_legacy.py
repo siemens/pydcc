@@ -165,19 +165,19 @@ class DCC:
         # Return DCC version
         return self.dcc_version
 
-    def uncertainty_list(self):
-        # Derive uncertainty from DCC
-        results = self.root.find("dcc:measurementResults/dcc:measurementResult/dcc:results", self.name_space)
-        unc_list = []
-        for result in results:
-            result_name = result.find("dcc:name/dcc:content", self.name_space)
-            result_data_list = result.find("dcc:data/dcc:list", self.name_space)
-            for result_data in result_data_list:
-                real_val = result_data.find("si:real/si:value", self.name_space)
-                unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
-                if not real_val == None:
-                    unc_list.append([result_name.text, unc.text])
-        return unc_list
+  #  def uncertainty_list(self):
+  #      # Derive uncertainty from DCC
+  #      results = self.root.find("dcc:measurementResults/dcc:measurementResult/dcc:results", self.name_space)
+  #      unc_list = []
+  #      for result in results:
+  #          result_name = result.find("dcc:name/dcc:content", self.name_space)
+  #          result_data_list = result.find("dcc:data/dcc:list", self.name_space)
+  #          for result_data in result_data_list:
+  #              real_val = result_data.find("si:real/si:value", self.name_space)
+  #              unc = result_data.find("si:real/si:expandedUnc/si:uncertainty", self.name_space)
+  #              if not real_val == None:
+  #                  unc_list.append([result_name.text, unc.text])
+  #      return unc_list
 
     def has_previous_report(self):
         # Check for previous report
@@ -225,6 +225,212 @@ class DCC:
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
 
+   # def __read_si_complex(self, node):
+   #     # das ist auch nur eine der beiden Arten der komplexen Zahlen :-(
+   #     mr = SiComplex()
+   #     mr.kind = 'complex'
+   #     mr.valueRe = node.find("si:valueReal", self.name_space).text
+   #     mr.valueIm = node.find("si:valueImag", self.name_space).text
+   #     mr.unit = node.find("si:unit", self.name_space).text
+   #     return mr
+
+    def __read_exp_U_List(self, node):
+        exp_u_list = ExpandedU()
+        unc_node = node.find("si:uncertaintyXMLList", self.name_space)
+        exp_u_list.U = unc_node.text
+        a = len('{https://ptb.de/si}')
+        exp_u_list.kind = node.tag[a:] + '->' + unc_node.tag[a:]
+        exp_u_list.k = node.find("si:coverageFactorXMLList", self.name_space).text
+        exp_u_list.coverage = node.find("si:coverageProbabilityXMLList", self.name_space).text
+        return exp_u_list
+
+    def __read_exp_U(self, node):
+        exp_u = ExpandedU()
+        unc_node = node.find("si:uncertainty", self.name_space)
+        exp_u.U = unc_node.text
+        a = len('{https://ptb.de/si}')
+        exp_u.kind = node.tag[a:] + '->' + unc_node.tag[a:]
+        exp_u.k = node.find("si:coverageFactor", self.name_space).text
+        exp_u.coverage = node.find("si:coverageProbability", self.name_space).text
+        return exp_u
+
+    def __read_covInt(self, node):
+        cov_int_u = CoverageInt()
+        std_unc_node = node.find("si:standardUnc", self.name_space)
+        cov_int_u.standard_u = std_unc_node.text
+        a = len('{https://ptb.de/si}')
+        cov_int_u.kind = node.tag[a:] + '->' + std_unc_node.tag[a:]
+        cov_int_u.int_min = node.find("si:intervalMin", self.name_space).text
+        cov_int_u.int_max = node.find("si:intervalMax", self.name_space).text
+        cov_int_u.coverage = node.find("si:coverageProbability", self.name_space).text
+        return cov_int_u
+
+    def __read_si_real(self, node):
+        mr = SiReal()
+        mr.kind = 'real'
+        mr.label = None
+        label_node = node.find("si:label", self.name_space)
+        if label_node is not None:
+            mr.label = label_node.text
+
+        mr.value = node.find("si:value", self.name_space).text
+        mr.unit = node.find("si:unit", self.name_space).text
+        u_node = node.find("si:expandedUnc", self.name_space)
+        if u_node is not None:
+            mr.unc = self.__read_exp_U(u_node)
+        else:
+            u_node = node.find("si:coverageInterval", self.name_space)
+            if u_node is not None:
+                mr.unc = self.__read_covInt(u_node)
+            else:
+                mr.unc = None
+        return mr
+
+    def __read_si_hybrid(self, node):
+        mr = SiHybrid()
+        mr.kind = 'hybrid'
+        mr.list = []
+        nodes = node.findall('{https://ptb.de/si}*', self.name_space)
+        for node2 in nodes:
+           mr2 = self.__read_si_element(node2)
+           mr.list.append(mr2)
+        return mr
+
+    def __read_si_list(self, node):
+        mr = SiList()
+        mr.kind = 'list'
+        mr.label = []
+        mr.values = []
+        mr.units = []
+        mr.uncs = []
+        mr.unc_kind = []
+        mr.unc_k =[]
+        rl = node.find("si:realList", self.name_space)
+        #TBD: festgestellt, dass die Struktuern nicht an den VCMM output passen erster Schritt in die Richtung
+        #TBD: wieder eine rekursive Struktur da si:list in einem si:list stecken kann
+        #TBD ester schritt, um die VCMM resulate lesen zu können
+        next_nodes = rl.findall("si:real", self.name_space)
+        for node in next_nodes:
+            lmr = []
+            lmr = self.__read_si_real(node)
+            mr.values.append(lmr.value)
+            mr.units.append(lmr.unit)
+            mr.label.append(lmr.label)
+            mr.unc_kind.append(lmr.unc.kind)
+            mr.uncs.append(lmr.unc.U)
+            mr.unc_k.append(lmr.unc.k)
+
+
+        return mr
+
+    def __read_si_realListXMLList(self, node):
+        mr = SiRealListXMLList()
+        mr.kind = 'realListXMLList'
+        mr.values = node.find("si:valueXMLList", self.name_space).text
+        mr.unit = node.find("si:unitXMLList", self.name_space).text
+        u_node = node.find("si:expandedUncXMLList", self.name_space)
+        if u_node is not None:
+            mr.uncs = self.__read_exp_U_List(u_node)
+        else:
+            u_node = node.find("si:coverageIntervalXMLList", self.name_space)
+            if u_node is not None:
+                mr.uncs = self.__read_covInt(u_node)
+            else:
+                mr.uncs = None
+        return mr
+
+    def __read_si_element(self, node):
+        mr = []
+        if node.tag == '{https://ptb.de/si}real':
+            mr = self.__read_si_real(node)
+        elif node.tag == '{https://ptb.de/si}list':
+            mr = self.__read_si_list(node)
+        elif node.tag == '{https://ptb.de/si}hybrid':
+            mr = self.__read_si_hybrid(node)
+        elif node.tag == '{https://ptb.de/si}complex':
+            mr = self.__read_si_complex(node)
+        elif node.tag == '{https://ptb.de/si}constant':
+            print('TODO take care of constant')
+        elif node.tag == '{https://ptb.de/si}realListXMLList':
+            mr = self.__read_si_realListXMLList(node)
+        return mr
+
+    def __report_si_real(self, mr):
+        real_res = []
+        if mr.label is not None:
+            real_res.append(mr.label)
+
+        real_res.append(mr.value)
+        real_res.append(mr.unit)
+        if mr.unc is not None:
+            real_res.append(mr.unc.kind)
+            if mr.unc.kind == 'expandedUnc->uncertainty':
+                real_res.append(mr.unc.U)
+                real_res.append(' k:')
+                real_res.append(mr.unc.k)
+            elif mr.unc.kind == 'coverageInterval->standardUnc':
+                real_res.append(mr.unc.standard_u)
+        return real_res
+
+    def __report_si_complex(self, mr):
+        complex_res =[]
+        complex_res.append('Re')
+        complex_res.append(mr.valueRe)
+        complex_res.append('Im')
+        complex_res.append(mr.valueIm)
+        complex_res.append(mr.unit)
+        return complex_res
+
+    def __report_si_hybrid(self, mr):
+        hybrid_res = []
+        for element in mr.list:
+             hybrid_res.append(self.__report_si_element(element))
+        return hybrid_res
+
+    def __report_si_list(self, mr):
+        list_res = []
+        print(len(mr.label))
+
+
+        list_res.append(mr.label)
+        list_res.append(mr.values)
+        list_res.append(mr.units)
+        list_res.append(mr.unc_kind)
+        list_res.append(mr.uncs)
+        list_res.append(mr.unc_k)
+
+        return list_res
+
+    def __report_si_realListXMLList(self, mr):
+        xml_real_list_res = []
+        xml_real_list_res.append(mr.values)
+        xml_real_list_res.append(mr.unit)
+        if mr.uncs is not None:
+            xml_real_list_res.append(mr.uncs.kind)
+            if mr.uncs.kind == 'expandedUncXMLList->uncertaintyXMLList':
+                xml_real_list_res.append(mr.uncs.U)
+                xml_real_list_res.append('k:')
+                xml_real_list_res.append(mr.uncs.k)
+            elif mr.uncs.kind == 'coverageIntervalXMLList->standardUncXMLList':
+                xml_real_list_res.append(mr.unc.standard_u)
+        return xml_real_list_res
+
+    def __report_si_element(self, mr):
+        res = []
+        if mr.kind == 'real':
+            res = self.__report_si_real(mr)
+        elif mr.kind == 'complex':
+            res = self.__report_si_complex(mr)
+        elif mr.kind == 'hybrid':
+            res = self.__report_si_hybrid(mr)
+        elif mr.kind == 'list':
+            res = self.__report_si_list(mr)
+        elif mr.kind == 'realListXMLList':
+            res = self.__report_si_realListXMLList(mr)
+        else:
+            res = "not ready to read some si result"
+        return res
+
     def get_calibration_result_by_quantity_refType3(self, result_refType):
         res = []
         #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
@@ -255,12 +461,39 @@ class DCC:
                     res.append(self.etree_to_dict(si_node))
         return(res)
 
+    def get_calibration_result_by_quantity_refType(self, result_refType):
+        res = []
+        quantities_with_required_reftype = []
+        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
+
+        for a_res_node in all_res_nodes:
+            quantities_with_required_reftype += [a_res_node.find('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')]
+
+        for i in quantities_with_required_reftype:
+            n = len(i)
+            if n > 0:
+                if n > 1:
+                    res.append('more than one quantity has the required refType')
+                for quantity in i:
+                    si_nodes = quantity.findall('./{https://ptb.de/si}*')
+                    for si_node in si_nodes:
+                        #mr = self.__read_si_element(si_node)
+                        #res.append(self.__report_si_element(mr))
+                        res.append(self.etree_to_dict(si_node))
+            else:
+                res = "no quantity with refType: " + result_refType + " was found in quantities in a result of a DCC"
+
+        return res
+
     def get_calibration_result_by_quantity_id(self, result_id):
         node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" + result_id + "\'" + ']')
         res = []
         if node is not None:
             si_nodes = node.findall('./{https://ptb.de/si}*')
             for si_node in si_nodes:
+                #mr = self.__read_si_element(si_node)
+                #res = self.__report_si_element(mr)
                 res = self.etree_to_dict(si_node)
         else:
             res = "quantity with id: " + result_id + "not found in DCC"
@@ -284,7 +517,27 @@ class DCC:
             for next_node in node:
                 self.__find_quantities_in_lists(next_node, quant, name, lang)
 
-    def get_calibration_results(self, type, lang=''):
+    def get_calibration_results(self, lang=' '):
+        res = []
+        quantities = []
+
+        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result', self.name_space)
+        for result in result_nodes:
+            name = ''
+            name = self.__read_name(result, name, lang)
+            data_node = result.find('dcc:data', self.name_space)
+            for nodes in data_node:
+                self.__find_quantities_in_lists(nodes, quantities, name, lang)
+
+        for quant in quantities:
+            si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
+            if si_node is not None:
+                mr = self.__read_si_element(si_node)
+                local_res = [quant[1], self.__report_si_element(mr)]
+                res.append(local_res)
+        return res
+
+    def get_calibration_results2(self, type, lang=''):
         quantities = []
         res = []
         result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
@@ -334,6 +587,63 @@ class DCC:
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.etree_to_dict(id_list)
+
+
+class U:
+    def _init__(self):
+        self.kind = None
+        self.coverage = None
+        self.distribution = None
+
+
+class CoverageInt(U):
+    def _init__(self):
+        self.standard_u = None
+        self.int_min = None
+        self.int_max = None
+
+
+class ExpandedU(U):
+    def _init__(self):
+        self.U = None
+        self.k = None
+
+
+class SI:
+    def __init__(self):
+        self.label = None
+        self.kind = None
+        self.unit = None
+
+
+class SiReal(SI):
+    def __init__(self):
+        self.value = None
+        self.unc = None
+
+
+class SiComplex(SI):
+    def __init__(self):
+        self.valueRe = None
+        self.valueIm = None
+
+
+class SiHybrid(SI):
+    def __init__(self):
+        self.list = None
+
+
+class SiList(SI):
+    def __init__(self):
+        self.values = None
+        self.units =None
+        self.uncs = None
+
+
+class SiRealListXMLList(SI):
+    def __init__(self):
+        self.values = None
+        self.uncs = None
 
 
 class dcc(DCC):
