@@ -47,13 +47,13 @@ class TestBaseFunctions(unittest.TestCase):
     def test_get_calibration_result_by_quantity_id(self):
         dcco = DCC('../data/dcc/dcc_ngp_temperature_typical_v12_refType2ID.xml')
         res = dcco.get_calibration_result_by_quantity_id('basic_measurementError')
-        self.assertEqual(res, ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2'])
+        self.assertEqual(res, ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', 'k:', '2'])
 
     def test_get_calibration_results(self):
         res = dcco_gp.get_calibration_results()
         self.assertEqual(res[0], ['  Messergebnisse  Bezugswert', [['306.248 373.121 448.253 523.319 593.154', '\\kelvin'], ['33.098 99.971 175.103 250.169 320.004', '\\degreecelsius']]])
         self.assertEqual(res[1], ['  Messergebnisse  Angezeigter Messwert Kalibriergegenstand', [['306.32 373.21 448.36 523.31 593.07', '\\kelvin'], ['33.17 100.06 175.21 250.16 319.92', '\\degreecelsius']]])
-        self.assertEqual(res[2], ['  Messergebnisse  Messabweichung', ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', ' k:', '2']])
+        self.assertEqual(res[2], ['  Messergebnisse  Messabweichung', ['0.072 0.089 0.107 -0.009 -0.084', '\\kelvin', 'expandedUncXMLList->uncertaintyXMLList', '0.061', 'k:', '2']])
 
     def test_calibration_date(self):
         calib_date = dcco_gp.calibration_date()
@@ -103,7 +103,7 @@ class TestBaseFunctions(unittest.TestCase):
     def test_compressed_dcc_crc(self):
         comp_dcc = dcco_gp.generate_compressed_dcc()
         crc32 = comp_dcc['crc32']
-        self.assertEqual(crc32, 2189713291)
+        self.assertEqual(crc32, 4136415575)
 
     def test_compressed_dcc_size(self):
         comp_dcc = dcco_gp.generate_compressed_dcc()
@@ -132,7 +132,7 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(dcco_gp.verify_dcc_xml())
 
     def test_verify_incorrect_dcc_xml(self):
-        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
+        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml'# Example from PTB
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
         self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
