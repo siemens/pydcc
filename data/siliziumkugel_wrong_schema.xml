@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dcc:digitalCalibrationCertificate
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="dcc_3_0_0.xsd dcc_3_0_0.xsd"
-        xmlns:dcc="dcc_3_0_0.xsd"
+        xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v2.4.0/dcc.xsd"
+        xmlns:dcc="https://ptb.de/dcc"
         xmlns:si="https://ptb.de/si"
         schemaVersion="2.4.0">
 
