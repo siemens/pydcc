@@ -12,7 +12,7 @@
 # See the LICENSE file in the top-level directory.
 #
 
-# import xmlschema
+import xmlschema
 import datetime
 import xml.etree.ElementTree as ET
 import zlib
@@ -43,7 +43,7 @@ class DCC:
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
 
         # Load default schema files
-        # self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
+        self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -293,6 +293,28 @@ class DCC:
     def __read_si_list(self, node):
         mr = SiList()
         mr.kind = 'list'
+        mr.label = []
+        mr.values = []
+        mr.units = []
+        mr.uncs = []
+        mr.unc_kind = []
+        mr.unc_k =[]
+        rl = node.find("si:realList", self.name_space)
+        #TBD: festgestellt, dass die Struktuern nicht an den VCMM output passen erster Schritt in die Richtung
+        #TBD: wieder eine rekursive Struktur da si:list in einem si:list stecken kann
+        #TBD ester schritt, um die VCMM resulate lesen zu können
+        next_nodes = rl.findall("si:real", self.name_space)
+        for node in next_nodes:
+            lmr = []
+            lmr = self.__read_si_real(node)
+            mr.values.append(lmr.value)
+            mr.units.append(lmr.unit)
+            mr.label.append(lmr.label)
+            mr.unc_kind.append(lmr.unc.kind)
+            mr.uncs.append(lmr.unc.U)
+            mr.unc_k.append(lmr.unc.k)
+
+
         return mr
 
     def __read_si_realListXMLList(self, node):
@@ -360,7 +382,17 @@ class DCC:
         return hybrid_res
 
     def __report_si_list(self, mr):
-        list_res = ['reading silist not implemented']
+        list_res = []
+        print(len(mr.label))
+
+
+        list_res.append(mr.label)
+        list_res.append(mr.values)
+        list_res.append(mr.units)
+        list_res.append(mr.unc_kind)
+        list_res.append(mr.uncs)
+        list_res.append(mr.unc_k)
+
         return list_res
 
     def __report_si_realListXMLList(self, mr):
@@ -371,7 +403,7 @@ class DCC:
             xml_real_list_res.append(mr.uncs.kind)
             if mr.uncs.kind == 'expandedUncXMLList->uncertaintyXMLList':
                 xml_real_list_res.append(mr.uncs.U)
-                xml_real_list_res.append(' k:')
+                xml_real_list_res.append('k:')
                 xml_real_list_res.append(mr.uncs.k)
             elif mr.uncs.kind == 'coverageIntervalXMLList->standardUncXMLList':
                 xml_real_list_res.append(mr.unc.standard_u)
@@ -385,10 +417,36 @@ class DCC:
             res = self.__report_si_complex(mr)
         elif mr.kind == 'hybrid':
             res = self.__report_si_hybrid(mr)
+        elif mr.kind == 'list':
+            res = self.__report_si_list(mr)
         elif mr.kind == 'realListXMLList':
             res = self.__report_si_realListXMLList(mr)
         else:
             res = "not ready to read some si result"
+        return res
+
+    def get_calibration_result_by_quantity_refType(self, result_refType):
+        res = []
+        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
+
+        for a_res_node in all_res_nodes:
+            quantities_with_required_reftype = a_res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
+
+        n = len(quantities_with_required_reftype)
+
+        if n > 0:
+            if n > 1:
+                res.append('more than one quantity has the required refType')
+
+            for quantity in quantities_with_required_reftype:
+                si_nodes = quantity.findall('./{https://ptb.de/si}*')
+                for si_node in si_nodes:
+                    mr = self.__read_si_element(si_node)
+                    res.append(self.__report_si_element(mr))
+        else:
+            res = "no quantity with refType: " + result_refType + " was found in quantities in a result of a DCC"
+
         return res
 
     def get_calibration_result_by_quantity_id(self, result_id):
@@ -406,7 +464,7 @@ class DCC:
     def __read_name(self, node, name, lang):
         local_name = node.find('dcc:name/dcc:content[@lang=' + "\'" + lang + "\'" + ']', self.name_space)
         if local_name is not None:
-            name = name + '  ' + local_name.text
+            name = name + ' ' + local_name.text
         else:
             local_name = node.find('dcc:name/dcc:content', self.name_space)
             if local_name is not None:
@@ -518,6 +576,7 @@ class SiHybrid(SI):
 class SiList(SI):
     def __init__(self):
         self.values = None
+        self.units =None
         self.uncs = None
 
 
