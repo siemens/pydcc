@@ -25,7 +25,7 @@ def _load_dcc_version_info_file_to_dict(raise_errors: bool = False) -> Dict:
     """
     Loads the dcc_version_info file and returns it as python dictonary
 
-    :param raise_errors:
+    :param raise_errors: If False, error messages are suppressed and a False is returned.
     :return: dcc_version_info file as dictonary
     """
     try:
@@ -54,7 +54,7 @@ def _get_actual_list_ddc_xsd_releases_from_server(url: str, raise_errors: bool =
         data = requests.get(url, allow_redirects=True)
     except Exception as e:
         if raise_errors:
-            print(e)
+            raise e
         return False
 
     """Save downloaded file"""
@@ -62,7 +62,7 @@ def _get_actual_list_ddc_xsd_releases_from_server(url: str, raise_errors: bool =
         open(os.path.join(files_folder, "dcc_releases.json"), 'wb').write(data.content)
     except Exception as e:
         if raise_errors:
-            print(e)
+            raise e
         return False
 
     return True
@@ -95,8 +95,17 @@ def _download_dcc_schemas(raise_errors: bool = False) -> List[str]:
 
     for release in release_list:
         if release.get("type") == "stable":
-            # TODO : check pattern
-            data = requests.get(release.get("url"), allow_redirects=True)
+
+            url = release.get("url")
+
+            """validate schemaLocation URI with pattern"""
+            for pattern in mandatory_uri_pattern:
+                if pattern not in url:
+                    if raise_errors:
+                        raise ValueError("one of the patterns was not found in the schemaLocation URI")
+                    continue
+
+            data = requests.get(url, allow_redirects=True)
 
             filename = "dcc_" + release.get("version").replace(".", "_") + ".xsd"
 
@@ -129,6 +138,8 @@ def _download_dsi_shemas_referenced_by_downloaded_dcc_schemas(raise_errors: bool
     dcc_version_info = _load_dcc_version_info_file_to_dict(raise_errors=raise_errors)
 
     if dcc_version_info == {}:
+        if raise_errors:
+            raise Exception('Can not load dcc version info')
         return False
 
     dcc_version_info["dcc_dsi_match"] = {}
@@ -151,7 +162,7 @@ def _download_dsi_shemas_referenced_by_downloaded_dcc_schemas(raise_errors: bool
             data = requests.get(dsi_info["schemaLocation"], allow_redirects=True)
         except Exception as e:
             if raise_errors:
-                print(e)
+                raise e
             continue
 
         """check if its really an xsd file or the download link was broken"""
@@ -168,7 +179,7 @@ def _download_dsi_shemas_referenced_by_downloaded_dcc_schemas(raise_errors: bool
             open(dsi_filepath, 'wb').write(data.content)
         except Exception as e:
             if raise_errors:
-                print(e)
+                raise e
             return False
 
         version = _get_dsi_info_from_dsi_schema(dsi_filepath)
@@ -182,10 +193,12 @@ def _download_dsi_shemas_referenced_by_downloaded_dcc_schemas(raise_errors: bool
         with open(os.path.join(files_folder, "dcc_version_info.json"), "w") as outfile:
             json.dump(dcc_version_info, outfile, indent=4)
 
+    return True
+
 
 def get_abs_local_dcc_shema_path(dcc_version: str = "3.1.1", raise_errors: bool = False) -> os.path:
     """
-    Returns a path to an xsd file corresponding to the given dcc version.
+    Returns a path to an DCC xsd file corresponding to the given dcc version.
     If the version was not found locally None is returned.
 
     :param dcc_version: version dcc.xsd schema for example "3.1.1"
@@ -204,19 +217,19 @@ def get_abs_local_dcc_shema_path(dcc_version: str = "3.1.1", raise_errors: bool 
     return os.path.join(files_folder, filename)
 
 
-def get_abs_local_dsi_shema_path(dsi_version: str = "3.1.1", raise_errors: bool = False) -> os.path:
+def get_abs_local_dsi_shema_path(dcc_version: str = "3.1.1", raise_errors: bool = False) -> os.path:
     """
-    Returns a path to an xsd file corresponding to the given dsi version.
+    Returns a path to an D-SI xsd file corresponding to the given dcc version.
     If the version was not found locally None is returned.
 
-    :param dsi_version: version dsi.xsd schema for example "3.1.1"
+    :param dcc_version: version dcc.xsd schema for example "3.1.1"
     :param raise_errors: Deactivates error messages and returns only None on failure
     :return: absolute path to the local stored dcc.xsd file if search for version was succesfull
     """
     dcc_version_info = _load_dcc_version_info_file_to_dict()
 
     try:
-        filename = dcc_version_info["dcc_dsi_match"][dsi_version]
+        filename = dcc_version_info["dcc_dsi_match"][dcc_version]
     except KeyError as e:
         if raise_errors:
             raise e
