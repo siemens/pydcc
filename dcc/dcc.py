@@ -17,7 +17,7 @@ import datetime
 import xml.etree.ElementTree as ET
 import zlib
 from collections import defaultdict
-
+from . import schema_loader
 import requests
 
 
@@ -43,7 +43,7 @@ class DCC:
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
 
         # Load default schema files
-        self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
+        #self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -62,6 +62,7 @@ class DCC:
             #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
+            self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version))
             #self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
 
