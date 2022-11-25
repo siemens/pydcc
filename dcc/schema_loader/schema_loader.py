@@ -1,3 +1,14 @@
+# PyDCC
+#
+# Python module for processing of digital calibration certificates (DCC)
+# according to https://www.ptb.de/dcc/
+#
+# Copyright (c) Siemens AG, 2022
+#
+# This work is licensed under the terms of the MIT License.
+# See the LICENSE file in the top-level directory.
+#
+
 """
 This module downloads the DCC schemas provided by the Physikalisch-Technische Bundesanstalt.
 All available versions are stored and made available by a function call.
