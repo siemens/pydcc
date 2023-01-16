@@ -10,7 +10,6 @@
 #
 
 from setuptools import setup
-import setuptools
 
 with open('README.md') as file:
     long_description = file.read()
