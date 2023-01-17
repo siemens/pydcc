@@ -27,7 +27,7 @@ setup(
     keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
     url = "https://gitlab.com/gemimeg/pydcc",
     packages=['dcc'],
-    include_package_data=False,
+    include_package_data=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
