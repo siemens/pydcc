@@ -25,8 +25,10 @@ dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 #dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/VCMM_KMG/VCMM1_param.xml')
 #dcco = DCC('C:/Working_D/xml/example/PORTAL_CMM_KJ/Log/VCMM_DCC.xml')
 #dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/Luca/Beispiel-DCC_PTB_id.xml')
+#dcco =DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/DKD_Laenge/Beispiel-DCC_PTB_KJ.xml')
 #dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/Luca/Beispiel-DCC_2022_10_18.xml')
-
+#dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/2D-Normal/2D_Normal_2023-01-18.xml')
+#dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/Kugel/Kugelnormal_20230102__refType_ID.xml')
 #
 #print("single result")
 #res = dcco.get_calibration_result_by_quantity_id("basic_measurementError")

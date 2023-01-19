@@ -277,13 +277,15 @@ class DCC:
                 name = name + ' ' + local_name.text
         return name
 
-    def __find_quantities_in_lists(self, node, quant, name, lang):
+    def __find_quantities_in_lists(self, node, quant, name, lang, attr):
         name = self.__read_name(node, name, lang)
+
+        attr = attr + str(str(node.tag) + str(node.attrib))
         if node.tag == '{https://ptb.de/dcc}quantity':
-            quant.append([node, name])
+            quant.append([node, name, attr])
         elif node.tag == '{https://ptb.de/dcc}list':
             for next_node in node:
-                self.__find_quantities_in_lists(next_node, quant, name, lang)
+                self.__find_quantities_in_lists(next_node, quant, name, lang, attr)
 
     def get_calibration_results(self, type, lang=''):
         quantities = []
@@ -291,16 +293,20 @@ class DCC:
         result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
                                          self.name_space)
         for result in result_nodes:
+            attr = str(str(result.tag) + str(result.attrib))
             data_node = result.find('dcc:data', self.name_space)
             name = ''
+            attr = attr + str(str(data_node.tag) + str(data_node.attrib))
             name = self.__read_name(result, name, lang)
+
             for nodes in data_node:
-                self.__find_quantities_in_lists(nodes, quantities, name, lang)
+                self.__find_quantities_in_lists(nodes, quantities, name, lang, attr)
 
         for quant in quantities:
             si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
             if si_node is not None:
                 if type == 'refType':
+                    #local_res = [quant[2], self.etree_to_dict(si_node)]
                     local_res = [quant[0].attrib, self.etree_to_dict(si_node)]
                 else:
                     local_res = [quant[1], self.etree_to_dict(si_node)]
