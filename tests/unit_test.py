@@ -15,6 +15,8 @@ from dcc import DCC
 import datetime
 import unittest
 
+from dcc.dcc import DCCTrustStore
+
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
 xml_file_path_gp = '../data/dcc/' + xml_file_name_gp
 dcco_gp = DCC(xml_file_path_gp)
@@ -140,6 +142,21 @@ class TestBaseFunctions(unittest.TestCase):
 
 # def test_is_signature_valid(self):
 #    self.assertFalse(dcco.is_signature_valid())
+
+    def test_valid_signature(self):
+        trust_store = DCCTrustStore()
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/sub.crt")
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+        self.assertTrue(dcco.is_signature_valid())
+
+    def test_invalid_signature(self):
+        trust_store = DCCTrustStore()
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/sub.crt")
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed_manipulated.xml', trust_store=trust_store)
+        self.assertFalse(dcco.is_signature_valid())
+
 
 
 if __name__ == '__main__':
