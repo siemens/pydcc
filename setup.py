@@ -40,7 +40,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-   'xmlschema > 1.5', 'requests', 'sign_xml >= 3.1.0', 'certvalidator', 'asn1crypto'
+   'xmlschema > 1.5', 'requests', 'signxml >= 3.1.0', 'certvalidator', 'asn1crypto'
     ]
 )
 
