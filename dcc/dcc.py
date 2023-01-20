@@ -25,7 +25,7 @@ from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
 from lxml import etree as et
 from asn1crypto import pem
-
+from cryptography import x509
 
 
 class DCC:
@@ -42,7 +42,7 @@ class DCC:
         self.name_space = dict()
         self.UID = None
         self.signature_section = None
-        self.signed = False
+        self.signed = None
         self.schema_sources = []
         self.trust_store = trust_store
 
@@ -137,13 +137,13 @@ class DCC:
                                           expect_references=num_refs)  # expect references due to XADES signature format
             # expect references due to XADES signature format
         except InvalidCertificate as e:
-            print("Signing certificate invalid, aborting...")
+            print("Signing certificate invalid")
             return False
         except InvalidSignature as e:
-            print("Could not verify signature, aborting...")
+            print("Signature is invalid")
             return False
         except InvalidInput as e:
-            print("Provided XML does not include enveloped signature, aborting...")
+            print("Provided XML does not include enveloped signature")
             return False
         else:
             print('signature verified (without CRL or OCSP validation!)')
@@ -158,19 +158,27 @@ class DCC:
         # Return true if signature was valid, return false if signature was not valid
         return True
 
-
     # To do Implement methods
-    # def get_signing_certificate(self):
+    def get_signer_certificate(self):
+        if self.signature_section is None:
+            print('No signature section available for this DCC object')
+            return None;
+        signing_cert = self.signature_section.find(".//ds:X509Certificate", self.name_space).text
+        if signing_cert is None:
+            print('No signer certificate in signature section')
+            return None
+        signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
+        return x509.load_pem_x509_certificate(str.encode(signing_cert_pem))
 
-    # def get_signing_time(self):
-
-    # def get_signer_certificate_serial_num(self):
-
-    # def get_signer_certificate_dn(self):
-
-    # def get_signer_certificate_validity_start(self):
-
-    # def get_signer_certificate_validity_end(self):
+    def get_signing_time(self):
+        if self.signature_section is None:
+            print('No signature section available for this DCC object')
+            return None
+        signing_time = self.signature_section.find(".//xades:SigningTime", self.name_space)
+        if signing_time is None:
+            print('No signing time available in signature section')
+            return None
+        return datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
 
     def load_dcc_from_xml_file(self):
         # Load DCC from file
@@ -221,6 +229,8 @@ class DCC:
 
     def is_signed(self):
         # Is the DCC signed?
+        if self.signed is not None:
+            return self.signed
         elem = self.root.find("ds:Signature", self.name_space)
         self.signed = not elem == None
         self.signature_section = elem
