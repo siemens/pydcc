@@ -16,19 +16,27 @@ import xmlschema
 import datetime
 import xml.etree.ElementTree as ET
 import zlib
+import binascii
 from collections import defaultdict
 from . import schema_loader
 import requests
+from signxml import InvalidCertificate, InvalidSignature, InvalidInput
+from certvalidator import CertificateValidator, errors, ValidationContext
+from signxml.xades import XAdESVerifier
+from lxml import etree as et
+from asn1crypto import pem
+
 
 
 class DCC:
 
-    def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None, url = None):
+    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store=None):
         # Initialize DCC object
         self.xml_file_name = xml_file_name
         self.administrative_data = None
         self.measurement_results = None
         self.root = None
+        self.root_byte = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = dict()
@@ -36,14 +44,16 @@ class DCC:
         self.signature_section = None
         self.signed = False
         self.schema_sources = []
+        self.trust_store = trust_store
 
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
         self.add_namespace('si', 'https://ptb.de/si')
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
+        self.add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
 
         # Load default schema files
-        #self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
+        # self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -59,17 +69,114 @@ class DCC:
 
         if self.root is not None:
             self.administrative_data = self.root[0]
-            #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
+            # self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
             self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version))
-            #self.valid_xml = self.verify_dcc_xml()
+            # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
+            if self.is_signed():
+                self.valid_signature = self.__verify_signature()
+
+    def __verify_signature(self):
+
+        if self.trust_store is None:
+            print("Could not validate certificate path because of missing trust store")
+            return False
+        if self.trust_store.trust_roots is None:
+            print("Could not validate certificate path because of missing root CA certificate")
+            return False
+        if self.trust_store.intermediates is None:
+            print("Could not validate certificate path because of missing intermediate CA certificate")
+            return False
+
+        # Step 1: Validate certificate that was used to sign the DCC
+        signing_cert = self.root.find(".//ds:X509Certificate", self.name_space).text
+        signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
+        # Vergleich mit dem Digest in Qualified Properties?
+        signing_time = self.root.find(".//xades:SigningTime", self.name_space)
+        validation_time = None
+        if signing_time is not None:
+            validation_time = datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
+        else:
+            validation_time = datetime.datetime.now()
+
+        # end_entity_cert works, signingCert does not work
+        context = ValidationContext(trust_roots=self.trust_store.trust_roots, moment=validation_time)
+        validator = CertificateValidator(
+            pem.armor('CERTIFICATE', binascii.a2b_base64(str.encode(signing_cert))),
+            validation_context=context, intermediate_certs=self.trust_store.intermediates)
+        try:
+            validator.validate_usage(set())
+        except errors.PathValidationError:
+            # The certificate could not be validated
+            print("Could not validate certificate path")
+            return False
+            # The certificate could not be validated
+        else:
+            print("Certificate path is valid")
+
+        # Step 2: Validate DCC signature
+
+        # find the number of References to verify
+        num_refs = len(self.root.findall(".//ds:Reference", self.name_space))
+        if num_refs < 2:
+            print(
+                "Expected signed DCC as XadES - but < 2 references are found in the signature (violating ETSI EN 319 "
+                "132-1 -> see Table 2)")
+            return False
+
+        # try to verify signature using the provided certificate chain (RootCA + SubCA) - signer certificate is
+        # parsed from the XML signature
+        # caution: at the moment this validation  routine does not include CRL or OCSP validation for the
+        # signer certificate or issuing CA - this validation should be implemented in the future to avoid
+        # trusting revoked certificates.
+        data_to_verify = self.root_byte
+        try:
+            data = XAdESVerifier().verify(data_to_verify, x509_cert=signing_cert_pem,
+                                          expect_references=num_refs)  # expect references due to XADES signature format
+            # expect references due to XADES signature format
+        except InvalidCertificate as e:
+            print("Signing certificate invalid, aborting...")
+            return False
+        except InvalidSignature as e:
+            print("Could not verify signature, aborting...")
+            return False
+        except InvalidInput as e:
+            print("Provided XML does not include enveloped signature, aborting...")
+            return False
+        else:
+            print('signature verified (without CRL or OCSP validation!)')
+
+        # Store signed data from DCC (without enveloped signature) in root element
+        # To do: Check if [0] is really the dcc element
+        self.root = data[0].signed_xml
+
+        # Store signature from verified xml in signature element
+        self.signature_section = data[0].signature_xml
+
+        # Return true if signature was valid, return false if signature was not valid
+        return True
+
+
+    # To do Implement methods
+    # def get_signing_certificate(self):
+
+    # def get_signing_time(self):
+
+    # def get_signer_certificate_serial_num(self):
+
+    # def get_signer_certificate_dn(self):
+
+    # def get_signer_certificate_validity_start(self):
+
+    # def get_signer_certificate_validity_end(self):
 
     def load_dcc_from_xml_file(self):
         # Load DCC from file
         with open(self.xml_file_name, "rb") as file:
             byte_array = file.read()
+            self.root_byte = byte_array
             self.load_dcc_from_byte_array(byte_array)
 
     def load_dcc_from_byte_array(self, byte_array):
@@ -287,8 +394,8 @@ class DCC:
         mr.list = []
         nodes = node.findall('{https://ptb.de/si}*', self.name_space)
         for node2 in nodes:
-           mr2 = self.__read_si_element(node2)
-           mr.list.append(mr2)
+            mr2 = self.__read_si_element(node2)
+            mr.list.append(mr2)
         return mr
 
     def __read_si_list(self, node):
@@ -299,11 +406,11 @@ class DCC:
         mr.units = []
         mr.uncs = []
         mr.unc_kind = []
-        mr.unc_k =[]
+        mr.unc_k = []
         rl = node.find("si:realList", self.name_space)
-        #TBD: festgestellt, dass die Struktuern nicht an den VCMM output passen erster Schritt in die Richtung
-        #TBD: wieder eine rekursive Struktur da si:list in einem si:list stecken kann
-        #TBD ester schritt, um die VCMM resulate lesen zu können
+        # TBD: festgestellt, dass die Struktuern nicht an den VCMM output passen erster Schritt in die Richtung
+        # TBD: wieder eine rekursive Struktur da si:list in einem si:list stecken kann
+        # TBD ester schritt, um die VCMM resulate lesen zu können
         next_nodes = rl.findall("si:real", self.name_space)
         for node in next_nodes:
             lmr = []
@@ -314,7 +421,6 @@ class DCC:
             mr.unc_kind.append(lmr.unc.kind)
             mr.uncs.append(lmr.unc.U)
             mr.unc_k.append(lmr.unc.k)
-
 
         return mr
 
@@ -368,7 +474,7 @@ class DCC:
         return real_res
 
     def __report_si_complex(self, mr):
-        complex_res =[]
+        complex_res = []
         complex_res.append('Re')
         complex_res.append(mr.valueRe)
         complex_res.append('Im')
@@ -379,13 +485,12 @@ class DCC:
     def __report_si_hybrid(self, mr):
         hybrid_res = []
         for element in mr.list:
-             hybrid_res.append(self.__report_si_element(element))
+            hybrid_res.append(self.__report_si_element(element))
         return hybrid_res
 
     def __report_si_list(self, mr):
         list_res = []
         print(len(mr.label))
-
 
         list_res.append(mr.label)
         list_res.append(mr.values)
@@ -428,11 +533,12 @@ class DCC:
 
     def get_calibration_result_by_quantity_refType(self, result_refType):
         res = []
-        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        # all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
         all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
 
         for a_res_node in all_res_nodes:
-            quantities_with_required_reftype = a_res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
+            quantities_with_required_reftype = a_res_node.findall(
+                './/{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
 
         n = len(quantities_with_required_reftype)
 
@@ -484,7 +590,8 @@ class DCC:
         res = []
         quantities = []
 
-        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result', self.name_space)
+        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
+                                         self.name_space)
         for result in result_nodes:
             name = ''
             name = self.__read_name(result, name, lang)
@@ -501,7 +608,7 @@ class DCC:
         return res
 
     def etree_to_dict(self, t):
-        #method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
+        # method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
         tkey = t.tag.rpartition('}')[2]
         d = {tkey: {} if t.attrib else None}
         children = list(t)
@@ -577,7 +684,7 @@ class SiHybrid(SI):
 class SiList(SI):
     def __init__(self):
         self.values = None
-        self.units =None
+        self.units = None
         self.uncs = None
 
 
@@ -585,6 +692,31 @@ class SiRealListXMLList(SI):
     def __init__(self):
         self.values = None
         self.uncs = None
+
+
+class DCCTrustStore:
+    def __init__(self):
+        self.trust_roots = []
+        self.intermediates = []
+
+    def load_trusted_root_from_file(self, file_name):
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.trust_roots.append(cert)
+
+    def load_intermediate_from_file(self, file_name):
+        # update trust intermediate list
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.intermediates.append(cert)
 
 
 class dcc(DCC):
