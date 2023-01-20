@@ -14,7 +14,7 @@
 from dcc import DCC
 import datetime
 import unittest
-
+from cryptography import x509
 from dcc.dcc import DCCTrustStore
 
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
@@ -157,7 +157,23 @@ class TestBaseFunctions(unittest.TestCase):
         dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed_manipulated.xml', trust_store=trust_store)
         self.assertFalse(dcco.is_signature_valid())
 
+    def test_get_signing_time(self):
+        trust_store = DCCTrustStore()
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+        trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+        expected_time = datetime.datetime.fromisoformat('2022-10-21T07:47:21Z'.replace('Z', '+00:00'))
+        self.assertEqual(dcco.get_signing_time(), expected_time)
 
+    def test_get_signing_certificate(self):
+        trust_store = DCCTrustStore()
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+        trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+        with open('../data/trusted_certs/signer.crt', "rb") as file:
+            expected_cert_bytes = file.read()
+            expected_cert = x509.load_pem_x509_certificate(expected_cert_bytes)
+            self.assertEqual(dcco.get_signer_certificate(), expected_cert)
 
 if __name__ == '__main__':
     unittest.main()
