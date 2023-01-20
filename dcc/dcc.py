@@ -18,11 +18,8 @@ import xml.etree.ElementTree as ET
 import zlib
 from collections import defaultdict
 
-#import os
-
 import requests
 
-#os.chdir('C:\PyDCC\pydcc2\pydcc\dcc')
 
 class DCC:
 
@@ -46,12 +43,8 @@ class DCC:
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
 
         # Load default schema files
-        #self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
-
-        #self.add_schema_file('../data/schema/dcc_3_1_2.xsd')
-        #self.add_schema_file('../data/schema/dcc_2_4_0.xsd')
-        #self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
-        self.add_schema_file('../data/schema/SI_Format_2.xsd')
+        self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
+        # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
             self.load_dcc_from_xml_file()
@@ -346,11 +339,3 @@ class DCC:
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""
     pass
-
-#if __name__=='__main__':
-    #dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
-    #res = dcco.get_calibration_result_by_quantity_refType('basic_measurementError')
-    #print("function that extracts information of a quantity with refType: basic_measurementError")
-    #print(res)
-    #print(dcco.verify_dcc_xml())
-    #print('done')

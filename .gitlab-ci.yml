@@ -28,6 +28,7 @@ stages:
 
 test:
   stage: Unit Tests
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   script:
   - pip install -e .  
   - pip install pytest

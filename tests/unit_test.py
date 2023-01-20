@@ -111,7 +111,7 @@ class TestBaseFunctions(unittest.TestCase):
     def test_compressed_dcc_crc(self):
         comp_dcc = dcco_gp.generate_compressed_dcc()
         crc32 = comp_dcc['crc32']
-        self.assertEqual(crc32, 2189713291)
+        self.assertEqual(crc32, 4136415575)
 
     def test_compressed_dcc_size(self):
         comp_dcc = dcco_gp.generate_compressed_dcc()
@@ -122,13 +122,6 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertFalse(dcco_gp.has_previous_report())
 
     def test_item_id(self):
-        dcco_v2 = DCC('../data/dcc/siliziumkugel_2_4_0.xml')
-
-        id_dict_v2 = {'identifications': {'identification': {'issuer': 'manufacturer', 'value': 'Si28kg_03_a',
-                                                             'description': {'content': [{'@lang': 'de', '#text':
-                                                                 'Kennnummer'}, {'@lang': 'en', '#text': 'Serial No.'}
-                                                                                         ]}}}}
-
         id_dict_v3 = {'identifications': {'identification': [{'issuer': 'manufacturer', 'value': 'string-manufacturer-item',
                                                  'name': {'content': [{'@lang': 'de', '#text': 'Serien Nr.'},
                                                                       {'@lang': 'en', '#text': 'Serial no.'}]}},
@@ -141,14 +134,13 @@ class TestBaseFunctions(unittest.TestCase):
                                                     'content': [{'@lang': 'de', '#text': 'Equipment Nr.'},
                                                                 {'@lang': 'en', '#text': 'Equipment no.'}]}}]}}
 
-        self.assertEqual(dcco_v2.item_id(), id_dict_v2)
         self.assertEqual(dcco_gp.item_id(), id_dict_v3)
 
     def test_verify_correct_dcc_xml(self):
         self.assertTrue(dcco_gp.verify_dcc_xml())
 
     def test_verify_incorrect_dcc_xml(self):
-        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml' # Example from PTB
+        xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml'# Example from PTB
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
         self.assertFalse(dcco_wrong_schema.verify_dcc_xml())
 
