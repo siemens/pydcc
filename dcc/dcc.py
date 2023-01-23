@@ -270,15 +270,29 @@ class DCC:
                 name = name + ' ' + local_name.text
         return name
 
-    def __find_quantities_in_lists(self, node, quant, name, lang, attr):
-        name = self.__read_name(node, name, lang)
+    def _read_path_realted_info(self, node, attr):
+        attr = attr + "dcc:" + str(str(node.tag.rpartition('}')[2]))
+        if "refType" in node.attrib.keys():
+            attr = attr + " [ @ refType =" + "\'" + str(node.attrib['refType']) + "\'" + "]"
+        if "refId" in node.attrib.keys():
+            attr = attr + " [ @ refId =" + "\'" + str(node.attrib['refId']) + "\'" + "]"
+        if "id" in node.attrib.keys():
+            attr = attr + " [ @ id =" + "\'" + str(node.attrib['id']) + "\'" + "]"
 
-        attr = attr + str(str(node.tag) + str(node.attrib))
+        return attr;
+
+
+
+    def __find_quantities_in_lists(self, node, quant, name, lang, xpath):
+        name = self.__read_name(node, name, lang)
+        xpath = self._read_path_realted_info(node, xpath)
+
         if node.tag == '{https://ptb.de/dcc}quantity':
-            quant.append([node, name, attr])
+            quant.append([node, name, xpath])
         elif node.tag == '{https://ptb.de/dcc}list':
+            xpath = xpath + " //"
             for next_node in node:
-                self.__find_quantities_in_lists(next_node, quant, name, lang, attr)
+                self.__find_quantities_in_lists(next_node, quant, name, lang, xpath)
 
     def get_calibration_results(self, type, lang=''):
         quantities = []
@@ -286,21 +300,22 @@ class DCC:
         result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
                                          self.name_space)
         for result in result_nodes:
-            attr = str(str(result.tag) + str(result.attrib))
+            xpath = ".//"
+            xpath = self._read_path_realted_info(result, xpath)
+            xpath = xpath + " //"
+
             data_node = result.find('dcc:data', self.name_space)
             name = ''
-            attr = attr + str(str(data_node.tag) + str(data_node.attrib))
             name = self.__read_name(result, name, lang)
 
             for nodes in data_node:
-                self.__find_quantities_in_lists(nodes, quantities, name, lang, attr)
+                self.__find_quantities_in_lists(nodes, quantities, name, lang, xpath)
 
         for quant in quantities:
             si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
             if si_node is not None:
-                if type == 'refType':
-                    #local_res = [quant[2], self.etree_to_dict(si_node)]
-                    local_res = [quant[0].attrib, self.etree_to_dict(si_node)]
+                if type == 'xpath':
+                    local_res = [quant[2], self.etree_to_dict(si_node)]
                 else:
                     local_res = [quant[1], self.etree_to_dict(si_node)]
                 res.append(local_res)
