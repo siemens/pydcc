@@ -14,6 +14,7 @@
 
 import xmlschema
 import datetime
+import os
 import xml.etree.ElementTree as ET
 import zlib
 import binascii
@@ -53,7 +54,8 @@ class DCC:
         self.add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
 
         # Load default schema files
-        # self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
+        own_path = os.path.dirname(os.path.realpath(__file__))
+        self.add_schema_file(os.path.join(own_path, 'schema/dcc_3_0_0.xsd'))
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:

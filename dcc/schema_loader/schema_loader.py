@@ -5,6 +5,9 @@
 #
 # Copyright (c) Siemens AG, 2022
 #
+# Authors:
+#     Kai Mienert, PTB
+#
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
@@ -24,6 +27,7 @@ from xml.sax import make_parser, handler
 
 # set folder where files and schemas will be stored
 files_folder = os.path.join(os.path.dirname(__file__), "..", "..", "data", "schemas")
+# files_folder = os.path.join(os.path.dirname(__file__), "..", "schema")
 
 # "url to load a json documents that hold informations about the DCC versions"
 url_dcc_schema_releases = "https://www.ptb.de/dcc/releases.json"
