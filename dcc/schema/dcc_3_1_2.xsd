@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="3.1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema version="3.1.2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:dcc="https://ptb.de/dcc"
            xmlns:si="https://ptb.de/si"
            targetNamespace="https://ptb.de/dcc"
@@ -33,7 +33,7 @@
             Vorab initiative of the Volkswagen Foundation (VolkswagenStiftung).
 
 
-            Documentation: https://ptb.de/dcc/v3.1.1/
+            Documentation: https://ptb.de/dcc/v3.1.2/
         </xs:documentation>
     </xs:annotation>
 
@@ -64,7 +64,7 @@
         <xs:attribute name="schemaVersion" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:pattern value="3\.1\.1"/>
+                    <xs:pattern value="3\.1\.2"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
@@ -622,7 +622,8 @@
             <xs:element name="data" type="dcc:dataType" minOccurs="0"/>
             <xs:element name="nonSIDefinition" type="xs:string" minOccurs="0"/>
             <xs:element name="nonSIUnit" type="xs:string" minOccurs="0"/>
-        </xs:sequence>
+            <xs:element name="location" type="dcc:locationType" minOccurs="0"/>
+		</xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="optional"/>
         <xs:attribute name="refId" type="xs:IDREFS" use="optional"/>
         <xs:attribute name="refType" type="dcc:refTypesType" use="optional"/>
