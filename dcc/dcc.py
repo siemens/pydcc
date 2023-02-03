@@ -14,36 +14,48 @@
 
 import xmlschema
 import datetime
+import os
 import xml.etree.ElementTree as ET
 import zlib
+import binascii
 from collections import defaultdict
-
+from . import schema_loader
 import requests
+from signxml import InvalidCertificate, InvalidSignature, InvalidInput
+from certvalidator import CertificateValidator, errors, ValidationContext
+from signxml.xades import XAdESVerifier
+from lxml import etree as et
+from asn1crypto import pem
+from cryptography import x509
 
 
 class DCC:
 
-    def __init__(self, xml_file_name = None, byte_array = None, compressed_dcc = None, url = None):
+    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store=None):
         # Initialize DCC object
         self.xml_file_name = xml_file_name
         self.administrative_data = None
         self.measurement_results = None
         self.root = None
+        self.root_byte = None
         self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = dict()
         self.UID = None
         self.signature_section = None
-        self.signed = False
+        self.signed = None
         self.schema_sources = []
+        self.trust_store = trust_store
 
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
         self.add_namespace('si', 'https://ptb.de/si')
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
+        self.add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
 
         # Load default schema files
-        self.add_schema_file('../data/schema/dcc_3_0_0.xsd')
+        own_path = os.path.dirname(os.path.realpath(__file__))
+        self.add_schema_file(os.path.join(own_path, 'schema/dcc_3_0_0.xsd'))
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -59,16 +71,122 @@ class DCC:
 
         if self.root is not None:
             self.administrative_data = self.root[0]
-            #self.administrative_data = root.find("dcc:administrativeData", self.name_space)
+            # self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
-            #self.valid_xml = self.verify_dcc_xml()
+            self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version))
+            # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
+            if self.is_signed():
+                self.valid_signature = self.__verify_signature()
+
+    def __verify_signature(self):
+
+        if self.trust_store is None:
+            print("Could not validate certificate path because of missing trust store")
+            return False
+        if self.trust_store.trust_roots is None:
+            print("Could not validate certificate path because of missing root CA certificate")
+            return False
+        if self.trust_store.intermediates is None:
+            print("Could not validate certificate path because of missing intermediate CA certificate")
+            return False
+
+        # Step 1: Validate certificate that was used to sign the DCC
+        signing_cert = self.root.find(".//ds:X509Certificate", self.name_space).text
+        signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
+        # Vergleich mit dem Digest in Qualified Properties?
+        signing_time = self.root.find(".//xades:SigningTime", self.name_space)
+        validation_time = None
+        if signing_time is not None:
+            validation_time = datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
+        else:
+            validation_time = datetime.datetime.now()
+
+        # end_entity_cert works, signingCert does not work
+        context = ValidationContext(trust_roots=self.trust_store.trust_roots, moment=validation_time)
+        validator = CertificateValidator(
+            pem.armor('CERTIFICATE', binascii.a2b_base64(str.encode(signing_cert))),
+            validation_context=context, intermediate_certs=self.trust_store.intermediates)
+        try:
+            validator.validate_usage(set())
+        except errors.PathValidationError:
+            # The certificate could not be validated
+            print("Could not validate certificate path")
+            return False
+            # The certificate could not be validated
+        else:
+            print("Certificate path is valid")
+
+        # Step 2: Validate DCC signature
+
+        # find the number of References to verify
+        num_refs = len(self.root.findall(".//ds:Reference", self.name_space))
+        if num_refs < 2:
+            print(
+                "Expected signed DCC as XadES - but < 2 references are found in the signature (violating ETSI EN 319 "
+                "132-1 -> see Table 2)")
+            return False
+
+        # try to verify signature using the provided certificate chain (RootCA + SubCA) - signer certificate is
+        # parsed from the XML signature
+        # caution: at the moment this validation  routine does not include CRL or OCSP validation for the
+        # signer certificate or issuing CA - this validation should be implemented in the future to avoid
+        # trusting revoked certificates.
+        data_to_verify = self.root_byte
+        try:
+            data = XAdESVerifier().verify(data_to_verify, x509_cert=signing_cert_pem,
+                                          expect_references=num_refs)  # expect references due to XADES signature format
+            # expect references due to XADES signature format
+        except InvalidCertificate as e:
+            print("Signing certificate invalid")
+            return False
+        except InvalidSignature as e:
+            print("Signature is invalid")
+            return False
+        except InvalidInput as e:
+            print("Provided XML does not include enveloped signature")
+            return False
+        else:
+            print('signature verified (without CRL or OCSP validation!)')
+
+        # Store signed data from DCC (without enveloped signature) in root element
+        # To do: Check if [0] is really the dcc element
+        self.root = data[0].signed_xml
+
+        # Store signature from verified xml in signature element
+        self.signature_section = data[0].signature_xml
+
+        # Return true if signature was valid, return false if signature was not valid
+        return True
+
+    # To do Implement methods
+    def get_signer_certificate(self):
+        if self.signature_section is None:
+            print('No signature section available for this DCC object')
+            return None;
+        signing_cert = self.signature_section.find(".//ds:X509Certificate", self.name_space).text
+        if signing_cert is None:
+            print('No signer certificate in signature section')
+            return None
+        signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
+        return x509.load_pem_x509_certificate(str.encode(signing_cert_pem))
+
+    def get_signing_time(self):
+        if self.signature_section is None:
+            print('No signature section available for this DCC object')
+            return None
+        signing_time = self.signature_section.find(".//xades:SigningTime", self.name_space)
+        if signing_time is None:
+            print('No signing time available in signature section')
+            return None
+        return datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
 
     def load_dcc_from_xml_file(self):
         # Load DCC from file
         with open(self.xml_file_name, "rb") as file:
             byte_array = file.read()
+            self.root_byte = byte_array
             self.load_dcc_from_byte_array(byte_array)
 
     def load_dcc_from_byte_array(self, byte_array):
@@ -113,6 +231,8 @@ class DCC:
 
     def is_signed(self):
         # Is the DCC signed?
+        if self.signed is not None:
+            return self.signed
         elem = self.root.find("ds:Signature", self.name_space)
         self.signed = not elem == None
         self.signature_section = elem
@@ -349,6 +469,31 @@ class DCC:
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.etree_to_dict(id_list)
+
+
+class DCCTrustStore:
+    def __init__(self):
+        self.trust_roots = []
+        self.intermediates = []
+
+    def load_trusted_root_from_file(self, file_name):
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.trust_roots.append(cert)
+
+    def load_intermediate_from_file(self, file_name):
+        # update trust intermediate list
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.intermediates.append(cert)
 
 
 class dcc(DCC):
