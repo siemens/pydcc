@@ -55,7 +55,7 @@ class DCC:
 
         # Load default schema files
         own_path = os.path.dirname(os.path.realpath(__file__))
-        self.add_schema_file(os.path.join(own_path, 'schema/dcc_3_0_0.xsd'))
+        #self.add_schema_file(os.path.join(own_path, 'schema/dcc_3_0_0.xsd'))
         # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
@@ -74,7 +74,7 @@ class DCC:
             # self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
-            self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version))
+            self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version, raise_errors=True))
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
             if self.is_signed():

@@ -26,8 +26,8 @@ from typing import List, Dict
 from xml.sax import make_parser, handler
 
 # set folder where files and schemas will be stored
-files_folder = os.path.join(os.path.dirname(__file__), "..", "..", "data", "schemas")
-# files_folder = os.path.join(os.path.dirname(__file__), "..", "schema")
+# files_folder = os.path.join(os.path.dirname(__file__), "..", "..", "data", "schemas")
+files_folder = os.path.join(os.path.dirname(__file__), "..", "schema")
 
 # "url to load a json documents that hold informations about the DCC versions"
 url_dcc_schema_releases = "https://www.ptb.de/dcc/releases.json"
