@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://ptb.de/si"
+	xmlns:si="https://ptb.de/si"
+	elementFormDefault="qualified">
+	
+	<xs:annotation>
+		<xs:documentation xml:lang="en">
+			Copyright (c) 2019 - EMPIR project 17IND02 (title: SmartCom) consortium and Physikalisch-Technische Bundesanstalt (PTB),
+			alle Rechte vorbehalten - all rights reserved. This XML scheme is provided attributed to the CC-BY-ND 4.0 license.
+			Please, refer to https://creativecommons.org/licenses/by-nd/4.0/legalcode for the full license.
+		</xs:documentation>
+		<xs:documentation xml:lang="en">
+			This XML scheme implements the Digital-SI (D-SI) data model for a transmission of metrological data in digital 
+			applications.
+			AUTHORS
+			Physikalisch-Technische Bundesanstalt (DE): Daniel Hutzschenreuter, Frank Härtig, Thomas Wiedenhöfer,
+			Siegfried Gustav Hackel, Alexander Scheibner, Wiebke Heeren; 
+			National Physical Laboratory (UK): Ian Smith, Clifford Brown
+			CONTACT 	
+			smartcom@ptb.de
+			WEBPAGE	
+			https://www.ptb.de/empir2018/smartcom/home/
+			VERSION 	
+			1.3.1
+			DATE		
+			2020-05-18
+			DOI:
+			10.5281/zenodo.3826517
+		</xs:documentation>
+		<xs:documentation xml:lang="en">
+			DISCLAIMER:
+			This XML scheme was developed by the EMPIR project 17IND02 (title: SmartCom) consortium under the lead of 
+			Physikalisch-Technische Bundesanstalt (PTB). The XML scheme is made available “as is“ 
+			free of cost at your own risk. Members of the EMPIR project 17IND02 (SmartCom) consortium and the Physikalisch-Technische
+			Bundesanstalt assume no responsibility whatsoever for its use by other parties, and makes no guarantees, expressed or 
+			implied, about its quality, reliability, safety, suitability or any other characteristic. As far as legally permitted, 
+			the members of the EMPIR project 17IND02 (SmartCom) consortium and the Physikalisch-Technische Bundesanstalt refuse
+			any liability for any direct, indirect or consequential damage arising in connection with the use of this XML scheme.
+	    </xs:documentation>
+		<xs:documentation xml:lang="en">
+	  		ACKNOWLEDGEMENT:
+		    The development of the XML scheme is part of the research project EMPIR 17IND02 (title: SmartCom). 
+		    This project (17IND02) has received funding from the EMPIR programme, co-financed by the Participating States and 
+		    from the European Union's Horizon 2020 research and innovation programme.
+	    </xs:documentation>
+	</xs:annotation>
+
+
+
+	<!--
+  ##############################################################################################
+  First part of the XML-schema: Elements for the SI-based exchange of measured quantities.
+  ##############################################################################################
+  -->
+	
+	<xs:element name="real">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Meta data element definition for a real measurement quantity.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The following statements of a real quantity are possible. 
+			    [(m)-mandatory, (o)-optional]
+			    
+			    1. Basic measured quantity
+			    	(o) - element label				(string)
+			    	(m) - element value				(decimal value type)
+			    	(m) - element unit				(string - SI format)
+			    	(o) - element dateTime			(xs:dateTime)
+			      
+			      
+			    2. Measured quantity with expanded measurement uncertainty
+			    	(o) - element label				(string)
+			    	(m) - element value				(decimal value type)
+			    	(m) - element unit				(string - SI format)
+					(o) - element dateTime			(xs:dateTime)
+			    	(m) - element expandedUnc 		(element type expandedUnc - sub structure)
+			      
+			      
+			    3. Measured quantity with uncertainty coverage interval (probabilistic-symmetric)
+			    	(o) - element label				(string)
+			    	(m) - element value				(decimal value type)
+			    	(m) - element unit				(string - SI format)
+			    	(o) - element dateTime			(xs:dateTime)
+			    	(m) - element coverageInterval  (element type coverageInterval - sub structure)
+				]]>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				Integration into external XML:
+				<myXML xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:si="https://ptb.de/si">
+				  <xs:element name="individualElement">
+			        <xs:complexType>
+			          <xs:sequence>
+			            <xs:element ref="si:real"/>
+			          </xs:sequence>
+			        </xs:complexType>
+			     </xs:element>
+			   </mxXML>
+				]]>  
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- optional label -->
+				<xs:element name="label" type="xs:string" minOccurs="0"/>
+				
+				<!-- mandatory information -->
+				<xs:element name="value" type="si:decimalType"/>
+				<xs:element name="unit"  type="si:unitType"/>
+
+				<!-- optional time stamp -->
+				<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>
+
+				<!-- optional choice of uncertainty statements -->
+				<xs:choice minOccurs="0">
+					<xs:element ref="si:expandedUnc"/>
+					<xs:element ref="si:coverageInterval"/>
+				</xs:choice>
+
+			</xs:sequence>
+
+		</xs:complexType> 
+	</xs:element>
+	
+
+	<xs:element name="expandedUnc">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of the structure, that gives the necessary components for stating 
+				an expanded measurement uncertainty. This element must always be used in the
+				context of a real quantity, which is an application within si:real and/or
+				si:globalUnivariateUnc.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The element has the following components [(m)-mandatory, (o)-optional]:
+				 
+				(m) - element uncertainty				(decimal value >= 0)
+			    (m) - element coverageFactor			(decimal value >= 1) 
+			    (m) - element coverageProbability		(decimal value in [0,1])
+				(o) - element distribution				(string)
+				
+				The unit of component uncertainty is the unit used in the context of
+				si:real and/or si:globalUnivariateUnc.
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="uncertainty" type="si:uncertaintyValueType"/>
+				<xs:element name="coverageFactor" type="si:kValueType"/>
+				<xs:element name="coverageProbability" type="si:probabilityValueType"/>
+				<xs:element name="distribution" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<xs:element name="coverageInterval">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of the structure, that gives the necessary components for stating 
+				a probabilistic-symmetric coverage interval for a real uncertainty. This element 
+				must always be used in the context of a real quantity, which is an application 
+				within si:real and/or si:globalUnivariateUnc.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The element has the following components [(m)-mandatory, (o)-optional]:
+				 
+				(m) - element stdUncertainty			(decimal value >= 0)
+				(m) - element intervalMin				(decimal value type) 
+			    (m) - element intervalMax				(decimal value type) 
+			    (m) - element coverageProbability		(decimal value in [0,1])
+				(o) - element distribution				(string)
+				
+				The unit of components stdUncertainty, intervalMin and intervalMax is the unit 
+				used in the context of si:real and/or si:globalUnivaraiteUnc.
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="standardUnc" type="si:uncertaintyValueType"/>
+				<xs:element name="intervalMin" type="si:decimalType"/>
+				<xs:element name="intervalMax" type="si:decimalType"/>
+				<xs:element name="coverageProbability" type="si:probabilityValueType"/>
+				<xs:element name="distribution" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="constant">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of a structure for real numbers, that represent for fundamental 
+				physical constants and mathematical	constants.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The element has the following components [(m)-mandatory, (o)-optional]:
+				 
+				(o) - element label						(string)
+				(m) - element value						(decimal value type) 
+			    (m) - element unit						(string - SI unit) 
+			    (o) - element dateTime					(xs:dateTime)
+			    (o) - element uncertainty				(decimal value >= 0)
+				(o) - element distribution				(string)
+				
+				The value and the uncertainty have the unit specified by the element unit.
+				For fundamental physical constants, that are defined experimentally, the
+				uncertainty is the standard deviation.
+				
+				For rounded mathematical constants, the uncertainty is the standard deviation
+				of a rectangular distribution (element value defines center point), that 
+				contains the exact value of the constant with 100 percent probability.
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- optional label -->
+				<xs:element name="label" type="xs:string" minOccurs="0"/>
+			
+				<!-- mandatory information -->
+				<xs:element name="value" type="si:decimalType"/>
+				<xs:element name="unit"  type="si:unitType"/>
+
+				<!-- optional time stamp -->
+				<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>
+				
+				<!-- optional uncertainty -->
+				<xs:element name="uncertainty" type="si:uncertaintyValueType" minOccurs="0"/>
+				
+				<!-- optional distribution -->
+				<xs:element name="distribution" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="complex">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The definition of complex quantities in the D-SI meta data model.
+				Complex quantities allow two representations of complex numerical values:
+				One is the Cartesian coordinate form, the other representation is the
+				polar coordinate form.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The following statements of a complex quantity are possible. 
+			    [(m)-mandatory, (o)-optional]
+			    
+			    1. Basic measured quantity in Cartesian form
+			    	(o) - element label				(string)
+			    	(m) - element valueReal			(decimal value type)
+					(m) - element valueImag			(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(o) - element dateTime			(xs:dateTime)
+				
+				
+				2. Basic measured quantity in polar form
+			    	(o) - element label				(string)
+			    	(m) - element valueMagnitude	(decimal value type)
+					(m) - element valuePhase		(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(m) - element unitPhase			(string - SI unit for an angular quantity)
+					(o) - element dateTime			(xs:dateTime)
+					
+					
+				3. Basic measured quantity in Cartesian form with ellipsoidal coverage region
+			    	(o) - element label				(string)
+			    	(m) - element valueReal			(decimal value type)
+					(m) - element valueImag			(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(o) - element dateTime			(xs:dateTime)
+					(m) - element ellipsoidalRegion	(element type ellipsoidalRegion - sub structure)
+				
+				
+				4. Basic measured quantity in polar form with ellipsoidal coverage region
+			    	(o) - element label				(string)
+			    	(m) - element valueMagnitude	(decimal value type)
+					(m) - element valuePhase		(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(m) - element unitPhase			(string - SI unit for an angular quantity)
+					(o) - element dateTime			(xs:dateTime)
+					(m) - element ellipsoidalRegion	(element type ellipsoidalRegion - sub structure)
+					
+					
+				5. Basic measured quantity in Cartesian form with rectangular coverage region
+			    	(o) - element label				(string)
+			    	(m) - element valueReal			(decimal value type)
+					(m) - element valueImag			(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(o) - element dateTime			(xs:dateTime)
+					(m) - element rectangularRegion	(element type rectangularRegion - sub structure)
+				
+				
+				6. Basic measured quantity in polar form with rectangular coverage region
+			    	(o) - element label				(string)
+			    	(m) - element valueMagnitude	(decimal value type)
+					(m) - element valuePhase		(decimal value type)
+			   	 	(m) - element unit				(string - SI unit)
+					(m) - element unitPhase			(string - SI unit for an angular quantity)
+					(o) - element dateTime			(xs:dateTime)
+					(m) - element rectangularRegion	(element type rectangularRegion - sub structure)
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- optional label -->
+				<xs:element name="label" type="xs:string" minOccurs="0"/>
+				<!-- choice of Cartesian coordinate form or polar coordinate form -->
+				<xs:choice>
+					<xs:sequence>
+						<!-- mandatory components of Cartesian coordinate form -->
+						<xs:element name="valueReal" type="si:decimalType"/>
+						<xs:element name="valueImag" type="si:decimalType"/>
+						<xs:element name="unit" type="si:unitType"/>
+					</xs:sequence>
+					<xs:sequence>
+						<!-- mandatory components of polar coordinate form -->
+						<xs:element name="valueMagnitude" type="si:decimalType"/>
+						<xs:element name="valuePhase" type="si:decimalType"/>
+						<xs:element name="unit" type="si:unitType"/>
+						<xs:element name="unitPhase" type="si:unitPhaseType"/>			
+					</xs:sequence>	
+				</xs:choice>
+				<!-- optional time stamp -->
+				<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>
+				<!-- optional uncertainty statement: either ellipsoidal or rectangular coverage region -->
+				<xs:choice minOccurs="0">
+					<xs:element ref="si:ellipsoidalRegion"/>
+					<xs:element ref="si:rectangularRegion"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	
+	<!--  -->
+	<xs:element name="covarianceMatrix">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of a covariance matrix element that is used for
+				multidimensional uncertainty statements in the D-SI format.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				A covariance matrix has n column elements.
+				The dimension of the covariance matrix is the amount of columns.
+				Each column contains the covariance values of one column of the 
+				covariance matrix.
+				The order of the columns is from left to right column in the
+				covariance matrix.
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="column" minOccurs="1" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">
+							Definition of a column in the covariance matrix.
+						</xs:documentation>
+						<xs:documentation xml:lang="en">
+							<![CDATA[
+							The column has n covariance elements, where
+							n is the amount of columns in the covariance matrix.
+							
+							The covariance elements are ordered as in the covariance matrix, started
+							at the element in the first row of the matrix and going to the
+							last row of the matrix.
+							]]>
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="covariance" minOccurs="1" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation xml:lang="en">
+										Each covariance component is defined by 
+										- element value		(decimal value type)
+										- element unit		(string - SI format)
+									</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="value" type="si:decimalType"/>
+										<xs:element name="unit" type="si:unitType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	
+	<xs:element name="ellipsoidalRegion">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of the structure, that provides a hyper-ellipsoidal coverage
+				region for stating the uncertainty of multivariate quantities. It is
+				used in the context of uncertainty for complex quantities and
+				lists of real or complex quantities.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The element has the following components [(m)-mandatory, (o)-optional]:
+				 
+				(m) - element covarianceMatrix			(sub structure covarianceMatrix)
+				(m) - element coverageFactor			(decimal value >= 1) 
+			    (m) - element coverageProbability		(decimal value in [0,1]) 
+				(o) - element distribution				(string)
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- covariance matrix data -->
+				<xs:element ref="si:covarianceMatrix"/>
+				<!-- coverage properties of region -->
+				<xs:element name="coverageFactor" type="si:kValueType"/>
+				<xs:element name="coverageProbability" type="si:probabilityValueType"/>
+				<!-- optional information about distribution -->
+				<xs:element name="distribution" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<!-- Structure under development by NPL and PTB -->
+	<xs:element name="rectangularRegion">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of the structure that provides a hyper-rectangular coverage
+				region for stating the uncertainty of multivariate quantities. It is
+				used in the context of uncertainty for complex quantities and
+				lists of real or complex quantities.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				The element has the following components [(m)-mandatory, (o)-optional]:
+				 
+				(m) - element covarianceMatrix			(sub structure covarianceMatrix)
+				(m) - element coverageFactor			(decimal value >= 1) 
+			    (m) - element coverageProbability		(decimal value in [0,1]) 
+				(o) - element distribution				(string)
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- covariance matrix data -->
+				<xs:element ref="si:covarianceMatrix"/>
+				<!-- coverage properties of region -->
+				<xs:element name="coverageFactor" type="si:kValueType"/>
+				<xs:element name="coverageProbability" type="si:probabilityValueType"/>
+				<!-- optional information about distribution -->
+				<xs:element name="distribution" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	
+	<xs:element name="list">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Meta data element definition for a list of basic measurement quantities. 
+				The list can represent independent measurement or multivariate vector quantities.
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				 A list can provide the following structures:
+    
+			    1: A list of si:real quantities
+			       - optional list timestamp, list label and/or list unit 
+			       - optional list univariate uncertainty statement with list unit
+				   - optional multivariate hyper-elliptical or hyper-rectangular coverage region
+				   
+				2: A list of si:complex quantities
+			       - optional list timestamp, list label and/or list unit(s) 
+			       - optional list bivariate uncertainty statement with list unit(s)
+				   - optional multivariate hyper-elliptical or hyper-rectangular coverage region
+				  
+				3: A recursive list of si:list elements
+			      - optional global timestamp and/or global label  
+				]]>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- optional label of the list -->
+				<xs:element name="label" type="xs:string" minOccurs="0"/>
+				<!-- optional list time stamp -->
+				<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>
+				
+				<!-- selection between list of lists and list of real or complex -->
+				<xs:choice>
+				
+					<!-- list of real or complex -->
+					<xs:sequence>
+						<!-- optional list unit -->
+						<xs:element name="listUnit" type="si:unitType" minOccurs="0"/>
+						
+						<!-- selection of real or complex type -->
+						<xs:choice>
+						
+							<!-- list of real elements -->
+							<xs:sequence>
+								<!-- optional list uncertainty -->
+								<xs:element ref="si:listUnivariateUnc" minOccurs="0"/>	
+								<!-- mandatory list of real elements -->
+								<xs:element name="real" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation xml:lang="en">
+											Meta data element definition for a real measurement quantity in list.
+											This implementation differs from the pure real quantity in the way that
+											the unit component is optional in order to allow a combination with
+											a global unit in the list of real quantities.
+										</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<!-- optional local label -->
+											<xs:element name="label" type="xs:string" minOccurs="0"/>
+											<!-- mandatory information -->
+											<xs:element name="value" type="si:decimalType"/>
+											<!-- if list unit, then do not write this local unit -->
+											<xs:element name="unit"  type="si:unitType" minOccurs="0"/>
+											<!-- optional local time stamp -->
+											<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>
+											<!-- optional choice of local uncertainty statements -->
+											<xs:choice minOccurs="0">
+												<xs:element ref="si:expandedUnc"/>
+												<xs:element ref="si:coverageInterval"/>
+											</xs:choice>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>				
+							</xs:sequence>
+							
+							
+							<!-- list of complex elements -->
+							<xs:sequence>	
+								<xs:element name="listUnitPhase" type="xs:string" minOccurs="0"/>			
+								<!-- optional list bivariate uncertainty -->
+								<xs:element ref="si:listBivariateUnc" minOccurs="0"/>
+								<!-- mandatory list of complex elements -->
+								<xs:element name="complex" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation xml:lang="en">
+											Meta data element definition for a complex measurement quantity in list.
+											This implementation differs from the pure complex quantity, in the way that
+											the unit components are optional in order to allow a combination with
+											a global unit in the list of complex quantities.
+										</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<!-- optional local label -->
+											<xs:element name="label" type="xs:string" minOccurs="0"/>								
+											<!-- choice of Cartesian coordinate form or polar coordinate form -->
+											<xs:choice>									
+												<xs:sequence>
+													<!-- mandatory components of Cartesian coordinate form -->
+													<xs:element name="valueReal" type="si:decimalType"/>
+													<xs:element name="valueImag" type="si:decimalType"/>
+													<!-- if list unit, then do not write this local unit -->
+													<xs:element name="unit" type="si:unitType" minOccurs="0"/>
+												</xs:sequence>										
+												<xs:sequence>
+													<!-- mandatory components of polar coordinate form -->
+													<xs:element name="valueMagnitude" type="si:decimalType"/>
+													<xs:element name="valuePhase" type="si:decimalType"/>
+													<!-- if list unit, then do not write this local unit -->
+													<xs:element name="unit" type="si:unitType" minOccurs="0"/>
+													<!-- if list unit, then do not write this local unit -->	
+													<xs:element name="unitPhase" type="si:unitPhaseType" minOccurs="0"/>												
+												</xs:sequence>										
+											</xs:choice>														
+											<!-- optional local time stamp -->
+											<xs:element name="dateTime" type="xs:dateTime" minOccurs="0"/>					
+											<!-- optional choice of local uncertainty statements -->
+											<xs:choice minOccurs="0">
+												<xs:element ref="si:ellipsoidalRegion"/>
+												<xs:element ref="si:rectangularRegion"/>
+											</xs:choice>					
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							
+						</xs:choice>
+
+						<!-- optional multivariate uncertainty statement -->
+						<xs:choice minOccurs="0">
+							<xs:element ref="si:ellipsoidalRegion"/>
+							<xs:element ref="si:rectangularRegion"/>
+						</xs:choice>
+					</xs:sequence>
+					<!-- end of list of real or complex quantities -->
+					
+					
+					
+					<!-- list of lists -->
+					<xs:sequence>
+						<!-- mandatory list of complex elements -->
+						<xs:element ref="si:list" maxOccurs="unbounded"/>
+					</xs:sequence>
+				
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<!--  -->
+	<xs:element name="listUnivariateUnc">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of a structure, for a global univariate uncertainty, that
+				is used within the list structure with a list of real quantities.
+				The global univariate uncertainty can either be given as an expanded 
+				measurement uncertainty or as a coverage interval.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="si:expandedUnc"/>
+					<xs:element ref="si:coverageInterval"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<!--  -->
+	<xs:element name="listBivariateUnc">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Definition of a structure, for a global bivariate uncertainty, that
+				is used within the list structure with a list of complex quantities.
+				The global bivariate uncertainty can either be given as a hyper-ellipsoidal
+				coverage region or a hyper-rectangular coverage region. Both
+				coverage regions must provide a covariance matrix of dimension 2.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="si:ellipsoidalRegion"/>
+					<xs:element ref="si:rectangularRegion"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	
+
+
+
+	<!-- -->
+	<xs:element name="hybrid">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				The hybrid elements allows to add quantities to the
+				machine readable D-SI format, with other units, than those allowed
+				to be used with the SI by means of the BIPM SI brochure.
+			</xs:documentation>	
+			<xs:documentation xml:lang="en">
+				<![CDATA[
+				 The hybrid element can contain the following information
+				 
+				 1. A set of real quantities
+				 	- all real elements provide a quantity value for one and the same measured quantity
+				 	- each real element provides this quantity with a different unit
+				 	- at least one real element provides the quantity with a machine readable SI unit
+				 	- the other real quantities can use any SI or non-SI unit
+				 	
+				 2. A set of complex quantities
+				 	- all complex elements provide a quantity value for one and the same measured quantity
+				 	- each complex element provides this quantity with a different unit(s)
+				 	- at least one complex element provides the quantity with a machine readable SI unit(s)
+				 	- the other complex quantities can use any SI or non-SI unit
+				 
+				  3. A set of list element
+				 	- all list elements must provide the same quantity information and hence, must have
+				 		an identical structure.
+				 	- the lists do only differ by using different units for each of the quantities
+				 	- at least one list  provides all quantities only with machine readable SI units
+				 	- the other lists can use any other units for the quantities
+				 
+				  4. A set of constant quantities
+				 	- all constant elements provide a quantity value for one and the same quantity
+				 	- each constant element provides this quantity with a different unit
+				 	- at least one constant element provides the quantity with a machine readable SI unit
+				 	- the other constant quantities can use any SI or non-SI unit
+				]]>
+			</xs:documentation>	
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<!-- mandatory adapter for at least one SI quantity and additional (non-) SI quantities -->
+				<xs:choice>
+					<xs:element ref="si:real" minOccurs="1" maxOccurs="unbounded" />
+					<xs:element ref="si:complex" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element ref="si:list" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element ref="si:constant" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+
+
+	<!--
+  ##############################################################################################
+  Second part of the XML-schema: internally used simple data types.
+  ##############################################################################################
+  -->
+
+	<xs:simpleType name="unitType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				BIPM SI brochure unit (9th edition).
+				Based on xs:string.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="unitPhaseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Unit of angular quantity in SI.
+				Based on xs:string.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="decimalType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Scientific decimal format for numerical values.
+				Based on type xs:double.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:pattern value="[-+]?((\d*\.\d+)|(\d+\.\d*)|(\d+\.?))([Ee][-+]?\d+)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="uncertaintyValueType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Scientific decimal format for numerical values of uncertainties
+				that must be positive (greater than zero or equal to zero).
+				Based on type xs:double.
+			</xs:documentation>
+		</xs:annotation>
+	
+		<xs:restriction base="xs:double">
+			<xs:pattern value="\+?((\d*\.\d+)|(\d+\.\d*)|(\d+\.?))([Ee][-+]?\d+)?"/>	  
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="kValueType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Scientific decimal format for coverage factor values for uncertainties
+				that must be greater than one or equal to one.
+				Based on type xs:double.
+			</xs:documentation>
+		</xs:annotation>	
+		<xs:restriction base="xs:double">
+			<xs:pattern value="\+?(([1-9]\d*\.\d*)|([1-9]\d*))"/>	  
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="probabilityValueType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				Decimal format for coverage probability values for uncertainties.
+				The value must be within the interval [0,1]. The scientific exponent 
+				"e" (or "E") is not allowed.
+				Based on type xs:double.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:pattern value="\+?((0(\.\d*)?)|(1(\.0*)?))"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
