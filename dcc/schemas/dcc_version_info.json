@@ -1,5 +1,5 @@
 {
-    "description": "mapping dcc schema versions to local dcc, dsi schema files",
+    "description": "mapping dcc schemas versions to local dcc, dsi schemas files",
     "dcc_xsd_file": {
         "2.1.0": "dcc_2_1_0.xsd",
         "2.1.1": "dcc_2_1_1.xsd",

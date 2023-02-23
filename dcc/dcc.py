@@ -19,19 +19,24 @@ import xml.etree.ElementTree as ET
 import zlib
 import binascii
 from collections import defaultdict
-from . import schema_loader
 import requests
 from signxml import InvalidCertificate, InvalidSignature, InvalidInput
 from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
-from lxml import etree as et
 from asn1crypto import pem
 from cryptography import x509
 
+from typing import Optional
+from .dcc_xml_validator import DCCXMLValidator
+
 
 class DCC:
+    """
+    Python module for processing of digital calibration certificates (DCC)
+    """
 
     def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store=None):
+
         # Initialize DCC object
         self.xml_file_name = xml_file_name
         self.administrative_data = None
@@ -47,16 +52,13 @@ class DCC:
         self.schema_sources = []
         self.trust_store = trust_store
 
+        self.xml_validator: DCCXMLValidator = DCCXMLValidator()
+
         # Set default DCC namespaces
         self.add_namespace('dcc', 'https://ptb.de/dcc')
         self.add_namespace('si', 'https://ptb.de/si')
         self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
         self.add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
-
-        # Load default schema files
-        own_path = os.path.dirname(os.path.realpath(__file__))
-        #self.add_schema_file(os.path.join(own_path, 'schema/dcc_3_0_0.xsd'))
-        # self.add_schema_file('../data/schema/SI_Format_1_3_1.xsd')
 
         if xml_file_name is not None:
             self.load_dcc_from_xml_file()
@@ -74,7 +76,6 @@ class DCC:
             # self.administrative_data = root.find("dcc:administrativeData", self.name_space)
             self.measurement_results = self.root[1]
             self.dcc_version = self.root.attrib['schemaVersion']
-            self.add_schema_file(schema_loader.get_abs_local_dcc_shema_path(self.dcc_version, raise_errors=True))
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
             if self.is_signed():
@@ -164,7 +165,7 @@ class DCC:
     def get_signer_certificate(self):
         if self.signature_section is None:
             print('No signature section available for this DCC object')
-            return None;
+            return None
         signing_cert = self.signature_section.find(".//ds:X509Certificate", self.name_space).text
         if signing_cert is None:
             print('No signer certificate in signature section')
@@ -218,15 +219,17 @@ class DCC:
     def add_namespace(self, name_space_label, name_space_url):
         # Add namespace
         self.name_space[name_space_label] = name_space_url
-
+    """
     def add_schema_file(self, file_name):
-        # Add SML schema file
+        # Add SML schemas file
         with open(file_name, "r") as file:
             self.schema_sources.append(file.read())
+    """
 
-    def verify_dcc_xml(self):
+    def verify_dcc_xml(self, online):
         # Verify DCC file
-        valid_xml = xmlschema.is_valid(self.xml_file_name, self.schema_sources)
+        valid_xml = self.xml_validator.dcc_is_valid_against_schema(self.root, online=online,
+                                                                   dcc_version=self.dcc_version)
         return valid_xml
 
     def is_signed(self):
@@ -341,7 +344,7 @@ class DCC:
 
     def get_calibration_result_by_quantity_refType3(self, result_refType):
         res = []
-        #all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
+        # all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
         all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
         for res_node in all_res_nodes:
             quants = res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
@@ -367,7 +370,7 @@ class DCC:
                 si_nodes = quant.findall('./{https://ptb.de/si}*')
                 for si_node in si_nodes:
                     res.append(self.etree_to_dict(si_node))
-        return(res)
+        return (res)
 
     def get_calibration_result_by_quantity_id(self, result_id):
         node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" + result_id + "\'" + ']')
@@ -399,9 +402,7 @@ class DCC:
         if "id" in node.attrib.keys():
             attr = attr + " [ @ id =" + "\'" + str(node.attrib['id']) + "\'" + "]"
 
-        return attr;
-
-
+        return attr
 
     def __find_quantities_in_lists(self, node, quant, name, lang, xpath):
         name = self.__read_name(node, name, lang)
@@ -442,7 +443,7 @@ class DCC:
         return res
 
     def etree_to_dict(self, t):
-        #method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
+        # method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
         tkey = t.tag.rpartition('}')[2]
         d = {tkey: {} if t.attrib else None}
         children = list(t)

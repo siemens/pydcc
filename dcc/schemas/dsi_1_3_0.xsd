@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="1.3.1" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema version="1.3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="https://ptb.de/si"
 	xmlns:si="https://ptb.de/si"
 	elementFormDefault="qualified">
@@ -22,11 +22,11 @@
 			WEBPAGE	
 			https://www.ptb.de/empir2018/smartcom/home/
 			VERSION 	
-			1.3.1
+			1.3.0
 			DATE		
-			2020-05-18
+			2019-10-16
 			DOI:
-			10.5281/zenodo.3826517
+			10.5281/zenodo.3366902
 		</xs:documentation>
 		<xs:documentation xml:lang="en">
 			DISCLAIMER:
@@ -132,7 +132,7 @@
 				Definition of the structure, that gives the necessary components for stating 
 				an expanded measurement uncertainty. This element must always be used in the
 				context of a real quantity, which is an application within si:real and/or
-				si:globalUnivariateUnc.
+				si:globalUnivaraiteUnc.
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<![CDATA[
@@ -144,7 +144,7 @@
 				(o) - element distribution				(string)
 				
 				The unit of component uncertainty is the unit used in the context of
-				si:real and/or si:globalUnivariateUnc.
+				si:real and/or si:globalUnivaraiteUnc.
 				]]>
 			</xs:documentation>
 		</xs:annotation>
@@ -165,7 +165,7 @@
 				Definition of the structure, that gives the necessary components for stating 
 				a probabilistic-symmetric coverage interval for a real uncertainty. This element 
 				must always be used in the context of a real quantity, which is an application 
-				within si:real and/or si:globalUnivariateUnc.
+				within si:real and/or si:globalUnivaraiteUnc.
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<![CDATA[
@@ -211,13 +211,13 @@
 			    (o) - element uncertainty				(decimal value >= 0)
 				(o) - element distribution				(string)
 				
-				The value and the uncertainty have the unit specified by the element unit.
+				The value and the uncertaintny have the unit specified by the element unit.
 				For fundamental physical constants, that are defined experimentally, the
 				uncertainty is the standard deviation.
 				
 				For rounded mathematical constants, the uncertainty is the standard deviation
 				of a rectangular distribution (element value defines center point), that 
-				contains the exact value of the constant with 100 percent probability.
+				containes the exact value of the constant with 100 percent probability.
 				]]>
 			</xs:documentation>
 		</xs:annotation>
@@ -357,9 +357,9 @@
 				A covariance matrix has n column elements.
 				The dimension of the covariance matrix is the amount of columns.
 				Each column contains the covariance values of one column of the 
-				covariance matrix.
+				covaraince matrix.
 				The order of the columns is from left to right column in the
-				covariance matrix.
+				covaliance matrix.
 				]]>
 			</xs:documentation>
 		</xs:annotation>
@@ -487,7 +487,7 @@
     
 			    1: A list of si:real quantities
 			       - optional list timestamp, list label and/or list unit 
-			       - optional list univariate uncertainty statement with list unit
+			       - optional list univaraite uncertainty statement with list unit
 				   - optional multivariate hyper-elliptical or hyper-rectangular coverage region
 				   
 				2: A list of si:complex quantities
@@ -687,26 +687,26 @@
 				 The hybrid element can contain the following information
 				 
 				 1. A set of real quantities
-				 	- all real elements provide a quantity value for one and the same measured quantity
+				 	- all real elementes provide a quantity value for one and the same measured quantity
 				 	- each real element provides this quantity with a different unit
 				 	- at least one real element provides the quantity with a machine readable SI unit
 				 	- the other real quantities can use any SI or non-SI unit
 				 	
 				 2. A set of complex quantities
-				 	- all complex elements provide a quantity value for one and the same measured quantity
+				 	- all complex elementes provide a quantity value for one and the same measured quantity
 				 	- each complex element provides this quantity with a different unit(s)
 				 	- at least one complex element provides the quantity with a machine readable SI unit(s)
 				 	- the other complex quantities can use any SI or non-SI unit
 				 
 				  3. A set of list element
-				 	- all list elements must provide the same quantity information and hence, must have
+				 	- all list elementes must provide the same quantity informations and hence, must have 
 				 		an identical structure.
 				 	- the lists do only differ by using different units for each of the quantities
 				 	- at least one list  provides all quantities only with machine readable SI units
-				 	- the other lists can use any other units for the quantities
+				 	- the other lists can use any oterh units for the quantities
 				 
 				  4. A set of constant quantities
-				 	- all constant elements provide a quantity value for one and the same quantity
+				 	- all constant elementes provide a quantity value for one and the same quantity
 				 	- each constant element provides this quantity with a different unit
 				 	- at least one constant element provides the quantity with a machine readable SI unit
 				 	- the other constant quantities can use any SI or non-SI unit
@@ -807,7 +807,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:double">
-			<xs:pattern value="\+?((0(\.\d*)?)|(1(\.0*)?))"/>
+			<xs:pattern value="\+?((0\.\d*[1-9]\d*)|(\.\d*[1-9]\d*)|(1\.0*)|(1))"/>	  
 		</xs:restriction>
 	</xs:simpleType>
 

@@ -1,0 +1,75 @@
+{
+  "description": "List of Versions of the DCC",
+  "releases": [
+    {
+      "version": "2.1.0",
+      "url": "https://www.ptb.de/dcc/v2.1.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "2.1.1",
+      "url": "https://www.ptb.de/dcc/v2.1.1/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "2.2.0",
+      "url": "https://www.ptb.de/dcc/v2.2.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "2.3.0",
+      "url": "https://www.ptb.de/dcc/v2.3.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "2.4.0",
+      "url": "https://www.ptb.de/dcc/v2.4.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "3.0.0-rc.1",
+      "url": "https://www.ptb.de/dcc/v3.0.0-rc.1/dcc.xsd",
+	  "type": "pre-release"
+    },
+    {
+      "version": "3.0.0-rc.2",
+      "url": "https://www.ptb.de/dcc/v3.0.0-rc.2/dcc.xsd",
+	  "type": "pre-release"
+    },
+    {
+      "version": "3.0.0-rc.3",
+      "url": "https://www.ptb.de/dcc/v3.0.0-rc.3/dcc.xsd",
+	  "type": "pre-release"
+    },
+    {
+      "version": "3.0.0-rc.4",
+      "url": "https://www.ptb.de/dcc/v3.0.0-rc.4/dcc.xsd",
+	  "type": "pre-release"
+    },
+    {
+      "version": "3.0.0",
+      "url": "https://www.ptb.de/dcc/v3.0.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "3.1.0",
+      "url": "https://www.ptb.de/dcc/v3.1.0/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "3.1.1",
+      "url": "https://www.ptb.de/dcc/v3.1.1/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "3.1.2",
+      "url": "https://www.ptb.de/dcc/v3.1.2/dcc.xsd",
+	  "type": "stable"
+    },
+    {
+      "version": "3.2.0",
+      "url": "https://www.ptb.de/dcc/v3.2.0/dcc.xsd",
+	  "type": "stable"
+    }    
+  ]
+}
