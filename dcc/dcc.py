@@ -219,14 +219,8 @@ class DCC:
     def add_namespace(self, name_space_label, name_space_url):
         # Add namespace
         self.name_space[name_space_label] = name_space_url
-    """
-    def add_schema_file(self, file_name):
-        # Add SML schemas file
-        with open(file_name, "r") as file:
-            self.schema_sources.append(file.read())
-    """
 
-    def verify_dcc_xml(self, online):
+    def verify_dcc_xml(self, online: bool):
         # Verify DCC file
         valid_xml = self.xml_validator.dcc_is_valid_against_schema(self.root, online=online,
                                                                    dcc_version=self.dcc_version)

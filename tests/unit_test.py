@@ -149,7 +149,6 @@ class TestBaseFunctions(unittest.TestCase):
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
         self.assertFalse(dcco_wrong_schema.verify_dcc_xml(online=True))
 
-
     def test_verify_incorrect_dcc_xml_offline(self):
         xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml'# Example from PTB
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
