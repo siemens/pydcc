@@ -17,13 +17,17 @@ from dcc import DCC
 
 xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
 dcco = DCC(xml_file_name) # Load DCC and crate DCC object
-#try:
-    #if dcco.verify_dcc_xml():
-    #    print("XML schema is valid.")
-    #else:
-    #    print("XML schema is invalid.")
-#except Exception as inst:
-#    print("XML schema not verified.")
+
+if not dcco.status_report.is_loaded:
+    print("Error: DCC was not loaded successfully!")
+
+if dcco.status_report.schema_verification_performed:
+    if dcco.status_report.valid_schema:
+        print("XML schema is valid.")
+    else:
+        print("XML schema is invalid.")
+else:
+    print("Warning: XML schema verification was not performed!")
 
 calib_date = dcco.calibration_date()
 print('Calibration date: %s' % calib_date.strftime("%d. %B %Y") )
@@ -35,9 +39,11 @@ print('DCC UID: %s' % uid)
 if (days_since_calibration > 365):
     print('=> Recalibration required according to QMS.')
 
-if dcco.is_signed():
+
+
+if dcco.status_report.is_signed:
     print('Signature available.')
-    if dcco.is_signature_valid():
+    if dcco.status_report.valid_signature:
         print('Signature is valid.')
     else:
         print('Signature could not be verified.')

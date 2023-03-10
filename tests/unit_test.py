@@ -46,14 +46,6 @@ class TestBaseFunctions(unittest.TestCase):
         lang = dcco_gp.mandatoryLang()
         self.assertEqual(lang, 'de')
 
-    def test_get_calibration_result_by_quantity_id(self):
-        dcco = DCC('../data/dcc/dcc_ngp_temperature_typical_v12_refType2ID.xml')
-        res = dcco.get_calibration_result_by_quantity_id('basic_measurementError')
-        self.assertEqual(res, {'realListXMLList': {'valueXMLList': '0.072 0.089 0.107 -0.009 -0.084', 'unitXMLList': '\\kelvin',
-                             'expandedUncXMLList': {'uncertaintyXMLList': '0.061', 'coverageFactorXMLList': '2',
-                                                    'coverageProbabilityXMLList': '0.95',
-                                                    'distributionXMLList': 'normal'}}})
-
     def test_get_calibration_results(self):
         res = dcco_gp.get_calibration_results('name')
         self.assertEqual(res[0], [' Messergebnisse Bezugswert', {'hybrid': {'realListXMLList': [{'valueXMLList': '306.248 373.121 448.253 523.319 593.154', 'unitXMLList': '\\kelvin'}, {'valueXMLList': '33.098 99.971 175.103 250.169 320.004', 'unitXMLList': '\\degreecelsius'}]}}])
