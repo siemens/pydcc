@@ -32,31 +32,48 @@ from .dcc_xml_validator import DCCXMLValidator
 
 
 class DCCStatusType:
-    """Report classes"""
-    SCHEMA = 1
-    SIGNATURE = 2
+    """Status report classes"""
+    IS_LOADED = 0
+    VALID_SCHEMA = 1
+    IS_SIGNED = 2
+    VALID_SIGNATURE = 3
 
 @dataclass
 class DCCStatusReport:
+    """
+    Status report for a specific DCC.
+    This status report is a checklist represented by a set of binary values.
+    This report is created by the class DCC.
+    """
 
+    is_loaded: bool = False
+
+    schema_verification_performed: bool = False
     valid_schema: bool = False
+
+    signature_verification_performed: bool = False
+    is_signed: bool = False
     valid_signature: bool = False
 
-    def report(self, status_type: DCCStatusType, success):
-        if status_type == DCCStatusType.SCHEMA:
+    def report(self, status_type: DCCStatusType, success=True):
+        """Report test results with this method-"""
+        if status_type == DCCStatusType.VALID_SCHEMA:
+            self.schema_verification_performed = True
             self.valid_schema = success
-        elif status_type == DCCStatusType.SIGNATURE:
+        elif status_type == DCCStatusType.VALID_SIGNATURE:
+            self.signature_verification_performed = True
             self.valid_signature = success
         pass
 
     # ignore_list: Optinal[DCCStatusType] = None
-    def get_overall_status(self, ignore_list=[]):
+    def get_status_summary(self, ignore_list=[]):
+        """Read status report summary."""
         overall_status = True
 
-        if DCCStatusType.SCHEMA not in ignore_list:
+        if DCCStatusType.VALID_SCHEMA not in ignore_list:
             overall_status = overall_status and self.valid_schema
 
-        if DCCStatusType.SIGNATURE not in ignore_list:
+        if DCCStatusType.VALID_SIGNATURE not in ignore_list:
             overall_status = overall_status and self.valid_signature
 
         return overall_status
@@ -81,7 +98,6 @@ class DCC:
         self.name_space = dict()
         self.UID = None
         self.signature_section = None
-        self.signed = None
         self.schema_sources = []
         self.trust_store = trust_store
 
@@ -112,7 +128,8 @@ class DCC:
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
             if self.is_signed():
-                self.valid_signature = self.__verify_signature()
+                valid_signature = self.__verify_signature()
+                self.status_report.report(DCCStatusType.VALID_SIGNATURE, valid_signature)
 
     def __verify_signature(self):
 
@@ -261,16 +278,15 @@ class DCC:
 
     def is_signed(self):
         # Is the DCC signed?
-        if self.signed is not None:
-            return self.signed
         elem = self.root.find("ds:Signature", self.name_space)
-        self.signed = not elem == None
+        is_signed = not elem == None
+        self.status_report.report(DCCStatusType.IS_SIGNED, is_signed)
         self.signature_section = elem
-        return self.signed
+        return is_signed
 
     def is_signature_valid(self):
         # Is DCC signature valid?
-        return self.valid_signature
+        return self.status_report.valid_signature
 
     def calibration_date(self):
         # Return calibration date (endPerformanceDate)
@@ -368,47 +384,6 @@ class DCC:
 
         ret_dict['compressed_dcc_data_in_c'] = compressed_dcc_data_in_c
         return ret_dict
-
-    def get_calibration_result_by_quantity_refType3(self, result_refType):
-        res = []
-        # all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}result')
-        all_res_nodes = self.root.findall('.//{https://ptb.de/dcc}measurementResult')
-        for res_node in all_res_nodes:
-            quants = res_node.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
-            for quant in quants:
-                si_nodes = quant.findall('./{https://ptb.de/si}*')
-                for si_node in si_nodes:
-                    res.append(self.etree_to_dict(si_node))
-
-        if len(res) > 1:
-            return (['more than one qantity has the refType ' + result_refType + '.', res])
-        else:
-            return (res)
-
-    def get_calibration_result_by_quantity_refType2(self, result_refType):
-        res = []
-        quants = self.root.findall('.//{https://ptb.de/dcc}quantity[@refType=' + "\'" + result_refType + "\'" + ']')
-
-        if len(quants) > 1:
-            return ('more than one quantity has the refType ' + result_refType + '.')
-
-        else:
-            for quant in quants:
-                si_nodes = quant.findall('./{https://ptb.de/si}*')
-                for si_node in si_nodes:
-                    res.append(self.etree_to_dict(si_node))
-        return (res)
-
-    def get_calibration_result_by_quantity_id(self, result_id):
-        node = self.root.find('.//{https://ptb.de/dcc}quantity[@id=' + "\'" + result_id + "\'" + ']')
-        res = []
-        if node is not None:
-            si_nodes = node.findall('./{https://ptb.de/si}*')
-            for si_node in si_nodes:
-                res = self.etree_to_dict(si_node)
-        else:
-            res = "quantity with id: " + result_id + "not found in DCC"
-        return res
 
     def __read_name(self, node, name, lang):
         local_name = node.find('dcc:name/dcc:content[@lang=' + "\'" + lang + "\'" + ']', self.name_space)
