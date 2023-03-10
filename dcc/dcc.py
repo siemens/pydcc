@@ -20,6 +20,7 @@ import zlib
 import binascii
 from collections import defaultdict
 import requests
+from dataclasses import dataclass
 from signxml import InvalidCertificate, InvalidSignature, InvalidInput
 from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
@@ -30,6 +31,38 @@ from typing import Optional
 from .dcc_xml_validator import DCCXMLValidator
 
 
+class DCCStatusType:
+    """Report classes"""
+    SCHEMA = 1
+    SIGNATURE = 2
+
+@dataclass
+class DCCStatusReport:
+
+    valid_schema: bool = False
+    valid_signature: bool = False
+
+    def report(self, status_type: DCCStatusType, success):
+        if status_type == DCCStatusType.SCHEMA:
+            self.valid_schema = success
+        elif status_type == DCCStatusType.SIGNATURE:
+            self.valid_signature = success
+        pass
+
+    # ignore_list: Optinal[DCCStatusType] = None
+    def get_overall_status(self, ignore_list=[]):
+        overall_status = True
+
+        if DCCStatusType.SCHEMA not in ignore_list:
+            overall_status = overall_status and self.valid_schema
+
+        if DCCStatusType.SIGNATURE not in ignore_list:
+            overall_status = overall_status and self.valid_signature
+
+        return overall_status
+
+
+
 class DCC:
     """
     Python module for processing of digital calibration certificates (DCC)
@@ -38,12 +71,12 @@ class DCC:
     def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store=None):
 
         # Initialize DCC object
+        self.status_report = DCCStatusReport()
         self.xml_file_name = xml_file_name
         self.administrative_data = None
         self.measurement_results = None
         self.root = None
         self.root_byte = None
-        self.valid_signature = False
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = dict()
         self.UID = None
