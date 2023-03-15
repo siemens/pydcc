@@ -21,6 +21,8 @@ dcco = DCC(xml_file_name) # Load DCC and crate DCC object
 if not dcco.status_report.is_loaded:
     print("Error: DCC was not loaded successfully!")
 
+dcco.verify_dcc_xml(online=True)
+
 if dcco.status_report.schema_verification_performed:
     if dcco.status_report.valid_schema:
         print("XML schema is valid.")

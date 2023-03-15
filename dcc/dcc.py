@@ -137,6 +137,7 @@ class DCC:
             self.UID = self.uid()
             self.status_report.report(DCCStatusType.IS_LOADED)
             if self.is_signed():
+                self.status_report.report(DCCStatusType.IS_SIGNED)
                 valid_signature = self.__verify_signature()
                 self.status_report.report(DCCStatusType.VALID_SIGNATURE, valid_signature)
 
@@ -282,6 +283,7 @@ class DCC:
         # Verify DCC file
         valid_xml = self.xml_validator.dcc_is_valid_against_schema(self.root, online=online,
                                                                    dcc_version=self.dcc_version)
+        self.status_report.report(DCCStatusType.VALID_SCHEMA, valid_xml)
         return valid_xml
 
     def is_signed(self):
