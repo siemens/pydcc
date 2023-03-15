@@ -52,8 +52,8 @@ class DCCStatusReport:
     schema_verification_performed: bool = False
     valid_schema: bool = False
 
-    signature_verification_performed: bool = False
     is_signed: bool = False
+    signature_verification_performed: bool = False
     valid_signature: bool = False
 
     def report(self, status_type: DCCStatusType, success=True):
@@ -69,6 +69,8 @@ class DCCStatusReport:
         elif status_type == DCCStatusType.VALID_SIGNATURE:
             self.signature_verification_performed = True
             self.valid_signature = success
+        else:
+            raise TypeError("Unknown DCCStatusType was passed to DCCStatusReport.")
 
 
     # ignore_list: Optinal[DCCStatusType] = None
