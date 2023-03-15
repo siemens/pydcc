@@ -53,4 +53,9 @@ else:
     print('Warning: DCC is not signed.')
 
 
-
+status_summary = dcco.status_report.get_status_summary()
+if (status_summary):
+    print('All test were passed.')
+else:
+    print('Warning: Some test failed.')
+    print(dcco.status_report)
