@@ -157,7 +157,7 @@ class DCC:
         signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
         # Vergleich mit dem Digest in Qualified Properties?
         signing_time = self.root.find(".//xades:SigningTime", self.name_space)
-        validation_time = None
+
         if signing_time is not None:
             validation_time = datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
         else:
