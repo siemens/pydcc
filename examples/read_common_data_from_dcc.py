@@ -25,7 +25,7 @@ if dcco.status_report.schema_verification_performed:
     if dcco.status_report.valid_schema:
         print("XML schema is valid.")
     else:
-        print("XML schema is invalid.")
+        print("Error: XML schema is invalid.")
 else:
     print("Warning: XML schema verification was not performed!")
 
@@ -36,22 +36,21 @@ print('%d days since calibration' % days_since_calibration)
 uid = dcco.uid()
 print('DCC UID: %s' % uid)
 
-if (days_since_calibration > 365):
-    print('=> Recalibration required according to QMS.')
-
-
+calibration_cycle_in_days = 365
+if (days_since_calibration > calibration_cycle_in_days):
+    print('Recalibration overdue according to QMS.')
+else:
+    next_calibration_in_days = calibration_cycle_in_days - days_since_calibration
+    print('Next recalibration in %u days according to QMS.' % next_calibration_in_days)
 
 if dcco.status_report.is_signed:
     print('Signature available.')
     if dcco.status_report.valid_signature:
         print('Signature is valid.')
     else:
-        print('Signature could not be verified.')
+        print('Error: Signature could not be verified.')
 else:
-    print('DCC is not signed.')
+    print('Warning: DCC is not signed.')
 
-uncertainty_list = dcco.uncertainty_list()
-for uncertainty in uncertainty_list:
-    uncertainty_label = uncertainty[0]
-    uncertainty_value = float(uncertainty[1])
-    print("%s: %.8f" % (uncertainty_label, uncertainty_value) )
+
+
