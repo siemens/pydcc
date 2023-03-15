@@ -46,6 +46,7 @@ class DCCStatusReport:
     This report is created by the class DCC.
     """
 
+    loading_performed: bool = False
     is_loaded: bool = False
 
     schema_verification_performed: bool = False
@@ -57,13 +58,18 @@ class DCCStatusReport:
 
     def report(self, status_type: DCCStatusType, success=True):
         """Report test results with this method-"""
-        if status_type == DCCStatusType.VALID_SCHEMA:
+        if status_type == DCCStatusType.IS_LOADED:
+            self.loading_performed = True
+            self.is_loaded = success
+        elif status_type == DCCStatusType.VALID_SCHEMA:
             self.schema_verification_performed = True
             self.valid_schema = success
+        elif status_type == DCCStatusType.IS_SIGNED:
+            self.is_signed = success
         elif status_type == DCCStatusType.VALID_SIGNATURE:
             self.signature_verification_performed = True
             self.valid_signature = success
-        pass
+
 
     # ignore_list: Optinal[DCCStatusType] = None
     def get_status_summary(self, ignore_list=[]):
@@ -127,6 +133,7 @@ class DCC:
             self.dcc_version = self.root.attrib['schemaVersion']
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
+            self.status_report.report(DCCStatusType.IS_LOADED)
             if self.is_signed():
                 valid_signature = self.__verify_signature()
                 self.status_report.report(DCCStatusType.VALID_SIGNATURE, valid_signature)
@@ -263,8 +270,7 @@ class DCC:
 
     def is_loaded(self):
         # Check if DCC was loaded successfully
-        dcc_loaded = not self.root == None
-        return dcc_loaded
+        return self.status_report.is_loaded
 
     def add_namespace(self, name_space_label, name_space_url):
         # Add namespace
