@@ -117,8 +117,10 @@ dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 #lang = dcco.mandatoryLang()
 
 # Get calibration results 
-cres = dcco.get_calibration_results('en')
+cres = dcco.get_calibration_results('xpath')
 print_results(cres)
+
+print(cres[0][1]['hybrid']['realListXMLList'])
 
 # Select data set with measurement error 
 mres = search_calibration_results(cres, 'Measurement error')
