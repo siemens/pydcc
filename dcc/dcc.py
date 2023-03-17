@@ -26,6 +26,7 @@ from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
 from asn1crypto import pem
 from cryptography import x509
+from typing import Union
 
 from typing import Optional
 from .dcc_xml_validator import DCCXMLValidator
@@ -87,13 +88,37 @@ class DCCStatusReport:
         return overall_status
 
 
+class DCCTrustStore:
+    def __init__(self):
+        self.trust_roots = []
+        self.intermediates = []
+
+    def load_trusted_root_from_file(self, file_name):
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.trust_roots.append(cert)
+
+    def load_intermediate_from_file(self, file_name):
+        # update trust intermediate list
+        cert = None
+        with open(file_name, 'rb') as f:
+            cert = f.read()
+            if pem.detect(cert):
+                type_name, headers, der_bytes = pem.unarmor(cert)
+                cert = der_bytes
+        self.intermediates.append(cert)
+
 
 class DCC:
     """
     Python module for processing of digital calibration certificates (DCC)
     """
 
-    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store=None):
+    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store: Union[DCCTrustStore, None] = None ):
 
         # Initialize DCC object
         self.status_report = DCCStatusReport()
@@ -482,31 +507,6 @@ class DCC:
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.etree_to_dict(id_list)
-
-
-class DCCTrustStore:
-    def __init__(self):
-        self.trust_roots = []
-        self.intermediates = []
-
-    def load_trusted_root_from_file(self, file_name):
-        cert = None
-        with open(file_name, 'rb') as f:
-            cert = f.read()
-            if pem.detect(cert):
-                type_name, headers, der_bytes = pem.unarmor(cert)
-                cert = der_bytes
-        self.trust_roots.append(cert)
-
-    def load_intermediate_from_file(self, file_name):
-        # update trust intermediate list
-        cert = None
-        with open(file_name, 'rb') as f:
-            cert = f.read()
-            if pem.detect(cert):
-                type_name, headers, der_bytes = pem.unarmor(cert)
-                cert = der_bytes
-        self.intermediates.append(cert)
 
 
 class dcc(DCC):
