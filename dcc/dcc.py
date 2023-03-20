@@ -508,6 +508,25 @@ class DCC:
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.etree_to_dict(id_list)
 
+    def get_item_id_by_name(self, searched_name, searched_language = None, searched_issuer = None, ):
+        id_list = self.item_id()['identifications']['identification']
+        for id in id_list:
+            names = id['name']['content']
+            issuer = id['issuer']
+            if searched_issuer is not None:
+                if not issuer == searched_issuer:
+                    continue
+            for name in names:
+                language = name['@lang']
+                if searched_language is not None:
+                    if not language == searched_language:
+                        continue
+                name_text =  name['#text']
+                if name_text == searched_name:
+                    value = id['value']
+                    return value
+        return None
+
 
 class dcc(DCC):
     """DEPRECATED compatibility class: please use dcc.DCC"""

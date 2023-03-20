@@ -123,6 +123,22 @@ class TestBaseFunctions(unittest.TestCase):
 
         self.assertEqual(dcco_gp.item_id(), id_dict_v3)
 
+    def test_get_item_id_by_name(self):
+        serial_number = dcco_gp.get_item_id_by_name('Serial no.')
+        self.assertEqual(serial_number, 'string-manufacturer-item')
+
+    def test_get_item_id_by_name_with_language(self):
+        serial_number = dcco_gp.get_item_id_by_name('Serial no.', 'en')
+        self.assertEqual(serial_number, 'string-manufacturer-item')
+
+    def test_get_item_id_by_name_with_language_and_issuer(self):
+        serial_number = dcco_gp.get_item_id_by_name('Serial no.', 'en', 'manufacturer')
+        self.assertEqual(serial_number, 'string-manufacturer-item')
+
+    def test_get_item_id_by_name_none(self):
+        serial_number = dcco_gp.get_item_id_by_name('Serial no.' ,'de')
+        self.assertEqual(serial_number, None)
+
     def test_verify_correct_dcc_xml_online(self):
         self.assertTrue(dcco_gp.verify_dcc_xml(online=True))
 
