@@ -79,13 +79,6 @@ class TestBaseFunctions(unittest.TestCase):
         version = dcco_gp.version()
         self.assertEqual(version, "3.1.1")
 
-    """
-    def test_uncertainty_list(self):
-        uncertainty_list = dcco.uncertainty_list()
-        self.assertEqual(uncertainty_list, [['Masse', '0.00000005'], ['Volumen', '0.000018']])
-       
-    """
-
     def test_empty_dcc_init_error_detection(self):
         exception_rised = False
         try:
