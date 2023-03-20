@@ -11,7 +11,7 @@
 # See the LICENSE file in the top-level directory.
 #
 # This example simulates a machinally verification of uncertainty values.
-# Pretending a new calibration has been executed. Usually, the calibration 
+# Pretending a new calibration has been executed. Usually, the calibration
 # results have to be verified if they meet the requirements for a certain application.
 # However, with a DCC this verification can be realized fully automated by computers.
 
@@ -36,35 +36,27 @@ def calibration_results_pre_processor(cres):
 
     return cres
 
-def search_calibration_results(cres, searched_name):
-    for i in cres:
-        name = i[0]
-        if name.find(searched_name) > -1:
-            selected_calib_result = i[1]
-            pre_processed_calib_result = calibration_results_pre_processor(selected_calib_result)
-            return pre_processed_calib_result
-
-
-def print_results(cres):
-   for i in cres:
-      print(i)
-
-
+def search_calibration_results(cres, searched_reftype):
+    for elem in cres:
+        xpath_string = elem[0]
+        if xpath_string.find(searched_reftype) > -1:
+            selected_calib_result = elem[1]
+            return selected_calib_result
 
 
 def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, upper_limit):
-	
+
 	lower_limit_extended = lower_limit - uncertainty
 	upper_limit_extended = upper_limit + uncertainty
-	
+
 	lower_limit_limited = lower_limit + uncertainty
 	upper_limit_limited = upper_limit - uncertainty
-	
+
 	#if upper_limit_limited <= lower_limit_limited:
 	#	print("Limits implicit conditional")
-	
+
 	conditional = False
-	
+
 	if measurement_error >= lower_limit and measurement_error <= upper_limit:
 		passed = True
 		if measurement_error < lower_limit_limited or measurement_error > upper_limit_limited:
@@ -74,15 +66,20 @@ def measurement_error_evaluation(measurement_error, uncertainty, lower_limit, up
 	else:
 		passed = False
 		if measurement_error >= lower_limit_extended and measurement_error <= upper_limit_extended:
-			conditional = False	
+			conditional = False
 		else:
-			conditional = True	
+			conditional = True
 
 	return (passed, conditional)
 
+def xml_list_to_float(xml_list: str):
+	string_list = xml_list.split(' ')
+	float_list = []
+	for item in string_list:
+		float_list.append(float(item))
+	return float_list
 
 
-	
 def evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, measurement_error_requirement):
 
 	print(" ")
@@ -91,11 +88,11 @@ def evaluate_measurements_results_for_given_limits(measurement_error_array, labo
 
 	overall_passed = True
 	overall_conditional = False
-	print ("  MSE   Passed  Cond.") 
-	for mse in measurement_error_array:	
+	print ("  MSE   Passed  Cond.")
+	for mse in measurement_error_array:
 		passed, conditional = measurement_error_evaluation(mse, laboratory_measurement_uncertainty, -measurement_error_requirement, measurement_error_requirement)
 		print("%7.3f %5s  %5s" % ( mse, passed, conditional ) )
-		overall_passed = overall_passed and passed 
+		overall_passed = overall_passed and passed
 		overall_conditional = overall_conditional or conditional
 
 
@@ -106,7 +103,7 @@ def evaluate_measurements_results_for_given_limits(measurement_error_array, labo
 	device_meets_requirements = overall_passed and not overall_conditional
 
 	print('Device meets requirements:  %5s' % device_meets_requirements)
- 
+
 	return device_meets_requirements
 
 
@@ -116,21 +113,25 @@ dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 
 #lang = dcco.mandatoryLang()
 
-# Get calibration results 
+# Get calibration results
 cres = dcco.get_calibration_results('xpath')
-print_results(cres)
 
-print(cres[0][1]['hybrid']['realListXMLList'])
 
-# Select data set with measurement error 
-mres = search_calibration_results(cres, 'Measurement error')
+# Select data set with measurement error
+mres = search_calibration_results(cres, 'basic_measurementError')
 print(mres)
 
-# Select array with measurement results 
-measurement_error_array = mres[0]
+
+
+
+# Select array with measurement results
+measurement_error_array = xml_list_to_float(mres['realListXMLList']['valueXMLList'])
+
+print(measurement_error_array)
+
 
 # Select meaasurement uncertainty
-laboratory_measurement_uncertainty = mres[3]
+laboratory_measurement_uncertainty = float(mres['realListXMLList']['expandedUncXMLList']['uncertaintyXMLList'])
 print(" ")
 print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
 
