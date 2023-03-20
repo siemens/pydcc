@@ -21,21 +21,6 @@ from dcc import DCC
 import numpy as np
 
 
-
-def calibration_results_pre_processor(cres):
-
-    # Convert calibration result value list from string separated by blanks to lsit of floating point values
-    string_list = cres[0].split(' ')
-    float_list = []
-    for item in string_list:
-        float_list.append(float(item))
-    cres[0] = float_list
-
-    # Convert uncertainty to floating pint values
-    cres[3] = float(cres[3])
-
-    return cres
-
 def search_calibration_results(cres, searched_reftype):
     for elem in cres:
         xpath_string = elem[0]
