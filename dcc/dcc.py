@@ -508,7 +508,7 @@ class DCC:
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.etree_to_dict(id_list)
 
-    def get_item_id_by_name(self, searched_name, searched_language = None, searched_issuer = None, ):
+    def get_item_id_by_name(self, searched_name, searched_language = None, searched_issuer = None):
         id_list = self.item_id()['identifications']['identification']
         for id in id_list:
             names = id['name']['content']
