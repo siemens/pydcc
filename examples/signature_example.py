@@ -23,7 +23,7 @@ trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
 trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
 
 # (1) Load DCC and create the DCC object (dcco)
-dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
 
 # (2) Verify if DCC is signed valid. If so, check if signature is valid
 if not dcco.is_signed():
@@ -31,9 +31,9 @@ if not dcco.is_signed():
 
 else:
     if dcco.is_signature_valid():
-        print('Signature of DCC is valid')
+        print('DCC is signed and signature of DCC is valid')
     else:
-        print('Signature ist not valid')
+        print('DCC is signed, but signature of DCC ist not valid')
 
     # (3) Get signing time
     print("Signing time: %s" % dcco.get_signing_time().strftime('%d/%m/%Y %H:%M:%S'))
