@@ -11,11 +11,13 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+
 from dcc import DCC
 import datetime
 import unittest
 from cryptography import x509
 from dcc.dcc import DCCTrustStore
+from dcc.dcc import DCCSignatureError
 
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
 xml_file_path_gp = '../data/dcc/' + xml_file_name_gp
@@ -92,7 +94,7 @@ class TestBaseFunctions(unittest.TestCase):
 
     def test_is_signed(self):
         xml_file_name = '../data/dcc/signed_siliziumkugel.xml'  # Example from PTB and signed by T-Systems
-        dcc_signed = DCC(xml_file_name)
+        dcc_signed = DCC(xml_file_name, signature_verification=False)
         self.assertTrue(dcc_signed.is_signed())
 
     def test_compressed_dcc_crc(self):
@@ -164,29 +166,30 @@ class TestBaseFunctions(unittest.TestCase):
         trust_store = DCCTrustStore()
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
-        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
         self.assertTrue(dcco.is_signature_valid())
 
     def test_invalid_signature(self):
         trust_store = DCCTrustStore()
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
-        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed_manipulated.xml', trust_store=trust_store)
-        self.assertFalse(dcco.is_signature_valid())
+        with self.assertRaises(DCCSignatureError):
+            DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed_manipulated.xml',
+                trust_store=trust_store)
 
     def test_get_signing_time(self):
         trust_store = DCCTrustStore()
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
-        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
-        expected_time = datetime.datetime.fromisoformat('2022-10-21T07:47:21Z'.replace('Z', '+00:00'))
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
+        expected_time = datetime.datetime.fromisoformat('2023-03-27T15:14:30Z'.replace('Z', '+00:00'))
         self.assertEqual(dcco.get_signing_time(), expected_time)
 
     def test_get_signing_certificate(self):
         trust_store = DCCTrustStore()
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
-        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
+        dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
         with open('../data/trusted_certs/signer.crt', "rb") as file:
             expected_cert_bytes = file.read()
             expected_cert = x509.load_pem_x509_certificate(expected_cert_bytes)
