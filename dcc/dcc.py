@@ -53,7 +53,7 @@ class DCCStatusReport:
     schema_verification_performed: bool = False
     valid_schema: bool = False
 
-    is_signed: bool = False
+    is_signed: bool = None  # CB: Changed no None
     signature_verification_performed: bool = False
     valid_signature: bool = False
 
@@ -118,7 +118,7 @@ class DCC:
     Python module for processing of digital calibration certificates (DCC)
     """
 
-    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, trust_store: Union[DCCTrustStore, None] = None ):
+    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, signature_verification=True, trust_store: Union[DCCTrustStore, None] = None):
 
         # Initialize DCC object
         self.status_report = DCCStatusReport()
@@ -132,6 +132,7 @@ class DCC:
         self.UID = None
         self.signature_section = None
         self.schema_sources = []
+        self.signature_verification = signature_verification
         self.trust_store = trust_store
 
         self.xml_validator: DCCXMLValidator = DCCXMLValidator()
@@ -161,27 +162,30 @@ class DCC:
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
             self.status_report.report(DCCStatusType.IS_LOADED)
-            if self.is_signed():
+            if self.is_signed():    # CB: Changes
                 self.status_report.report(DCCStatusType.IS_SIGNED)
-                valid_signature = self.__verify_signature()
-                self.status_report.report(DCCStatusType.VALID_SIGNATURE, valid_signature)
+                if self.signature_verification:
+                    self.__verify_signature()
+            else:
+                self.status_report.report(DCCStatusType.IS_SIGNED, False)  # CB: Inserted
+
 
     def __verify_signature(self):
 
+        # Step 0: Check if there is a trust store with root and intermediate CA certificates
         if self.trust_store is None:
-            print("Could not validate certificate path because of missing trust store")
-            return False
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Could not validate certificate path because of missing trust store.")
         if self.trust_store.trust_roots is None:
-            print("Could not validate certificate path because of missing root CA certificate")
-            return False
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Could not validate certificate path because of missing root CA certificate.")
         if self.trust_store.intermediates is None:
-            print("Could not validate certificate path because of missing intermediate CA certificate")
-            return False
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Could not validate certificate path because of missing intermediate CA certificate.")
 
         # Step 1: Validate certificate that was used to sign the DCC
         signing_cert = self.root.find(".//ds:X509Certificate", self.name_space).text
         signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
-        # Vergleich mit dem Digest in Qualified Properties?
         signing_time = self.root.find(".//xades:SigningTime", self.name_space)
 
         if signing_time is not None:
@@ -198,43 +202,37 @@ class DCC:
             validator.validate_usage(set())
         except errors.PathValidationError:
             # The certificate could not be validated
-            print("Could not validate certificate path")
-            return False
-            # The certificate could not be validated
-        else:
-            print("Certificate path is valid")
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Could not validate certificate path.")
 
         # Step 2: Validate DCC signature
 
-        # find the number of References to verify
+        # find the number of references to verify
         num_refs = len(self.root.findall(".//ds:Reference", self.name_space))
         if num_refs < 2:
-            print(
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError(
                 "Expected signed DCC as XadES - but < 2 references are found in the signature (violating ETSI EN 319 "
                 "132-1 -> see Table 2)")
-            return False
 
         # try to verify signature using the provided certificate chain (RootCA + SubCA) - signer certificate is
         # parsed from the XML signature
         # caution: at the moment this validation  routine does not include CRL or OCSP validation for the
-        # signer certificate or issuing CA - this validation should be implemented in the future to avoid
-        # trusting revoked certificates.
+        # signer certificate or issuing CA -
+        # to do: this validation should be implemented in the future to avoid trusting revoked certificates.
         data_to_verify = self.root_byte
         try:
             data = XAdESVerifier().verify(data_to_verify, x509_cert=signing_cert_pem,
                                           expect_references=num_refs)  # expect references due to XADES signature format
-            # expect references due to XADES signature format
-        except InvalidCertificate as e:
-            print("Signing certificate invalid")
-            return False
-        except InvalidSignature as e:
-            print("Signature is invalid")
-            return False
-        except InvalidInput as e:
-            print("Provided XML does not include enveloped signature")
-            return False
-        else:
-            print('signature verified (without CRL or OCSP validation!)')
+        except InvalidCertificate:
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Signing certificate invalid.")
+        except InvalidSignature:
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Signature is invalid.")
+        except InvalidInput:
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Provided XML does not include enveloped signature.")
 
         # Store signed data from DCC (without enveloped signature) in root element
         # To do: Check if [0] is really the dcc element
@@ -243,29 +241,26 @@ class DCC:
         # Store signature from verified xml in signature element
         self.signature_section = data[0].signature_xml
 
-        # Return true if signature was valid, return false if signature was not valid
-        return True
+        # Signature was valid
+        self.status_report.report(DCCStatusType.VALID_SIGNATURE, True)
 
-    # To do Implement methods
     def get_signer_certificate(self):
         if self.signature_section is None:
-            print('No signature section available for this DCC object')
-            return None
+            raise DCCSignatureError('No signature section available for this DCC object. Either the DCC does not have '
+                                    'a signature or the signature was not verified or is invalid.')
         signing_cert = self.signature_section.find(".//ds:X509Certificate", self.name_space).text
         if signing_cert is None:
-            print('No signer certificate in signature section')
-            return None
+            raise DCCSignatureError('No signer certificate available in signature section.')
         signing_cert_pem = '-----BEGIN CERTIFICATE-----\n' + signing_cert + '\n-----END CERTIFICATE-----'
         return x509.load_pem_x509_certificate(str.encode(signing_cert_pem))
 
     def get_signing_time(self):
         if self.signature_section is None:
-            print('No signature section available for this DCC object')
-            return None
+            raise DCCSignatureError('No signature section available for this DCC object. Either the DCC does not have '
+                                    'a signature or the signature was not verified or is invalid.')
         signing_time = self.signature_section.find(".//xades:SigningTime", self.name_space)
         if signing_time is None:
-            print('No signing time available in signature section')
-            return None
+            raise DCCSignatureError('No signing time available in signature section')
         return datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
 
     def load_dcc_from_xml_file(self):
@@ -313,10 +308,11 @@ class DCC:
 
     def is_signed(self):
         # Is the DCC signed?
+        # CB: Changes
+        if self.status_report.is_signed is not None:
+            return self.status_report.is_signed
         elem = self.root.find("ds:Signature", self.name_space)
         is_signed = not elem == None
-        self.status_report.report(DCCStatusType.IS_SIGNED, is_signed)
-        self.signature_section = elem
         return is_signed
 
     def is_signature_valid(self):
@@ -526,6 +522,10 @@ class DCC:
                     value = id['value']
                     return value
         return None
+
+
+class DCCSignatureError(Exception):
+    """ this exception is raised if any problem with the validation of the DCC signature occurs"""
 
 
 class dcc(DCC):
