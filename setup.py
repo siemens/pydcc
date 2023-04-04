@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 3 - Beta",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
