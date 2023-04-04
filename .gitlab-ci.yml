@@ -19,6 +19,7 @@ before_script:
 stages:
 #  - Static Analysis
   - Unit Tests
+  - Doc Check
 #  - Version Increment
 
 #pylint:
@@ -35,6 +36,12 @@ test:
   - pip install pytest-cov
   - cd tests
   - pytest --cov=dcc -cov-branch --cov-report term-missing 
+
+doc:
+  stage: Doc Check
+  script:
+  - cd tests
+  - python documentation_check.py
 
 #vincr:
 #  stage: Version Increment
