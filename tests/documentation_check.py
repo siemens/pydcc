@@ -31,7 +31,13 @@ for function in functions_DCC:
         else:
             print(function)
 
-print("%u of %u functions are documented" % (found_counter, total_counter))
+print(" ")
+print("%u status::documented" % found_counter)
+print("%u status::total " % total_counter)
+print("%u status::undocumented" % (total_counter-found_counter))
+
+
+#print("%u of %u functions are documented" % (found_counter, total_counter))
 
 
 

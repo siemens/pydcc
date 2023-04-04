@@ -137,19 +137,19 @@ class DCC:
         self.xml_validator: DCCXMLValidator = DCCXMLValidator()
 
         # Set default DCC namespaces
-        self.add_namespace('dcc', 'https://ptb.de/dcc')
-        self.add_namespace('si', 'https://ptb.de/si')
-        self.add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
-        self.add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
+        self.__add_namespace('dcc', 'https://ptb.de/dcc')
+        self.__add_namespace('si', 'https://ptb.de/si')
+        self.__add_namespace('ds', 'http://www.w3.org/2000/09/xmldsig#')
+        self.__add_namespace('xades', 'http://uri.etsi.org/01903/v1.3.2#')
 
         if xml_file_name is not None:
-            self.load_dcc_from_xml_file()
+            self.__load_dcc_from_xml_file()
         elif byte_array is not None:
-            self.load_dcc_from_byte_array(byte_array)
+            self.__load_dcc_from_byte_array(byte_array)
         elif compressed_dcc is not None:
-            self.load_compressed_dcc(compressed_dcc)
+            self.__load_compressed_dcc(compressed_dcc)
         elif url is not None:
-            self.load_dcc_from_public_server(url)
+            self.__load_dcc_from_public_server(url)
         else:
             raise Exception('PyDCC: DCC object created without giving an XML source.')
 
@@ -268,39 +268,39 @@ class DCC:
             return None
         return datetime.datetime.fromisoformat(signing_time.text.replace('Z', '+00:00'))
 
-    def load_dcc_from_xml_file(self):
+    def __load_dcc_from_xml_file(self):
         # Load DCC from file
         with open(self.xml_file_name, "rb") as file:
             byte_array = file.read()
             self.root_byte = byte_array
-            self.load_dcc_from_byte_array(byte_array)
+            self.__load_dcc_from_byte_array(byte_array)
 
-    def load_dcc_from_byte_array(self, byte_array):
+    def __load_dcc_from_byte_array(self, byte_array):
         # Load DCC from file
         self.dcc_xml_raw_data = byte_array
         self.root = ET.fromstring(byte_array)
 
-    def load_dcc_from_public_server(self, server_url, server_port=8085, dcc_id=None, item_id=None):
+    def __load_dcc_from_public_server(self, server_url, server_port=8085, dcc_id=None, item_id=None):
         success = False
         # Load DCC from server (PROTOTYPE)
         query_address = server_url  # + dcc_id # URL encode, special chars
         response = requests.get(query_address)
         if response.status_code == 200:
             byte_array = response.content
-            self.load_dcc_from_byte_array(byte_array)
+            self.__load_dcc_from_byte_array(byte_array)
             success = True
         return success
 
-    def load_compressed_dcc(self, byte_array):
+    def __load_compressed_dcc(self, byte_array):
         # Load compressed DCC
         self.dcc_xml_raw_data = zlib.decompress(byte_array)
-        self.load_dcc_from_byte_array(self.dcc_xml_raw_data)
+        self.__load_dcc_from_byte_array(self.dcc_xml_raw_data)
 
     def is_loaded(self):
         # Check if DCC was loaded successfully
         return self.status_report.is_loaded
 
-    def add_namespace(self, name_space_label, name_space_url):
+    def __add_namespace(self, name_space_label, name_space_url):
         # Add namespace
         self.name_space[name_space_label] = name_space_url
 
