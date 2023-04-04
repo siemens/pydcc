@@ -45,6 +45,7 @@ doc:
   - cd tests
   - undocumented=$(python documentation_check.py | grep 'undocumented' | awk '{print $1}' )
   - python documentation_check.py
+  - cd ..
   - anybadge -l "doc" -v $undocumented -f doc.svg -c darkcyan
   artifacts:
     paths:
