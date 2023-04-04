@@ -41,8 +41,11 @@ doc:
   stage: Doc Check
   script:
   - pip install -e .
+  - pip install anybadge
   - cd tests
+  - undocumented=$(python documentation_check.py | grep 'undocumented' | awk '{print $1}' )
   - python documentation_check.py
+  - anybadge -l "doc" -v $undocumented -f doc.svg -c darkcyan
 
 #vincr:
 #  stage: Version Increment
