@@ -40,6 +40,7 @@ test:
 doc:
   stage: Doc Check
   script:
+  - pip install -e . 
   - cd tests
   - python documentation_check.py
 
