@@ -90,12 +90,12 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(exception_rised)
 
     def test_is_not_signed(self):
-        self.assertFalse(dcco_gp.is_signed())
+        self.assertFalse(dcco_gp.status_report.is_signed)
 
     def test_is_signed(self):
         xml_file_name = '../data/dcc/signed_siliziumkugel.xml'  # Example from PTB and signed by T-Systems
         dcc_signed = DCC(xml_file_name, signature_verification=False)
-        self.assertTrue(dcc_signed.is_signed())
+        self.assertTrue(dcc_signed.status_report.is_signed)
 
     def test_compressed_dcc_crc(self):
         comp_dcc = dcco_gp.generate_compressed_dcc()
@@ -167,7 +167,7 @@ class TestBaseFunctions(unittest.TestCase):
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
         dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
-        self.assertTrue(dcco.is_signature_valid())
+        self.assertTrue(dcco.status_report.valid_signature)
 
     def test_invalid_signature(self):
         trust_store = DCCTrustStore()
