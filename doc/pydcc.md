@@ -70,16 +70,15 @@ Verify DCC file according to the official XML shema [2]
 dcco.verify_dcc_xml_file()
 ```
 
-## Signature
+## Signature Verification
 
-Retruns True, if the DCC was signed?
+Returns the signer certificate that was used to sign the DCC, if the DCC has a valid signature.
 ```python
-dcco.is_signed()
+dcco.get_signer_certificate()
 ```
-
-Retruns True, if DCC signature valid?
+Returns the time when the DCC was signed, if the DCC has a valid signature.
 ```python
-dcco.is_signature_valid()
+dcco.get_signing_time()
 ```
 
 ## Calibration Date
