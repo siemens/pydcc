@@ -19,6 +19,7 @@ before_script:
 stages:
 #  - Static Analysis
   - Unit Tests
+  - Doc Check
 #  - Version Increment
 
 #pylint:
@@ -36,6 +37,21 @@ test:
   - cd tests
   - pytest --cov=dcc -cov-branch --cov-report term-missing 
 
+doc:
+  stage: Doc Check
+  script:
+  - pip install -e .
+  - pip install anybadge
+  - cd tests
+  - undocumented=$(python documentation_check.py | grep 'undocumented' | awk '{print $1}' )
+  - python documentation_check.py
+  - cd ..
+  - anybadge -l "doc" -v $undocumented -f doc.svg -c darkcyan
+  artifacts:
+    paths:
+        - doc.svg
+    when: always
+    expire_in: 52 weeks
 #vincr:
 #  stage: Version Increment
 #  script:

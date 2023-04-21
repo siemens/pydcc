@@ -32,22 +32,17 @@ DCCs were defined as XML files [1]. The code below loads an example provided by 
 Load DCC from file
 ```python
 from dcc import dcc
-dcco = dcc('siliziumkugel.xml') # Load DCC from file
+dcco = DCC('dcc_gp_temperature_typical_v12.xml') # Load DCC from file
 ```
 
 In case the DCC was revived from another system as a string or byte array (dcc_byte_array).
 ```python
-dcco = dcc(byte_array = dcc_byte_array) # Load DCC from file
+dcco = DCC(byte_array = dcc_byte_array) # Load DCC from file
 ```
 
 In case a compressed DCC was revived, previously compressed by PyDCC (compressed_dcc_byte_array).
 ```python
-dcco = dcc(compressed_dcc = compressed_dcc_byte_array) # Load DCC from file
-```
-
-Returns True, if the DCC was loaded successfully.
-```python
-dcco.is_loaded()
+dcco = DCC(compressed_dcc = compressed_dcc_byte_array) # Load DCC from file
 ```
 
 ## DCC unique identification
@@ -65,22 +60,31 @@ dcco.version()
 
 ## Schema Verification
 
-Verify DCC file according to the official XML shema [2] 
+The schema verification must be executed after loading the DCC.
+
+Verify DCC file according to the official XML shema [2] when internet connection is available. 
 ```python
-dcco.verify_dcc_xml_file()
+dcco.verify_dcc_xml(online=True)
 ```
 
-## Signature
-
-Retruns True, if the DCC was signed?
+Verify DCC file according to the official XML shema [2] when internet connection is not available. 
+In this case, please make sure downloading all required schema files to local repository using the schema downloader class.
 ```python
-dcco.is_signed()
+dcco.verify_dcc_xml(online=False)
 ```
 
-Retruns True, if DCC signature valid?
+## Signature verification
+
+The signature verification is executed automatically if not deactivate explicitly in the constructor.
+However, make sure to provide a trust store before creating the DCC object.
 ```python
-dcco.is_signature_valid()
+trust_store = DCCTrustStore()
+trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
+dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
 ```
+The trust store object can be reused for loading any other DCCs.
+
 
 ## Calibration Date
 
@@ -117,18 +121,14 @@ dcco.has_previous_report()
 
 ## Uncertainty
 
-A basic list of all uncertainties was implemented so far.
-```python
-dcco.uncertainty_list()
-```
-
-[['Masse', '0.00000005'], ['Volumen', '0.000018']]
-
+Processing of DCC automatically is a key motivation for PyDCC.
+Thus, evaluation the uncertainty of an DCC according to specific requirements was evaluated. 
+Therefore, please try the example in ../examples/uncertainty_check_example.py
 
 
 ## Compressed DCC
 
-With this examle a compressed DCC was generated. 
+With this example a compressed DCC was generated which can be embedded on a device with constraint resources. 
 ```python
 # Generate compressed DCC
 embdcc = dcco.generate_compressed_dcc()   
@@ -151,13 +151,7 @@ DCC compression ratio 17.2%.
 ## List of identifications
 The available identifications of all the items described by the DCC can be returned using
 ```python
-dcco.item_id()
+serial_number = dcco.get_item_id_by_name('Serial no.')
 ```
-which returns the dictionary with the identification types along with any attributes (eg. language)
-as keys and the identifications themselves as values
-```
-{'issuer': 'manufacturer',
- 'value': 'Si28kg_03_a',
- 'content (lang: de)': 'Kennnummer',
- 'content (lang: en)': 'Serial No.'}
-```
+Please try the example in ../examples/read_identifications.py
+
