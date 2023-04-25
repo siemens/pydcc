@@ -459,20 +459,20 @@ class DCC:
             si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
             if si_node is not None:
                 if type == 'xpath':
-                    local_res = [quant[2], self.etree_to_dict(si_node)]
+                    local_res = [quant[2], self.__etree_to_dict(si_node)]
                 else:
-                    local_res = [quant[1], self.etree_to_dict(si_node)]
+                    local_res = [quant[1], self.__etree_to_dict(si_node)]
                 res.append(local_res)
         return res
 
-    def etree_to_dict(self, t):
+    def __etree_to_dict(self, t):
         # method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
         tkey = t.tag.rpartition('}')[2]
         d = {tkey: {} if t.attrib else None}
         children = list(t)
         if children:
             dd = defaultdict(list)
-            for dc in map(self.etree_to_dict, children):
+            for dc in map(self.__etree_to_dict, children):
                 for k, v in dc.items():
                     dd[k].append(v)
             d = {tkey: {k: v[0] if len(v) == 1 else v
@@ -492,7 +492,7 @@ class DCC:
     def item_id(self):
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
-        return self.etree_to_dict(id_list)
+        return self.__etree_to_dict(id_list)
 
     def get_item_id_by_name(self, searched_name, searched_language = None, searched_issuer = None):
         id_list = self.item_id()['identifications']['identification']
