@@ -336,7 +336,7 @@ class DCC:
         uid_string = elem.text
         return uid_string
 
-    def mandatoryLang(self):
+    def mandatory_language(self):
         # Return mandatory Language Code
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
         mandatoryLang = elem.text

@@ -96,7 +96,7 @@ def evaluate_measurements_results_for_given_limits(measurement_error_array, labo
 # Load DCC and create the DCC object (dcco)
 dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 
-#lang = dcco.mandatoryLang()
+#lang = dcco.mandatory_language()
 
 # Get calibration results
 cres = dcco.get_calibration_results('xpath')

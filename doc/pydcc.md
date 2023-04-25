@@ -164,3 +164,14 @@ serial_number = dcco.get_item_id_by_name('Serial no.')
 ```
 Please try the example in ../examples/read_identifications.py
 
+
+
+
+## Get the mendatory language
+
+```python
+print( dcco.mandatory_language()
+```
+
+Return example: de
+

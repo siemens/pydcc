@@ -45,7 +45,7 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertTrue(dcc_from_compressed_byte_array.is_loaded())
 
     def test_mandatoryLang(self):
-        lang = dcco_gp.mandatoryLang()
+        lang = dcco_gp.mandatory_language()
         self.assertEqual(lang, 'de')
 
     def test_get_calibration_results(self):
