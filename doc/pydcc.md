@@ -58,7 +58,16 @@ dcco.version()
 ```
 
 
-## Schema Verification
+## Check if DCC was loaded successfully.
+
+```python
+if not dcco.status_report.is_loaded:
+    print("Error: DCC was not loaded successfully!")
+```
+
+
+
+## Perform schema verification
 
 The schema verification must be executed after loading the DCC.
 
