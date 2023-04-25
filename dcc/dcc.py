@@ -53,7 +53,7 @@ class DCCStatusReport:
     schema_verification_performed: bool = False
     valid_schema: bool = False
 
-    is_signed: bool = None  # CB: Changed no None
+    is_signed: bool = False
     signature_verification_performed: bool = False
     valid_signature: bool = False
 
@@ -162,13 +162,10 @@ class DCC:
             # self.valid_xml = self.verify_dcc_xml()
             self.UID = self.uid()
             self.status_report.report(DCCStatusType.IS_LOADED)
-            if self.is_signed():    # CB: Changes
+            if self.__is_signed():
                 self.status_report.report(DCCStatusType.IS_SIGNED)
                 if self.signature_verification:
                     self.__verify_signature()
-            else:
-                self.status_report.report(DCCStatusType.IS_SIGNED, False)  # CB: Inserted
-
 
     def __verify_signature(self):
 
@@ -306,18 +303,11 @@ class DCC:
         self.status_report.report(DCCStatusType.VALID_SCHEMA, valid_xml)
         return valid_xml
 
-    def is_signed(self):
+    def __is_signed(self):
         # Is the DCC signed?
-        # CB: Changes
-        if self.status_report.is_signed is not None:
-            return self.status_report.is_signed
         elem = self.root.find("ds:Signature", self.name_space)
         is_signed = not elem == None
         return is_signed
-
-    def is_signature_valid(self):
-        # Is DCC signature valid?
-        return self.status_report.valid_signature
 
     def calibration_date(self):
         # Return calibration date (endPerformanceDate)

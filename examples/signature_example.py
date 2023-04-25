@@ -26,11 +26,11 @@ trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
 dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed.xml', trust_store=trust_store)
 
 # (2) Verify if DCC is signed valid. If so, check if signature is valid
-if not dcco.is_signed():
+if not dcco.status_report.is_signed:
     print('DCC is not signed')
 
 else:
-    if dcco.is_signature_valid():
+    if dcco.status_report.valid_signature:
         print('DCC is signed and signature of DCC is valid')
     else:
         print('DCC is signed, but signature of DCC ist not valid')
