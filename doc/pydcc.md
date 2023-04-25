@@ -1,10 +1,10 @@
 # PyDCC user guide
 
-User guide for those who want to use PyDCC for their application.
+This document is a user guide for those who want to use PyDCC for their application.
 
 ## Installing the PyDCC library
 
-However, we decided to pospone the publication of our software module. Thus, we have to use this alternateve.
+However, we decided to postpone the publication of our software module. Thus, we have to use this alternative.
 ```python
 git pull
 git checkout <version>
@@ -13,14 +13,14 @@ pip install -e .
 ```
 
 Explanation of the steps:
-- Make sure beeing in the root from the git repository.
+- Make sure being in the root from the git repository.
 - git pull to get the latest changes.
 - git checkout followed by the version you want to install. Versions are declared in the README.md.
 - python setup.py bdist to build the projects. You will need to install setuptools therefore: pip install setuptools
 - pip install -e . to install pydcc on a local machine.
 
 
-Usually, we would use PyPi for distributing and isntalling our open source software. 
+Usually, we would use PyPi for distributing and installing our open source software. 
 ```python
 python install pydcc
 ```
@@ -45,13 +45,17 @@ In case a compressed DCC was revived, previously compressed by PyDCC (compressed
 dcco = DCC(compressed_dcc = compressed_dcc_byte_array) # Load DCC from file
 ```
 
-## DCC unique identification
+## Get the identification of the DCC
+
+The DCC contains multiple identifications. However, this identification is identifying the DCC itself.
 
 ```python
 dcco.uid()
 ```
 
 ## DCC version
+
+The version of the DCC schema.
 
 ```python
 dcco.version()
@@ -76,8 +80,8 @@ Verify DCC file according to the official XML shema [2] when internet connection
 dcco.verify_dcc_xml(online=True)
 ```
 
-Verify DCC file according to the official XML shema [2] when internet connection is not available. 
-In this case, please make sure downloading all required schema files to local repository using the schema downloader class.
+VVerify the DCC file according to the official XML schema [2] when the internet connection is unavailable. 
+In this case, please make sure to download all required schema files to the local repository using the schema downloader class.
 ```python
 dcco.verify_dcc_xml(online=False)
 ```
@@ -131,13 +135,16 @@ dcco.has_previous_report()
 ## Uncertainty
 
 Processing of DCC automatically is a key motivation for PyDCC.
-Thus, evaluation the uncertainty of an DCC according to specific requirements was evaluated. 
-Therefore, please try the example in ../examples/uncertainty_check_example.py
+Thus, evaluation the uncertainty of a DCC according to specific requirements was evaluated. 
+
+The essential method to get the calibration results is get_calibration_results. However, the evaluation of measurement results is an advanced task. 
+Therefore, please try the example  ../examples/uncertainty_check_example.py
 
 
 ## Compressed DCC
 
-With this example a compressed DCC was generated which can be embedded on a device with constraint resources. 
+This example generates a compressed DCC that can be embedded on a device with constraint resources. 
+
 ```python
 # Generate compressed DCC
 embdcc = dcco.generate_compressed_dcc()   
@@ -148,7 +155,7 @@ print('Embedded DCC compression ratio %.1f%%' % compression_ratio_100)
 print('CRC32 of raw data: %x' % embdcc['crc32'])
 compressed_data = embdcc['dcc_xml_raw_data_compressed']
 ```
-In a second step the compressed data (compressed_data) would be transffered to the corresponding sensor system.
+In the second step, the compressed data (compressed_data) would be transferred to the corresponding sensor system.
 
 Compression results:
 The original DCC size for Siliziumkugel.xml in version 2.4.0 was 30926 bytes.
@@ -156,13 +163,15 @@ The compressed DCC size was 5324 bytes.
 DCC compression ratio 17.2%.
 
 
+## Get a specific identification
 
-## List of identifications
-The available identifications of all the items described by the DCC can be returned using
+The DCC can store multiple item identifications for the calibrated item. Identification can be a serial number, a manufacturer id, a product name, or any custom string identifying the calibrated item.
+With the method get_item_id_by_name, a specific identification can be returned. However, the exact name of this identification must be known.
 ```python
 serial_number = dcco.get_item_id_by_name('Serial no.')
 ```
-Please try the example in ../examples/read_identifications.py
+
+Try the example code in ../examples/read_identifications.py
 
 
 
