@@ -402,7 +402,7 @@ class DCC:
                 name = name + ' ' + local_name.text
         return name
 
-    def _read_path_realted_info(self, node, attr):
+    def __read_path_realted_info(self, node, attr):
         attr = attr + "dcc:" + str(str(node.tag.rpartition('}')[2]))
         if "refType" in node.attrib.keys():
             attr = attr + " [ @ refType =" + "\'" + str(node.attrib['refType']) + "\'" + "]"
@@ -415,7 +415,7 @@ class DCC:
 
     def __find_quantities_in_lists(self, node, quant, name, lang, xpath):
         name = self.__read_name(node, name, lang)
-        xpath = self._read_path_realted_info(node, xpath)
+        xpath = self.__read_path_realted_info(node, xpath)
 
         if node.tag == '{https://ptb.de/dcc}quantity':
             quant.append([node, name, xpath])
@@ -431,7 +431,7 @@ class DCC:
                                          self.name_space)
         for result in result_nodes:
             xpath = ".//"
-            xpath = self._read_path_realted_info(result, xpath)
+            xpath = self.__read_path_realted_info(result, xpath)
             xpath = xpath + " //"
 
             data_node = result.find('dcc:data', self.name_space)
