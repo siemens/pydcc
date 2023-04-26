@@ -12,9 +12,7 @@
 # See the LICENSE file in the top-level directory.
 #
 
-import xmlschema
 import datetime
-import os
 import xml.etree.ElementTree as ET
 import zlib
 import binascii
@@ -103,7 +101,7 @@ class DCCTrustStore:
         self.trust_roots.append(cert)
 
     def load_intermediate_from_file(self, file_name):
-        # update trust intermediate list
+        """ update trust intermediate list """
         cert = None
         with open(file_name, 'rb') as f:
             cert = f.read()
@@ -122,19 +120,18 @@ class DCC:
 
         # Initialize DCC object
         self.status_report = DCCStatusReport()
-        self.xml_file_name = xml_file_name
-        self.administrative_data = None
-        self.measurement_results = None
-        self.root = None
-        self.root_byte = None
+        self.xml_file_name: str = xml_file_name
+        self.administrative_data: Union[ET, None] = None
+        self.measurement_results: Union[ET, None] = None
+        self.root: Union[ET, None] = None
+        self.root_byte: Union[bytearray, None] = None
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = dict()
-        self.UID = None
-        self.signature_section = None
+        self.UID: str = ""
+        self.signature_section: Union[ET, None] = None
         self.schema_sources = []
-        self.signature_verification = signature_verification
-        self.trust_store = trust_store
-
+        self.signature_verification: bool = signature_verification
+        self.trust_store: Union[DCCTrustStore, None] = trust_store
         self.xml_validator: DCCXMLValidator = DCCXMLValidator()
 
         # Set default DCC namespaces
@@ -339,8 +336,8 @@ class DCC:
     def mandatory_language(self):
         # Return mandatory Language Code
         elem = self.root.find("dcc:administrativeData/dcc:coreData/dcc:mandatoryLangCodeISO639_1", self.name_space)
-        mandatoryLang = elem.text
-        return mandatoryLang
+        mandatory_lang = elem.text
+        return mandatory_lang
 
     def version(self):
         # Return DCC version
@@ -502,8 +499,3 @@ class DCC:
 
 class DCCSignatureError(Exception):
     """ this exception is raised if any problem with the validation of the DCC signature occurs"""
-
-
-class dcc(DCC):
-    """DEPRECATED compatibility class: please use dcc.DCC"""
-    pass
