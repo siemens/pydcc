@@ -24,9 +24,8 @@ from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
 from asn1crypto import pem
 from cryptography import x509
-from typing import Union
-
 from typing import Optional
+
 from .dcc_xml_validator import DCCXMLValidator
 
 
@@ -116,23 +115,30 @@ class DCC:
     Python module for processing of digital calibration certificates (DCC)
     """
 
-    def __init__(self, xml_file_name=None, byte_array=None, compressed_dcc=None, url=None, signature_verification=True, trust_store: Union[DCCTrustStore, None] = None):
-
+    def __init__(
+        self,
+        xml_file_name: Optional[str] = None,
+        byte_array: Optional[bytearray] = None,
+        compressed_dcc: Optional[bytearray] = None,
+        url: Optional[str] = None,
+        signature_verification: bool = True,
+        trust_store: Optional[DCCTrustStore] = None
+    ):
         # Initialize DCC object
         self.status_report = DCCStatusReport()
-        self.xml_file_name: str = xml_file_name
-        self.administrative_data: Union[ET, None] = None
-        self.measurement_results: Union[ET, None] = None
-        self.root: Union[ET, None] = None
-        self.root_byte: Union[bytearray, None] = None
+        self.xml_file_name = xml_file_name
+        self.administrative_data: Optional[ET.Element] = None
+        self.measurement_results: Optional[ET.Element] = None
+        self.root: Optional[ET.Element] = None
+        self.root_byte: Optional[bytearray] = None
         self.datetime_file_loaded = datetime.datetime.now()
         self.name_space = dict()
         self.UID: str = ""
-        self.signature_section: Union[ET, None] = None
+        self.signature_section: Optional[ET.Element] = None
         self.schema_sources = []
-        self.signature_verification: bool = signature_verification
-        self.trust_store: Union[DCCTrustStore, None] = trust_store
-        self.xml_validator: DCCXMLValidator = DCCXMLValidator()
+        self.signature_verification = signature_verification
+        self.trust_store = trust_store
+        self.xml_validator = DCCXMLValidator()
 
         # Set default DCC namespaces
         self.__add_namespace('dcc', 'https://ptb.de/dcc')
