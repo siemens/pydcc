@@ -179,8 +179,8 @@ Try the example code in ../examples/read_identifications.py
 ## Get the mendatory language
 
 ```python
-print( dcco.mandatory_language()
+dcco.mandatory_language()
 ```
 
-Return example: de
+Return example: 'de'
 
