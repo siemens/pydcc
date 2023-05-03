@@ -132,13 +132,15 @@ dcco.has_previous_report()
 
 
 
-## Uncertainty
+## Evaluate the Uncertainty
 
 Processing of DCC automatically is a key motivation for PyDCC.
 Thus, evaluation the uncertainty of a DCC according to specific requirements was evaluated. 
+Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by [Good Practice](https://dccwiki.ptb.de/en/gp_home).
 
 The essential method to get the calibration results is get_calibration_results. However, the evaluation of measurement results is an advanced task. 
 Therefore, please try the example  ../examples/uncertainty_check_example.py
+
 
 
 ## Compressed DCC
