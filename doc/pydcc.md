@@ -112,8 +112,6 @@ dcco.days_since_calibration()
 ```
 
 
-CRC32 of raw data: efc19810
-
 
 ## Calibration Laboratory Name
 
@@ -163,7 +161,7 @@ Compression results:
 The original DCC size for Siliziumkugel.xml in version 2.4.0 was 30926 bytes.
 The compressed DCC size was 5324 bytes.
 DCC compression ratio 17.2%.
-
+CRC32 of raw data: efc19810
 
 ## Get a specific identification
 
