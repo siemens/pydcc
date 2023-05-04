@@ -1,10 +1,10 @@
 # Python library for reading and evaluating digital calibration certificates (DCC) 
 
-Library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC version 3.0.0 [3]. 
+PyDCC is a library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC version 3.0.0 [3]. 
 This collaborative work was introduced by a talk given at the 2nd DCC conference [4]. 
 Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by Good Practice [5].
 
-Out of scope: PyDCC is not inteded to modify or generate DCCs.
+Out of scope: PyDCC is not intended to modify or generate DCCs.
 
 ## General Software Information
 
@@ -12,32 +12,33 @@ This software module is a joint initiative driven by the project [GEMIMEG-II.](h
 
 Maintainer: [Andreas Tobola](mailto:andreas.tobola@siemens.com), Siemens AG
 
-Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. We appreciate any contributions. The workflow was defined in the [contribution guide](CONTRIBUTING.md).
+Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. The workflow was defined in the [contribution guide](CONTRIBUTING.md). We appreciate any contributions.
 
 ## License
 
-In general, the software was licensed under the [MIT License](LICENSE). Therefore, see the LICENSE file in the top-level directory.
+The software was generally licensed under the [MIT License](LICENSE). Therefore, see the LICENSE file in the top-level directory.
 
-[Data examples](data) included in this repository may contain other licenses. Please refer to the license decalrations within the data examples.
+[Data examples](data) included in this repository may contain other licenses. Please refer to the license declarations within the data examples.
 
 ## Background to DCC
 
-The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was released by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure and consists of regulated areas, whose information must meet certain requirements. The DCC exists in Extensible Markup Language (XML). 
+The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was released by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure comprising regulated areas whose information must meet specific requirements. The DCC exists in Extensible Markup Language (XML). 
+
 ## Aim of this software library
 
-Python is a programming language widly used in science and cloud computing applications. This software library extends Python by capabilities of handling DCC. In particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurements results. 
+Python is a programming language widely used in science and cloud computing applications. This software library extends Python by capabilities of handling DCC, in particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurement results. 
 
-For more details including API documentation consider reading the [user guide](doc/pydcc.md).
+Consider reading the [user guide](doc/pydcc.md) for more details, including API documentation.
 
-Further, the [contibution guide](CONTRIBUTING.md) explains how one can contibute to this software module.
+Further, the [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
 
 ## References
 
-[1] Official release of the digital calibration certificate (DCC) in version 2.4.0 https://www.ptb.de/dcc/v2.4.0/de/
+[1] The official release of the digital calibration certificate (DCC) in version 2.4.0 https://www.ptb.de/dcc/v2.4.0/de/
 
-[2] Current XML shema for DCCs https://www.ptb.de/dcc/dcc.xsd
+[2] Current XML schema for DCCs https://www.ptb.de/dcc/dcc.xsd
 
-[3] Official release of the digital calibration certificate (DCC) in version 3.0.0 https://www.ptb.de/dcc/v3.0.0/
+[3] The official release of the digital calibration certificate (DCC) in version 3.0.0 https://www.ptb.de/dcc/v3.0.0/
 
 [4] Andreas Tobola, Introducing PyDCC – a Python module for the DCC, 2nd international DCC-Conference 01 - 03 March 2022 Proceedings, Publisher: Physikalisch-Technische Bundesanstalt (PTB), DOI 10.7795/820.20220411, 2022
 
@@ -49,5 +50,3 @@ Main page to the DCC https://www.ptb.de/dcc
 
 Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
 Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
-
-
