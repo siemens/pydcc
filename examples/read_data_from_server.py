@@ -10,6 +10,9 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+# Before starting this example, make sure to run the test server.
+# dcc_test_server.py
+#
 import sys
 sys.path.append("../dcc")
 from dcc import DCC
