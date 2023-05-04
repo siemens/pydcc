@@ -92,35 +92,33 @@ def evaluate_measurements_results_for_given_limits(measurement_error_array, labo
 	return device_meets_requirements
 
 
-
-# Load DCC and create the DCC object (dcco)
-dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
-
-#lang = dcco.mandatory_language()
-
-# Get calibration results
-cres = dcco.get_calibration_results('xpath')
+if __name__ == '__main__':
 
 
-# Select data set with measurement error
-mres = search_calibration_results(cres, 'basic_measurementError')
-print(mres)
+	# Load DCC and create the DCC object (dcco)
+	dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
+
+	#lang = dcco.mandatory_language()
+
+	# Get calibration results
+	cres = dcco.get_calibration_results('xpath')
 
 
+	# Select data set with measurement error
+	mres = search_calibration_results(cres, 'basic_measurementError')
+	print(mres)
 
+	# Select array with measurement results
+	measurement_error_array = xml_list_to_float(mres['realListXMLList']['valueXMLList'])
 
-# Select array with measurement results
-measurement_error_array = xml_list_to_float(mres['realListXMLList']['valueXMLList'])
+	print(measurement_error_array)
 
-print(measurement_error_array)
+	# Select meaasurement uncertainty
+	laboratory_measurement_uncertainty = float(mres['realListXMLList']['expandedUncXMLList']['uncertaintyXMLList'])
+	print(" ")
+	print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
 
-
-# Select meaasurement uncertainty
-laboratory_measurement_uncertainty = float(mres['realListXMLList']['expandedUncXMLList']['uncertaintyXMLList'])
-print(" ")
-print("Measurement uncertainty was +/- %.4f K (2*Sigma)" % laboratory_measurement_uncertainty)
-
-# Execute tests with different requirements
-evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.1)
-evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.16)
-evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.18)
+	# Execute tests with different requirements
+	evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.1)
+	evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.16)
+	evaluate_measurements_results_for_given_limits(measurement_error_array, laboratory_measurement_uncertainty, 0.18)
