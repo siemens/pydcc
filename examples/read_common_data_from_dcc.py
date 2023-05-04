@@ -15,7 +15,7 @@ import sys
 sys.path.append("../dcc")
 from dcc import DCC
 
-xml_file_name = '../data/dcc/siliziumkugel_2_4_0.xml' # Example from PTB
+xml_file_name = '../data/dcc/dcc_gp_temperature_typical_v12.xml' # Example from PTB
 dcco = DCC(xml_file_name) # Load DCC and crate DCC object
 
 if not dcco.status_report.is_loaded:
