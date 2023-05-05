@@ -12,6 +12,7 @@
 # See the LICENSE file in the top-level directory.
 #
 
+from dcc import DCCStatusType
 from dcc import DCC
 import datetime
 import unittest
@@ -78,8 +79,6 @@ class TestBaseFunctions(unittest.TestCase):
         tserv.join()
 
         self.assertTrue(dcc_from_server.is_loaded())
-
-
 
     def test_mandatoryLang(self):
         lang = dcco_gp.mandatory_language()
@@ -193,6 +192,15 @@ class TestBaseFunctions(unittest.TestCase):
         xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml'# Example from PTB
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
         self.assertFalse(dcco_wrong_schema.verify_dcc_xml(online=False))
+
+    def test_status_summary(self):
+        result = dcco_gp.status_report.get_status_summary()
+        self.assertFalse(result)
+
+    def test_status_summary_ignore_list(self):
+        result = dcco_gp.status_report.get_status_summary(ignore_list=[DCCStatusType.VALID_SCHEMA, DCCStatusType.IS_SIGNED, DCCStatusType.VALID_SIGNATURE])
+        self.assertTrue(result)
+
 
 # Work in progress
 
