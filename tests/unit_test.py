@@ -18,10 +18,27 @@ import unittest
 from cryptography import x509
 from dcc.dcc import DCCTrustStore
 from dcc.dcc import DCCSignatureError
+from flask import Flask
+from multiprocessing import Process
+
 
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
 xml_file_path_gp = '../data/dcc/' + xml_file_name_gp
 dcco_gp = DCC(xml_file_path_gp)
+
+
+app = Flask(__name__)
+
+@app.route('/dcc/123', methods=['GET'])
+def dcc_test_service():
+    xml_file_name = "../data/dcc/dcc_gp_temperature_typical_v12.xml"
+    with open(xml_file_name, "rb") as file:
+        byte_array = file.read()
+    return byte_array
+
+def service_thread():
+    global app
+    app.run(host='127.0.0.1', debug=False, port=8085)
 
 
 class TestBaseFunctions(unittest.TestCase):
@@ -43,6 +60,26 @@ class TestBaseFunctions(unittest.TestCase):
 
         dcc_from_compressed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compressed_byte_array.is_loaded())
+
+    def test_loading_form_server(self):
+
+        # Create local server for test purposes only
+        tserv = Process(target=service_thread)
+        tserv.start()
+
+        import time
+        time.sleep(3)
+
+        # Load from server
+        dcc_from_server = DCC(url="http://127.0.0.1:8085/dcc/123")
+
+        # Terminate server
+        tserv.terminate()
+        tserv.join()
+
+        self.assertTrue(dcc_from_server.is_loaded())
+
+
 
     def test_mandatoryLang(self):
         lang = dcco_gp.mandatory_language()
