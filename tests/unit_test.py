@@ -20,6 +20,7 @@ from dcc.dcc import DCCTrustStore
 from dcc.dcc import DCCSignatureError
 from flask import Flask
 from multiprocessing import Process
+import time
 
 
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
@@ -31,8 +32,7 @@ app = Flask(__name__)
 
 @app.route('/dcc/123', methods=['GET'])
 def dcc_test_service():
-    xml_file_name = "../data/dcc/dcc_gp_temperature_typical_v12.xml"
-    with open(xml_file_name, "rb") as file:
+    with open(xml_file_path_gp, "rb") as file:
         byte_array = file.read()
     return byte_array
 
@@ -67,8 +67,8 @@ class TestBaseFunctions(unittest.TestCase):
         tserv = Process(target=service_thread)
         tserv.start()
 
-        import time
-        time.sleep(3)
+        # Give Flask some time to get ready. It would be better to ask Flask for being ready.
+        time.sleep(.5)
 
         # Load from server
         dcc_from_server = DCC(url="http://127.0.0.1:8085/dcc/123")
