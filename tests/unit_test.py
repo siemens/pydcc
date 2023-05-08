@@ -69,7 +69,7 @@ class TestBaseFunctions(unittest.TestCase):
         tserv.start()
 
         # Give Flask some time to get ready. It would be better to ask Flask for being ready.
-        time.sleep(.5)
+        time.sleep(2)
 
         # Load from server
         dcc_from_server = DCC(url="http://127.0.0.1:8085/dcc/123")
