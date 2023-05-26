@@ -9,3 +9,5 @@ build
 .vscode
 .idea
 data/temp
+data/dcc_xml_validator
+!data/dcc_xml_validator/Readme.md
