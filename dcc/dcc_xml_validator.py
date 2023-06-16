@@ -13,36 +13,43 @@
 #
 
 """
-This module downloads the DCC schemas provided by the Physikalisch-Technische Bundesanstalt.
-All available versions are stored and made available by a function call.
-Additionally the D-SI schemas are stored and also made available by a function call.
+This module can be used to validate a Digital Calibration Certificate (DCC). The DCCXMLValidator class is used to
+perform the validation. The Physikalisch-Technische Bundesanstalt provides a Json document. This document lists
+all current DCC schemas. The class DCCXMLValidator downloads all schemas listed in the json file. For validation
+the function dcc_is_valid_against_schema can be used. The user specifies whether the previously downloaded schemas
+are used or the schemaLocations in the DCC-xml file are used.
+
+The DCC schemas and all other dependencies are stored in a workspace. This is usually located in a specified folder.
+However, the user can define the workspace himself. For licensing reasons, the schemas cannot be stored in the
+project/module directory.
 """
 
 import requests
-# import urllib.request as urlib_requests
 import json
 import os
-from typing import List, Dict, Optional, Callable
+from typing import List, Optional, Callable
 import platform
-from xml.sax import make_parser, handler
 import xmlschema
 import xml.etree.ElementTree as ET
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from datetime import datetime
 
 # "url to load a json documents that hold information about the DCC versions"
 url_dcc_schema_releases = "https://www.ptb.de/dcc/releases.json"
 
-# the json document with dcc releases store uri's to download xsd files. These patterns are used to validate the uri's
-mandatory_uri_pattern: List[str] = ["https", "ptb.de", "xsd"]
+
+class DccXmlValidator(Exception):
+    """General exception."""
 
 
-def standard_workspace(get_system: Optional[Callable] = platform.system) -> os.path:
+class DccSchemaNotAvailableLocal(DccXmlValidator):
+    """No locally available schema was found for the DCC to be validated."""
+
+
+def get_standard_workspace_path() -> os.path:
     # Get the system the programm is running on to decide what folder should be used
-    if get_system is None:
-        get_system = platform.system
 
-    system = get_system()
+    system = platform.system()
     if system == "Windows":
         appdata_path = os.getenv('APPDATA')
     elif system == "Linux":
@@ -56,23 +63,38 @@ def standard_workspace(get_system: Optional[Callable] = platform.system) -> os.p
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
-    # Create a Readme.txt file inside the Folder with some information about the usage.
-
-    readme_content = "This directory was created by the pyDCC software.\nIt is used to store downloaded xml schemas." \
-                     "\nThese are used for the validation of the DCCs." + "\n\n" + "Created on: " + str(datetime.now())
-
-    file_path = os.path.join(folder_path, 'Readme.txt')
-    if not os.path.exists(file_path):
-        with open(file_path, mode="w") as file:
-            file.write(readme_content)
-
     return folder_path
 
 
-class Dependency(BaseModel):
-    # imported schemas by dcc schema
-    online_schemaLocation: str = ""
-    namespace: str = ""
+def get_imports_from_xml(xml_string: str):
+    root = ET.fromstring(xml_string)
+
+    # Find all elements with the tag "import"
+    import_elements = root.findall(".//{*}import")
+    dependencys: List[str] = []
+
+    # Iterate over each import element
+    for element in import_elements:
+        if "schemaLocation" in element.attrib:
+            dependencys.append(element.attrib["schemaLocation"])
+
+    return dependencys
+
+
+def get_target_namespace_from_xml(xml_string: str):
+    root = ET.fromstring(xml_string)
+    if "targetNamespace" in root.attrib:
+        return root.attrib.get("targetNamespace")
+    return ""
+
+
+def get_schema_version(xml_string: str):
+    root = ET.fromstring(xml_string)
+    if "schemaVersion" in root.attrib:
+        return root.attrib.get("schemaVersion")
+    if "version" in root.attrib:
+        return root.attrib.get("version")
+    return ""
 
 
 class Schema(BaseModel):
@@ -80,12 +102,11 @@ class Schema(BaseModel):
     targetNamespace: str = ""
     filename: str = ""
     version_str: str = ""
-    version_int: str = ""
     location_local_abs: str = ""
     online_schemaLocation: str = ""
 
     # dependencies
-    dependencys: List[Dependency] = []
+    dependencys: List[str] = []
 
 
 class DCCRelease(BaseModel):
@@ -114,45 +135,125 @@ class Data(BaseModel):
     last_update: datetime = datetime.now()
 
 
+WORKSPACE_STATUS_OK = 0
+WORKSPACE_PATH_DOES_NOT_EXIST = 1
+WORKSPACE_NO_README = 2
+WORKSPACE_STATUS_NO_DATA_FILE = 3
+WORKSPACE_STATUS_MISSING_SCHEMA_FILES = 4
+WORKSPACE_STATUS_JSON_FILE_CORRUPTED = 5
+
+
 class DCCXMLValidator:
 
-    def __init__(self, path_to_workspace: Optional[str] = None, init_local_schemas: bool = True):
+    def __init__(self, path_to_workspace: Optional[str] = None, workspace_init: bool = True):
+        """
+        DCCXMLValidator can be used to validate the DCC against the schema. Online validation is supported,
+        where the dcc schema is downloaded from the source specified in the dcc. It is also possible to validate
+        the dcc against locally stored schemas. These are stored in a workspace.
+
+        :param path_to_workspace: set path to workspace, if not set then a default workspace path is used.
+            Path depends on os.
+        :type path_to_workspace: string
+        :param workspace_init:  Init the workspace if it has not yet been
+            initiated or is not valid.
+        :type workspace_init: bool
+        """
 
         #  set workspace where schemas will be stored locally on the machine. Used to perform offline schema validation
         if path_to_workspace is None:
-            self.path_workspace = standard_workspace()
+            self.path_workspace = get_standard_workspace_path()
         else:
             self.path_workspace = path_to_workspace
 
-
-        self.path_data_file = os.path.join(self.path_workspace, "schemas.json")
+        self.path_data_file = os.path.join(self.path_workspace, "data.json")
 
         # check if workspace is valid
-        # self.workspace_valid = self.workspace_is_valid()
-        self.data = Data()
+        self.workspace_status = self.__get_workspace_status()
 
+        self.data: Optional[Data] = None
 
-    def workspace_is_valid(self) -> bool:
+        # if workspace is not valid try to initiate it
+        if workspace_init and not self.workspace_status == WORKSPACE_STATUS_OK:
+            self.__init_workspace()
+            self.workspace_status = self.__get_workspace_status()
 
-        try:
-            with open(self.path_workspace, mode="r") as file:
-                datax = json.load(file)
-        except Exception as e:
-            print(e)
-            return False
+        # if workspace is valid load data.json. These file contains alls local available schemas
+        if self.workspace_status == WORKSPACE_STATUS_OK:
+            with open(self.path_data_file, mode="r", encoding="utf-8") as file:
+                self.data = Data(**json.load(file))
 
-        try:
-            self.data = Data(**datax)
-        except Exception as e:
-            print(e)
-            return False
+        self.previous_used_schmas = {}
 
-        # TODO
+    def __init_workspace(self):
+        # Create a Readme.txt file inside the Folder with some information about the usage.
 
-        return True
+        content = "This directory was created by the pyDCC software.\nIt is used to store downloaded xml schemas." \
+                  "\nThese are used for the validation of the DCCs." + "\n\n" + "Created on: " + \
+                  str(datetime.now())
+        path_readme = os.path.join(self.path_workspace, 'Readme.txt')
+        if not os.path.exists(path_readme):
+            with open(path_readme, mode="w") as file:
+                file.write(content)
+
+        self.__download_list_with_available_releases()
+
+        self.__download_schemas_referenced_by_list()
+
+        self.__download_dependencys()
+
+        if self.data is not None:
+            with open(self.path_data_file, mode="w") as file:
+                file.write(self.data.json(indent=4))
+
+    def __get_workspace_status(self) -> int:
+        """
+        Check the workspace.
+
+        1. Test if the path to the workspace folder exists and user have access
+        2. Test if there is a Readme.txt file inside the workspace
+        3. Test if there is a data.json file insode the workspace
+        4. Try to parse the data.json file
+        5. Test if all loacal xsd files referenced ba data.json exists
+
+        :return: Status of workspace (WORKSPACE_STATUS_OK,WORKSPACE_PATH_DOES_NOT_EXIST,WORKSPACE_NO_README
+        ,WORKSPACE_STATUS_NO_DATA_FILE,WORKSPACE_STATUS_MISSING_SCHEMA_FILES,WORKSPACE_STATUS_JSON_FILE_CORRUPTED)
+        :rtype: int
+        """
+
+        # 1. Test if the path to the workspace folder exists
+        if not os.path.exists(self.path_workspace):
+            return WORKSPACE_PATH_DOES_NOT_EXIST
+
+        if not os.access(self.path_workspace, os.W_OK | os.R_OK):
+            raise PermissionError("Check the choosen workspace directory " + "\"" + str(
+                self.path_workspace) + "\"" + " but the current user has no access rights")
+
+        # 2. Test if there is a Readme.txt file inside the workspace
+        if not os.path.isfile(os.path.join(self.path_workspace, "Readme.txt")):
+            return WORKSPACE_NO_README
+
+        # 3. Test if there is a data.json file insode the workspace
+        if not os.path.isfile(os.path.join(self.path_workspace, "data.json")):
+            return WORKSPACE_STATUS_NO_DATA_FILE
+
+        # 4. Try to parse the data.json file
+        with open(self.path_data_file, mode="r", encoding="utf-8") as file:
+            try:
+                self.data = Data(**json.load(file))
+            except ValidationError:
+                return WORKSPACE_STATUS_JSON_FILE_CORRUPTED
+
+            # return "can not parse data.json file"
+
+        # 5. Test if all local xsd files referenced ba data.json exists
+        for local_schema in self.data.local_available_schemas:
+            if not os.path.isfile(local_schema.location_local_abs):
+                return WORKSPACE_STATUS_MISSING_SCHEMA_FILES
+
+        return WORKSPACE_STATUS_OK
 
     def dcc_is_valid_against_schema(self, dcc_etree: ET, dcc_version: str,
-                                    online: bool = False) -> bool:
+                                    online: bool) -> bool:
         """
         Validate DCC against the dcc schema
 
@@ -161,172 +262,118 @@ class DCCXMLValidator:
         :param online: download referenced dcc schemas using location hints or use local stored xsd files
         :return: true if dcc is valid
         """
-        is_valid: bool = False
 
         if online:
-            is_valid = xmlschema.is_valid(xml_document=dcc_etree, use_location_hints=True)
+            return xmlschema.is_valid(xml_document=dcc_etree, use_location_hints=True)
         else:
-            with open(self.get_abs_local_dcc_shema_path(dcc_version=dcc_version), 'r') as file:
+
+            if dcc_version in self.previous_used_schmas:
+                schema = self.previous_used_schmas[dcc_version]
+                return xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
+
+            schema_info: Optional[Schema] = None
+
+            if self.data is not None:
+                for local_available_schema in self.data.local_available_schemas:
+                    if local_available_schema.version_str == dcc_version:
+                        schema_info = local_available_schema
+                        break
+            else:
+                raise DccSchemaNotAvailableLocal
+
+            if schema_info is None:
+                raise DccSchemaNotAvailableLocal
+
+            with open(schema_info.location_local_abs, 'r') as file:
                 schema_file = file.read()
 
-            locations = {"https://ptb.de/dcc": str(self.get_abs_local_dcc_shema_path(dcc_version=dcc_version)),
-                         "https://ptb.de/si": str(self.get_abs_local_dsi_schema_path(dcc_version=dcc_version))}
-            # TODO load all imports -> dcc 3.2.0
-            if dcc_version == "3.2.0":
-                locations["http://www.w3.org/2000/09/xmldsig#"] = str(
-                    os.path.join(os.path.dirname(__file__), "schemas", "ds_0_1.xsd"))
+            local_schema_locations = {"https://ptb.de/dcc": schema_info.location_local_abs}
+
+            for dependency in schema_info.dependencys:
+                for local_available_schema in self.data.local_available_schemas:
+                    if local_available_schema.online_schemaLocation == dependency:
+                        local_schema_locations[
+                            local_available_schema.targetNamespace] = local_available_schema.location_local_abs
 
             schema = xmlschema.XMLSchema(schema_file, build=True, allow="sandbox",
-                                         base_url=os.path.join(os.path.dirname(__file__), "schemas"),
-                                         locations=locations)
+                                         base_url=self.path_workspace,
+                                         locations=local_schema_locations)
 
-            is_valid = xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
-        return is_valid
+            self.previous_used_schmas[dcc_version] = schema
 
-    def download_list_with_avalable_releases(self, raise_errors: bool = True) -> bool:
-        """
-        Download a list with all available dcc schemas
+            return xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
 
-        :param raise_errors: Deactivates error messages and returns only False on failure
-        :return: On success True is returned and on failure False
-        """
+    def __download_list_with_available_releases(self):
 
-        """Download json document with releases"""
-        try:
-            download = requests.get(url_dcc_schema_releases, allow_redirects=True)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return False
+        download = requests.get(url_dcc_schema_releases, allow_redirects=True)
+        self.data = Data()
+        self.data.online_available_releases = DCCOnlineReleases(**(download.json()))
 
-        """Parse data"""
-        datax = download.json()
-        self.data.online_available_releases = DCCOnlineReleases(**datax)
+    def __download_schemas_referenced_by_list(self):
 
         for release in self.data.online_available_releases.releases:
-
-            # onely download stable releases
             if release.type != "stable":
                 continue
 
-        with open(self.path_data_file, mode="w") as file:
-            file.write(self.data.json(indent=4))
-
-    def download_schemas(self):
-
-        self.load_data_file_from_workspace()
-
-        for release in self.data.online_available_releases.releases:
-            try:
-                download = requests.get(release.url, allow_redirects=True)
-            except Exception as e:
-                print(e)
-                continue
-
-            if release.type != "stable":
-                continue
+            download = requests.get(release.url, allow_redirects=True)
 
             # save downloaded xsd schema content to file
             filename = "dcc_" + release.version.replace(".", "_") + ".xsd"
             with open(os.path.join(self.path_workspace, filename), mode="wb") as file:
                 file.write(download.content)
 
-            schema = Schema(targetNamespace=self.get_target_namespace_from_xml((download.content.decode("utf-8"))),
+            schema = Schema(targetNamespace=get_target_namespace_from_xml((download.content.decode("utf-8"))),
                             filename=filename,
-                            version_str=release.version.replace(".", "_"),
-                            version_int=int(release.version.replace(".", "")),
+                            version_str=release.version,
                             location_local_abs=str(os.path.join(self.path_workspace, filename)),
                             online_schemaLocation=release.url,
-                            dependencys=self.get_imports_from_xml((download.content.decode("utf-8"))))
+                            dependencys=get_imports_from_xml((download.content.decode("utf-8"))))
+
             self.data.local_available_schemas.append(schema)
 
-        self.save_data_file_to_workspace()
+    def __download_dependencys(self):
 
-    def get_imports_from_xml(self, xml_string: str):
+        # The schemas are uniquely identified by their schemaLocation. However, the generated filename cannot be
+        # unique if the schemaLocation changes but the schema does not. For this reason an uid was introduced.
+        # Another solution would be the use of a hash value.
+        uid = 0
 
-        root = ET.fromstring(xml_string)
-
-        # Find all elements with the tag "import"
-        import_elements = root.findall(".//{*}import")
-        dependencys = []
-
-        # Iterate over each import element
-        for element in import_elements:
-
-            if "schemaLocation" in element.attrib:
-                tmp = Dependency(online_schemaLocation=element.attrib["schemaLocation"],
-                                        namespace=element.attrib["namespace"])
-
-                dependencys.append(tmp)
-
-        return dependencys
-
-    def download_dependencys(self):
-
-        self.load_data_file_from_workspace()
-
-        downloaded_schemas = []
-
-        for entry in self.data.local_available_schemas:
-            for dependecny in entry.dependencys:
+        for local_dcc_schema in self.data.local_available_schemas:
+            for dependecny in local_dcc_schema.dependencys:
                 try:
-                    download = requests.get(dependecny.online_schemaLocation, allow_redirects=True)
+                    download = requests.get(dependecny, allow_redirects=True)
                 except Exception as e:
                     print(e)
                     continue
                 # save downloaded xsd schema content to file
+                # check for xml content
                 if "<?xml" not in download.content.decode("utf-8")[0:10]:
                     continue
 
-                target_namespace = self.get_target_namespace_from_xml(download.content.decode("utf-8"))
-                version = self.get_version_from_xml(download.content.decode("utf-8"))
+                target_namespace = get_target_namespace_from_xml(download.content.decode("utf-8"))
+                version = get_schema_version(download.content.decode("utf-8"))
 
-                filename = target_namespace.split("/")[-1] + "_" + version.replace(".", "_") + ".xsd"
+                uid += 1
+                filename = target_namespace.split("/")[-1] + "_" + version.replace(".", "__") + str(uid) + ".xsd"
                 with open(os.path.join(self.path_workspace, filename), mode="wb") as file:
                     file.write(download.content)
 
                 new_schema = Schema(targetNamespace=target_namespace,
-                       filename=filename,
-                       version_str=version.replace(".", "_"),
-                       version_int=int(version.replace(".", "")),
-                       location_local_abs=str(os.path.join(self.path_workspace, filename)),
-                       online_schemaLocation=dependecny.online_schemaLocation,
-                       dependencys=self.get_imports_from_xml((download.content.decode("utf-8"))))
+                                    filename=filename,
+                                    version_str=version.replace(".", "_"),
+                                    location_local_abs=str(os.path.join(self.path_workspace, filename)),
+                                    online_schemaLocation=dependecny)
+
+                # INFO: if you have to download the dependencies of the dependencies (and so on)
+                # add dependencys=get_imports_from_xml((download.content.decode("utf-8")) and
+                # run this loop until now more schemas will be downloaded
+
+                already_added = False
 
                 for schema in self.data.local_available_schemas:
                     if schema.online_schemaLocation == new_schema.online_schemaLocation:
-                        continue
+                        already_added = True
+                        break
 
-                downloaded_schemas.append(new_schema)
-
-        for schema in downloaded_schemas:
-            self.data.local_available_schemas.append(schema)
-
-        self.save_data_file_to_workspace()
-
-    def save_data_file_to_workspace(self):
-
-        self.data.last_update = str(datetime.now())
-
-        with open(self.path_data_file, mode="w") as file:
-            file.write(self.data.json(indent=4))
-
-    def load_data_file_from_workspace(self):
-
-        with open(self.path_data_file, mode="r", encoding="utf-8") as file:
-            self.data = Data(**json.load(file))
-
-    def get_target_namespace_from_xml(self, xml_string: str):
-
-        root = ET.fromstring(xml_string)
-        if "targetNamespace" in root.attrib:
-            return root.attrib.get("targetNamespace")
-        return ""
-    def get_version_from_xml(self, xml_string: str):
-
-        root = ET.fromstring(xml_string)
-        return root.attrib.get("version")
-
-
-
-
+                if not already_added:
+                    self.data.local_available_schemas.append(new_schema)

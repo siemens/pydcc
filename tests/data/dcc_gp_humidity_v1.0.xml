@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="dcc.xsl"?>
+<dcc:digitalCalibrationCertificate 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dcc="https://ptb.de/dcc" 
+	xmlns:si="https://ptb.de/si" 
+	xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v3.1.2/dcc.xsd" 
+	schemaVersion="3.1.2">
+<!--        
+		DCC - Digital Calibration Certificate
+		Copyright (c) 2019 - 2022 Physikalisch-Technische Bundesanstalt
+
+		This XML dataset is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Lesser General Public License as published by
+		the Free Software Foundation, version 3 of the License.
+
+		This XSD is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+		GNU Lesser General Public License for more details.
+
+		The development of minimum requirements for a digital calibration certificate (DCC) is partially funded and
+		supported by the joint research project EMPIR 17IND02 (title: SmartCom).
+		This project (17IND02) has received funding from the EMPIR programme co-financed by the Participating States
+		and from the European Union's Horizon 2020 research and innovation programme.
+		The further development of the digital calibration certificate (DCC) is partly supported by the lighthouse
+		project GEMIMEG-II (GEMIMEG 01 MT20001E) funded by the German Federal Ministry for Economic Affairs and
+		Energy (BMWi) and the project "International Standard Accident Number" (ISAN) funded by the Niedersächsiches
+		Vorab initiative of the Volkswagen Foundation (VolkswagenStiftung).
+
+
+		Documentation: https://ptb.de/dcc
+
+		ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION!
+
+		This is not a real calibration certificate. It is invalid.
+
+		Draft Good Practise Temperature
+		
+		GP_DCC_humidity_19
+		==================
+-->
+	<dcc:administrativeData>
+		<dcc:dccSoftware>
+			<dcc:software>
+				<dcc:name>
+					<dcc:content>Notepad++ (32-bit)</dcc:content>
+				</dcc:name>
+				<dcc:release>v 8.4.6</dcc:release>
+			</dcc:software>
+		</dcc:dccSoftware>
+		<dcc:coreData>
+			<dcc:countryCodeISO3166_1>DE</dcc:countryCodeISO3166_1>
+			<dcc:usedLangCodeISO639_1>de</dcc:usedLangCodeISO639_1>
+			<dcc:usedLangCodeISO639_1>en</dcc:usedLangCodeISO639_1>
+			<dcc:mandatoryLangCodeISO639_1>de</dcc:mandatoryLangCodeISO639_1>
+			<dcc:uniqueIdentifier>Id 123456789 HtW</dcc:uniqueIdentifier>
+			<dcc:identifications>
+				<dcc:identification>
+					<dcc:issuer>calibrationLaboratory</dcc:issuer>
+					<dcc:value>Or_123456789</dcc:value>
+					<dcc:name>
+						<dcc:content lang="de">Auftrags Nr.</dcc:content>
+						<dcc:content lang="en">Order no.</dcc:content>
+					</dcc:name>
+				</dcc:identification>
+			</dcc:identifications>
+			<dcc:beginPerformanceDate>1957-08-13</dcc:beginPerformanceDate>
+			<dcc:endPerformanceDate>1957-08-14</dcc:endPerformanceDate>
+			<dcc:performanceLocation>laboratory</dcc:performanceLocation>
+		</dcc:coreData>
+		<dcc:items>
+			<dcc:name>
+				<dcc:content lang="de">Feuchtemesssystem</dcc:content>
+				<dcc:content lang="en">Hygrometer</dcc:content>
+			</dcc:name>
+			<dcc:description>
+				<dcc:content lang="de">Feuchtemesssystem zur direkten Messung der relativen Feuchte und der Temperatur, bestehend aus einem Anzeigegerät und einem Sensor mit den Maßen: Gesamtlänge 210 mm, Länge Sensorelement 35 mm und Durchmesser 14 mm.</dcc:content>
+				<dcc:content lang="en">Hygrometer for the direct measurement of relative humidity and temperature, it consists of a handheld display unit and a sensor with the dimensions: total length 210 mm, sensor lenght 35 mm and diameter 14 mm.</dcc:content>
+			</dcc:description>
+			<dcc:item>
+				<dcc:name>
+					<dcc:content lang="de">Anzeigegerät</dcc:content>
+					<dcc:content lang="en">Display unit</dcc:content>
+				</dcc:name>
+				<dcc:manufacturer>
+					<dcc:name>
+						<dcc:content>Feuchtemesstechnik GmbH</dcc:content>
+					</dcc:name>
+				</dcc:manufacturer>
+				<dcc:model>Display 1234-5</dcc:model>
+				<dcc:identifications>
+					<dcc:identification>
+						<dcc:issuer>manufacturer</dcc:issuer>
+						<dcc:value>123456789 Ma</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Serien Nr.</dcc:content>
+							<dcc:content lang="en">Serial no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>customer</dcc:issuer>
+						<dcc:value>123456789 Hu</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Messmittel Nr.</dcc:content>
+							<dcc:content lang="en">Measurement equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>calibrationLaboratory</dcc:issuer>
+						<dcc:value>Eq 123456789</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Equipment Nr.</dcc:content>
+							<dcc:content lang="en">Equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+				</dcc:identifications>
+			</dcc:item>
+			<dcc:item>
+				<dcc:name>
+					<dcc:content lang="de">Feuchtesensor</dcc:content>
+					<dcc:content lang="en">Humidity sensor</dcc:content>
+				</dcc:name>
+				<dcc:manufacturer>
+					<dcc:name>
+						<dcc:content>Feuchtemesstechnik GmbH</dcc:content>
+					</dcc:name>
+				</dcc:manufacturer>
+				<dcc:model>H2OMeas 6789-1</dcc:model>
+				<dcc:identifications>
+					<dcc:identification>
+						<dcc:issuer>manufacturer</dcc:issuer>
+						<dcc:value>Fs 135792468 Hu</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Serien Nr.</dcc:content>
+							<dcc:content lang="en">Serial no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>customer</dcc:issuer>
+						<dcc:value>Be 123456789 kk</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Messmittel Nr.</dcc:content>
+							<dcc:content lang="en">Measurement equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>calibrationLaboratory</dcc:issuer>
+						<dcc:value>Cl 123456789 By</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Equipment Nr.</dcc:content>
+							<dcc:content lang="en">Equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+				</dcc:identifications>
+			</dcc:item>
+		</dcc:items>
+		<dcc:calibrationLaboratory>
+			<dcc:contact>
+				<dcc:name>
+					<dcc:content>Kalibrierfirma GmbH</dcc:content>
+				</dcc:name>
+				<dcc:eMail>info@kalibrierfirma.xx</dcc:eMail>
+				<dcc:phone>+49 123 4567-89</dcc:phone>
+				<dcc:fax>+49 123 4567-90</dcc:fax>
+				<dcc:location>
+					<dcc:city>Musterstadt</dcc:city>
+					<dcc:countryCode>DE</dcc:countryCode>
+					<dcc:postCode>00900</dcc:postCode>
+					<dcc:street>Musterstraße</dcc:street>
+					<dcc:streetNo>1</dcc:streetNo>
+					<dcc:further>
+						<dcc:content>www.kalibrierfirma.xx</dcc:content>
+					</dcc:further>
+				</dcc:location>
+			</dcc:contact>
+		</dcc:calibrationLaboratory>
+		<dcc:respPersons>
+			<dcc:respPerson>
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Michaela Musterfrau</dcc:content>
+					</dcc:name>
+				</dcc:person>
+				<dcc:mainSigner>true</dcc:mainSigner>
+			</dcc:respPerson>
+			<dcc:respPerson>
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Michael Mustermann</dcc:content>
+					</dcc:name>
+				</dcc:person>
+			</dcc:respPerson>
+		</dcc:respPersons>
+		<dcc:customer>
+			<dcc:name>
+				<dcc:content>Kunde GmbH</dcc:content>
+			</dcc:name>
+			<dcc:eMail>info@kunde.xx</dcc:eMail>
+			<dcc:location>
+				<dcc:city>Musterstadt</dcc:city>
+				<dcc:countryCode>DE</dcc:countryCode>
+				<dcc:postCode>00900</dcc:postCode>
+				<dcc:further>
+					<dcc:content lang="de">Kunden Nr. 123456789</dcc:content>
+					<dcc:content lang="en">Customer ID no. 123456789</dcc:content>
+				</dcc:further>
+			</dcc:location>
+		</dcc:customer>
+		<dcc:statements>
+			<dcc:statement refType="basic_recalibration">
+				<dcc:declaration>
+					<dcc:content lang="de">Datum, wann nach der Festlegung durch den Kunden spätestens der Kalibriergegenstand rekalibriert werden soll:</dcc:content>
+					<dcc:content lang="en">Date when the calibration item is to be recalibrated at the latest according to the customer's specification:</dcc:content>
+				</dcc:declaration>
+				<dcc:date>1959-10-22</dcc:date>
+				<dcc:respAuthority>
+					<dcc:name>
+						<dcc:content>Kunde GmbH</dcc:content>
+					</dcc:name>
+					<dcc:eMail>info@kunde.xx</dcc:eMail>
+					<dcc:location>
+						<dcc:city>Musterstadt</dcc:city>
+						<dcc:postCode>00900</dcc:postCode>
+						<dcc:countryCode>DE</dcc:countryCode>
+					</dcc:location>
+				</dcc:respAuthority>
+			</dcc:statement>
+			<dcc:statement refType="basic_conformity">
+				<dcc:declaration>
+					<dcc:content lang="de">Die Konformitätsaussage erfolgt anhand der Vorgaben des Kunden. Sie sind im DCC mit aufgeführt.</dcc:content>
+					<dcc:content lang="en">The conformity statement is made on the basis of the customer's specifications. They are listed in the DCC.</dcc:content>
+				</dcc:declaration>
+				<dcc:respAuthority>
+					<dcc:name>
+						<dcc:content>Kunde GmbH</dcc:content>
+					</dcc:name>
+					<dcc:eMail>info@kunde.xx</dcc:eMail>
+					<dcc:location>
+						<dcc:city>Musterstadt</dcc:city>
+						<dcc:postCode>00900</dcc:postCode>
+						<dcc:countryCode>DE</dcc:countryCode>
+					</dcc:location>
+				</dcc:respAuthority>
+				<dcc:conformity>pass</dcc:conformity>
+			</dcc:statement>
+			<dcc:statement>
+				<dcc:norm>DIN EN ISO/IEC 17025:2018-03</dcc:norm>
+				<dcc:reference>7.8.4.3</dcc:reference>
+				<dcc:declaration>
+					<dcc:content lang="de">Die Ergebnisse gelten zum Zeitpunkt der Kalibrierung. Es obliegt dem Antragsteller, zu gegebener Zeit eine Rekalibrierung zu veranlassen.</dcc:content>
+					<dcc:content lang="en">The results refer only to the object calibrated in this DCC. The measurement results are valid at the time of calibration. The applicant is responsible for arranging a recalibration in due time.</dcc:content>
+				</dcc:declaration>
+			</dcc:statement>
+			<dcc:statement refType="basic_validityRange">
+				<dcc:declaration>
+					<dcc:content lang="de">Angabe des kalibrierten Bereichs der relativen Feuchte bei der vorgegebenen Gastemperatur: </dcc:content>
+					<dcc:content lang="en">Specification of the calibrated range of the relative humidity at the given gas temperature:</dcc:content>				
+				</dcc:declaration>
+				<dcc:data>
+					<dcc:quantity refType="basic_validityRangeMin">
+						<dcc:name>
+							<dcc:content lang="de">Unteres Limit des kalibrierten Bereichs</dcc:content>
+							<dcc:content lang="en">Lower limit of the calibrated range</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>0.1</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>10</si:value>
+								<si:unit>\percent</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+					<dcc:quantity refType="basic_validityRangeMax">
+						<dcc:name>
+							<dcc:content lang="de">Oberes Limit des kalibrierten Bereichs</dcc:content>
+							<dcc:content lang="en">Upper limit of the calibrated range</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>0.8</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>80</si:value>
+								<si:unit>\percent</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+					<dcc:quantity refType="basic_validitySecondaryCondition">
+						<dcc:name>
+							<dcc:content lang="de">Vorgegebene Gastemperatur</dcc:content>
+							<dcc:content lang="en">Given gas temperature</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>293.15</si:value>
+								<si:unit>\kelvin</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>20</si:value>
+								<si:unit>\degreecelsius</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+				</dcc:data>
+			</dcc:statement>
+			<dcc:statement refType="basic_measurementRange">
+				<dcc:declaration>
+					<dcc:content lang="de">Angabe des Bereichs, in dem gemessen wurde:</dcc:content>
+					<dcc:content lang="en">Specification of the range in which the measurement was performed:</dcc:content>
+				</dcc:declaration>
+				<dcc:data>
+					<dcc:quantity refType="basic_measurementRangeMin">
+						<dcc:name> 
+							<dcc:content lang="de">Unteres Limit des Messbereichs</dcc:content>
+							<dcc:content lang="en">Lower limit of the measurment range</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>0</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>0</si:value>
+								<si:unit>\percent</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+					<dcc:quantity refType="basic_measurementRangeMax">
+						<dcc:name>
+							<dcc:content lang="de">Oberes Limit des Messbereichs</dcc:content>
+							<dcc:content lang="en">Upper limit of the measurment range</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>1</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>100</si:value>
+								<si:unit>\percent</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+					<dcc:quantity refType="basic_measurementSecondaryCondition">
+						<dcc:name>
+							<dcc:content lang="de">Vorgegebene Temperatur:</dcc:content>
+							<dcc:content lang="en">Given temperature:</dcc:content>
+						</dcc:name>
+						<si:hybrid>
+							<si:real>
+								<si:value>293.15</si:value>
+								<si:unit>\kelvin</si:unit>
+							</si:real>
+							<si:real>
+								<si:value>20</si:value>
+								<si:unit>\degreecelsius</si:unit>
+							</si:real>
+						</si:hybrid>
+					</dcc:quantity>
+				</dcc:data>
+			</dcc:statement>
+		</dcc:statements>
+	</dcc:administrativeData>
+	<dcc:measurementResults>
+		<dcc:measurementResult>
+			<dcc:name>
+				<dcc:content lang="de">Messergebnisse</dcc:content>
+				<dcc:content lang="en">Measurement results</dcc:content>
+			</dcc:name>
+			<dcc:usedMethods>
+				<dcc:usedMethod refType="basic_uncertainty">
+						<dcc:name>
+							<dcc:content lang="de">Erweiterte Messunsicherheit</dcc:content>
+							<dcc:content lang="en">Expanded uncertainty</dcc:content>
+						</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Angegeben ist die erweiterte Messunsicherheit, die sich aus der Standardmessunsicherheit durch Multiplikation mit dem Erweiterungsfaktor k = 2 ergibt. Sie wurde gemäß dem "Guide to the Expression of Uncertainty in Measurement (GUM)" ermittelt. Der Wert der Messgröße liegt dann im Regelfall mit einer Wahrscheinlichkeit von annähernd 95 % im zugeordneten Überdeckungsintervall.</dcc:content>
+						<dcc:content lang="en">The uncertainty stated is the expanded measurement uncertainty obtained by multiplying the standard measurement uncertainty by the coverage factor k=2. It has been determined in accordance with  the “Guide to the Expression of Uncertainty in Measurement (GUM)”. The value of the measurand then normally lies, with a probability of approximately 95%, within the attributed coverage interval.</dcc:content>
+					</dcc:description>
+					<dcc:norm>GUM</dcc:norm>
+				</dcc:usedMethod>
+				<dcc:usedMethod refType="gp_uncertainty">
+						<dcc:name>
+							<dcc:content lang="de">Messunsicherheit des Verfahrens</dcc:content>
+							<dcc:content lang="en">Measurement uncertainity of the measurement procedure</dcc:content>
+						</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Die Messunsicherheit der Abweichung des von der Anzeige des Gerätes abgelesenen Wertes vom Referenzwert der relativen Feuchte ist in der Tabelle für die einzelnen Kalibrierpunkte angegeben. Berücksichtigt wurden dabei Beiträge aus der Messung der Taupunkttemperatur, sowie der Messung der Bezugstemperatur (Kalibrierung des Pt-100 sowie Temperaturinhomogenität der Klimakammer) und der Kurzzeitstabilität des Kalibriergegenstandes während der Messung. Ein Beitrag für die Langzeitstabilität oder des Hystereseverhaltens des Kalibriergegenstandes ist nicht berücksichtigt.</dcc:content> 
+						<dcc:content lang="en">The measurement uncertainity of the difference of the read value from the display of the device and the reference value of the relative humidity is given in the table for each single point of calibration. Contribution due to the measurement of the dew point tmeperature, and the reference temperature (calibration of the Pt-100 as well as inhomogeneity of the climatic chamber), and short term stability of the device under calibration during the meausurement are considered. Contributions due to long term stability or hysteresis of the device under test are not considered.</dcc:content> 
+					</dcc:description>
+					<dcc:norm>GUM</dcc:norm>
+				</dcc:usedMethod>
+				<dcc:usedMethod refType="gp_method">
+					<dcc:name>
+						<dcc:content lang="de">Kalibrierverfahren</dcc:content>
+						<dcc:content lang="en">Calibration method</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Die Feuchtekalibrierung wurde nach der DKD-Richtlinie DKD-R 5-8 „Kalibrierung von Hygrometern zur direkten Erfassung der relativen Feuchte“, Ausgabe 02/2019 nach Ablauf A2 (aufwärts/abwärts) durchgeführt.</dcc:content>
+						<dcc:content lang="en">The humidity calibration was carried out according to the DKD guideline DKD-R 5-8 ʺCalibration of hygrometers for the direct measurement of relative humidityʺ, Edition 10/2019, in accordance with sequence A2 (upward/downward).</dcc:content>
+					</dcc:description>
+					<dcc:norm>DKD-R 5-8</dcc:norm>
+					<dcc:reference>https://doi.org/10.7795/550.20190214</dcc:reference>
+				</dcc:usedMethod>
+				<dcc:usedMethod refType="basic_measurementConditions">
+					<dcc:name>
+						<dcc:content lang="de">Messbedingungen</dcc:content>
+						<dcc:content lang="en">Measurement conditions</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Die Kalibrierung wurde in einem Klimaschrank bei einer Strömungsgeschwindigkeit von ca. 2 m/s durchgeführt.</dcc:content>
+						<dcc:content lang="en">The calibration was carried out in a climatic chamber at a flow velocity of approximately 2 m/s.</dcc:content>
+						<dcc:content lang="de">Die Kalibrierung wurde in Luft durchgeführt.</dcc:content>
+						<dcc:content lang="en">The calibration was carried out in air.</dcc:content>
+						<dcc:content lang="de">Der externe Fühler des Kalibriergegenstandes wurde inklusive 1 m seiner Anschlussleitung im Klimaschrank positioniert. Das Anzeigegerät war während der Kalibrierung außerhalb der Messkammer den Raumbedingungen ausgesetzt.</dcc:content>
+						<dcc:content lang="en">The external sensor of the calibration item was positioned in the climatic chamber, including 1 m of its connecting cable. The display unit was exposed to room conditions outside the measuring chamber during calibration.</dcc:content>
+						<dcc:content lang="de">Die Angleichzeit für jeden Kalibrierpunkt betrug mindestens 150 min.</dcc:content>
+						<dcc:content lang="en">The adjustment time for each calibration point was at least 150 min.</dcc:content>
+						<dcc:content lang="de">Der Startwert für die Kalibrierung war die angegebene Umgebungsbedingung.</dcc:content>
+						<dcc:content lang="en">The starting value for the calibration was the specified environmental condition.</dcc:content>
+						<dcc:content lang="de">Der Wert der Hysterese ist in der Messunsicherheit nicht berücksichtigt.</dcc:content>
+						<dcc:content lang="en">The value of the hysteresis is not considered in the measurement uncertainty.</dcc:content>
+						<dcc:content lang="de">Der Referenzwert der relativen Feuchte wurde aus den Messwerten der Gastemperatur und Taupunkttemperatur der Bezugsnormale berechnet.</dcc:content>
+						<dcc:content lang="en">The reference value of the relative humidity was calculated from the measured values of the gas temperature and dew point temperature of the reference standards.</dcc:content>
+						<dcc:content lang="de">Die angegebenen relativen Feuchtewerte beziehen sich auf die Sättigung über Wasser.</dcc:content>
+						<dcc:content lang="en">The given values of relative humidity refer to the saturation above water.</dcc:content>
+						<dcc:content lang="de">Angegeben sind die Messergebnisse in der Reihenfolge der Kalibrierung.</dcc:content>
+						<dcc:content lang="en">The measurement results are shown in order of the calibration.</dcc:content>
+					</dcc:description>
+				</dcc:usedMethod>
+			</dcc:usedMethods>
+			<dcc:measuringEquipments>
+				<dcc:measuringEquipment refType="basic_standardUsed">
+					<dcc:name>
+						<dcc:content lang="de">Pt 100 Widerstandsthermometer</dcc:content>
+						<dcc:content lang="en">Pt 100 thermometer</dcc:content>
+					</dcc:name>
+					<dcc:certificate>
+						<dcc:referral>
+							<dcc:content>www.kalibrierfirma.xx/certificate-download</dcc:content>
+						</dcc:referral>
+						<dcc:referralID>GP-mE-Certificate-x</dcc:referralID>
+						<dcc:procedure>analogue</dcc:procedure>
+						<dcc:value>analogue</dcc:value>
+					</dcc:certificate>
+					<dcc:identifications>
+						<dcc:identification>
+							<dcc:issuer>manufacturer</dcc:issuer>
+							<dcc:value>Temperaturmesstechnik GmbH</dcc:value>
+						</dcc:identification>
+					</dcc:identifications>
+				</dcc:measuringEquipment>
+				<dcc:measuringEquipment refType="basic_standardUsed">
+					<dcc:name>
+						<dcc:content lang="de">Taupunktspiegel-Hygrometer</dcc:content>
+						<dcc:content lang="en">Dew point hygrometer</dcc:content>
+					</dcc:name>
+					<dcc:certificate>
+						<dcc:referral>
+							<dcc:content>www.kalibrierfirma.xx/certificate-download</dcc:content>
+						</dcc:referral>
+						<dcc:referralID>GP-mE-Certificate-y</dcc:referralID>
+						<dcc:procedure>SHA256</dcc:procedure>
+						<dcc:value>SHA256-value</dcc:value>
+					</dcc:certificate>
+				</dcc:measuringEquipment>
+			</dcc:measuringEquipments>
+			<dcc:influenceConditions>
+				<dcc:influenceCondition refType="basic_temperature">
+					<dcc:name> 
+						<dcc:content lang="de">Umgebungsbedingung Temperatur</dcc:content>
+						<dcc:content lang="en">Ambient condition temperature</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:quantity refType="basic_temperatureMin">
+							<dcc:name>
+								<dcc:content lang="de">Minimale Umgebungstemperatur</dcc:content>
+								<dcc:content lang="en">Minimum ambient temperature</dcc:content>
+							</dcc:name>
+							<si:hybrid>
+								<si:real>
+									<si:value>295.15</si:value>
+									<si:unit>\kelvin</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>22</si:value>
+									<si:unit>\degreecelsius</si:unit>
+								</si:real>
+							</si:hybrid>	
+						</dcc:quantity>
+						<dcc:quantity refType="basic_temperatureMax">
+							<dcc:name>
+								<dcc:content lang="de">Maximale Umgebungstemperatur</dcc:content>
+								<dcc:content lang="en">Maximum ambient temperature</dcc:content>
+							</dcc:name>
+							<si:hybrid>
+								<si:real>
+									<si:value>297.15</si:value>
+									<si:unit>\kelvin</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>24</si:value>
+									<si:unit>\degreecelsius</si:unit>
+								</si:real>
+							</si:hybrid>	
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="basic_humidityRelative">
+					<dcc:name>
+						<dcc:content lang="de">Umgebungsbedingung relative Luftfeuchte</dcc:content>
+						<dcc:content lang="en">Ambient condition relative air humidity</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:quantity refType="basic_humidityRelativeMin">
+							<dcc:name>
+								<dcc:content lang="de">Minimale relative Luftfeuchte der Umgebung</dcc:content>
+								<dcc:content lang="en">Minimum relative humidity of the ambient air</dcc:content>
+							</dcc:name>
+							<si:hybrid>
+								<si:real>
+									<si:value>0.35</si:value>
+									<si:unit>\one</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>35</si:value>
+									<si:unit>\percent</si:unit>
+								</si:real>
+							</si:hybrid>
+						</dcc:quantity>						
+						<dcc:quantity refType="basic_humidityRelativeMax">
+							<dcc:name>
+								<dcc:content lang="de">Maximale relative Luftfeuchte der Umgebung</dcc:content>
+								<dcc:content lang="en">Maximum relative humidity of the ambient air</dcc:content>
+							</dcc:name>
+							<si:hybrid>
+								<si:real>
+									<si:value>0.55</si:value>
+									<si:unit>\one</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>55</si:value>
+									<si:unit>\percent</si:unit>
+								</si:real>
+							</si:hybrid>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="basic_valueSettlingTime gp_valueAdjustmentTime">
+					<dcc:name>
+						<dcc:content lang="de">Angleichzeit für jeden Kalibrierpunkt</dcc:content>
+						<dcc:content lang="en">Adjustment time for each calibration point</dcc:content>
+					</dcc:name>
+					<dcc:data> 
+						<dcc:quantity>
+							<si:hybrid>
+								<si:real>
+									<si:value>9000</si:value>
+									<si:unit>\second</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>150</si:value>
+									<si:unit>\minute</si:unit>
+								</si:real>
+							</si:hybrid>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="gp_valueFlowVelocity">
+					<dcc:name>
+						<dcc:content lang="de">Anströmgeschwindigkeit</dcc:content>
+						<dcc:content lang="en">Flow velocity</dcc:content>
+					</dcc:name>
+					<dcc:data> 
+						<dcc:quantity>
+							<si:real>
+								<si:value>2</si:value>
+								<si:unit>\metre\second\tothe{-1}</si:unit>
+							</si:real>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="basic_measurementDimension">
+					<dcc:name>
+						<dcc:content lang="de">Angezeigte Einheit</dcc:content>
+						<dcc:content lang="en">Unit of display</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:quantity>
+							<si:real>
+								<si:value>1</si:value>
+								<si:unit>\percent</si:unit>
+							</si:real>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="basic_measurementRangeScaleInterval">
+					<dcc:name>
+						<dcc:content lang="de">Auflösung der Anzeige</dcc:content>
+						<dcc:content lang="en">Resolution of display</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:quantity>
+							<si:hybrid>
+								<si:real>
+									<si:value>0.001</si:value>
+									<si:unit>\one</si:unit>
+								</si:real>
+								<si:real>
+									<si:value>0.1</si:value>
+									<si:unit>\percent</si:unit>
+								</si:real>
+							</si:hybrid>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+			</dcc:influenceConditions>
+			<dcc:results>
+				<dcc:result refType="gp_relativeGasHumidityAboveWater">
+					<dcc:name>
+						<dcc:content lang="de">Messergebnisse</dcc:content>
+						<dcc:content lang="en">Measurement results</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:list>
+							<dcc:quantity refType="basic_referenceValue">
+								<dcc:name> 
+									<dcc:content lang="de">Referenzwert relative Feuchte</dcc:content>
+									<dcc:content lang="en">Reference value relative humidity</dcc:content>
+								</dcc:name>
+								<si:hybrid>
+									<si:realListXMLList>
+										<si:valueXMLList>0.201 0.500 0.800 0.901 0.801 0.500 0.200</si:valueXMLList>
+										<si:unitXMLList>\one</si:unitXMLList>
+										<si:dateTimeXMLList>2021-07-27T06:00:01 2021-07-27T09:30:00 2021-07-27T13:00:00 2021-07-27T16:30:00 2021-07-27T20:00:00 2021-07-27T23:30:00 2021-07-28T03:00:00</si:dateTimeXMLList>
+									</si:realListXMLList>
+									<si:realListXMLList>
+										<si:valueXMLList>20.1 50.0 80.0 90.1 80.1 50.0 20.0</si:valueXMLList>
+										<si:unitXMLList>\percent</si:unitXMLList>
+									</si:realListXMLList>
+								</si:hybrid>
+							</dcc:quantity>
+							<dcc:quantity refType="basic_measuredValue">
+								<dcc:name>
+									<dcc:content lang="de">Angezeigter Messwert Kalibriergegenstand</dcc:content>
+									<dcc:content lang="en">Displayed value calibration item</dcc:content>
+								</dcc:name>
+								<si:hybrid>
+									<si:realListXMLList>
+										<si:valueXMLList>0.197 0.499 0.803 0.912 0.813 0.506 0.197</si:valueXMLList>
+										<si:unitXMLList>\one</si:unitXMLList>
+										<si:dateTimeXMLList>2021-07-27T06:00:01 2021-07-27T09:30:00 2021-07-27T13:00:00 2021-07-27T16:30:00 2021-07-27T20:00:00 2021-07-27T23:30:00 2021-07-28T03:00:00</si:dateTimeXMLList>
+									</si:realListXMLList>
+									<si:realListXMLList>
+										<si:valueXMLList>19.7 49.9 80.3 91.2 81.3 50.6 19.7</si:valueXMLList>
+										<si:unitXMLList>\percent</si:unitXMLList>
+									</si:realListXMLList>
+								</si:hybrid>
+							</dcc:quantity>
+							<dcc:quantity refType="basic_measurementError">
+								<dcc:name>
+									<dcc:content lang="de">Messabweichung</dcc:content>
+									<dcc:content lang="en">Measurement error</dcc:content>
+								</dcc:name>
+								<si:hybrid>
+									<si:realListXMLList>
+										<si:valueXMLList>-0.004 -0.001 0.003 0.011 0.012 0.006 -0.003</si:valueXMLList>
+										<si:unitXMLList>\one</si:unitXMLList>
+										<si:expandedUncXMLList>
+											<si:uncertaintyXMLList>0.006 0.008 0.010 0.011 0.010 0.008 0.006</si:uncertaintyXMLList>
+											<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+											<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+										</si:expandedUncXMLList>
+									</si:realListXMLList>
+									<si:realListXMLList>
+										<si:valueXMLList>-0.4 -0.1 0.3 1.1 1.2 0.6 -0.3</si:valueXMLList>
+										<si:unitXMLList>\percent</si:unitXMLList>
+									</si:realListXMLList>
+								</si:hybrid>
+								<dcc:measurementMetaData>
+									<dcc:metaData refType="basic_conformity">
+										<dcc:declaration>
+											<dcc:name>
+												<dcc:content lang="de">Konformität</dcc:content>
+												<dcc:content lang="en">Conformity</dcc:content>
+											</dcc:name>
+										</dcc:declaration>
+										<dcc:conformityXMLList>pass</dcc:conformityXMLList>
+										<dcc:data>
+											<dcc:quantity refType="basic_toleranceLimitLower">
+												<dcc:name>
+													<dcc:content lang="de">Unteres Toleranzlimit</dcc:content>
+													<dcc:content lang="en">Lower tolerance limit</dcc:content>
+												</dcc:name>
+												<si:hybrid>
+													<si:realListXMLList>
+														<si:valueXMLList>-0.022</si:valueXMLList>
+														<si:unitXMLList>\one</si:unitXMLList>
+													</si:realListXMLList>
+													<si:realListXMLList>
+														<si:valueXMLList>-2.2</si:valueXMLList>
+														<si:unitXMLList>\percent</si:unitXMLList>
+													</si:realListXMLList>
+												</si:hybrid>
+											</dcc:quantity>
+											<dcc:quantity refType="basic_acceptanceLimitLower">
+												<dcc:name>
+													<dcc:content lang="de">Unteres Akzeptanzlimit</dcc:content>
+													<dcc:content lang="en">Lower acceptance limit</dcc:content>
+												</dcc:name>
+												<si:hybrid>
+													<si:realListXMLList>
+														<si:valueXMLList>-0.020</si:valueXMLList>
+														<si:unitXMLList>\one</si:unitXMLList>
+													</si:realListXMLList>
+													<si:realListXMLList>
+														<si:valueXMLList>-2.0</si:valueXMLList>
+														<si:unitXMLList>\percent</si:unitXMLList>
+													</si:realListXMLList>
+												</si:hybrid>
+											</dcc:quantity>
+											<dcc:quantity refType="basic_acceptanceLimitUpper">
+												<dcc:name>
+													<dcc:content lang="de">Oberes Akzeptanzlimit</dcc:content>
+													<dcc:content lang="en">Upper acceptance limit</dcc:content>
+												</dcc:name>
+												<si:hybrid>
+													<si:realListXMLList>
+														<si:valueXMLList>0.020</si:valueXMLList>
+														<si:unitXMLList>\one</si:unitXMLList>
+													</si:realListXMLList>
+													<si:realListXMLList>
+														<si:valueXMLList>2.0</si:valueXMLList>
+														<si:unitXMLList>\percent</si:unitXMLList>
+													</si:realListXMLList>
+												</si:hybrid>
+											</dcc:quantity>
+											<dcc:quantity refType="basic_toleranceLimitUpper">
+												<dcc:name>
+													<dcc:content lang="de">Oberes Toleranzlimit</dcc:content>
+													<dcc:content lang="en">Upper tolerance limit</dcc:content>
+												</dcc:name>
+												<si:hybrid>
+													<si:realListXMLList>
+														<si:valueXMLList>0.022</si:valueXMLList>
+														<si:unitXMLList>\one</si:unitXMLList>
+													</si:realListXMLList>
+													<si:realListXMLList>
+														<si:valueXMLList>2.2</si:valueXMLList>
+														<si:unitXMLList>\percent</si:unitXMLList>
+													</si:realListXMLList>
+												</si:hybrid>
+											</dcc:quantity>
+										</dcc:data>
+									</dcc:metaData>
+								</dcc:measurementMetaData>
+							</dcc:quantity>
+							<dcc:influenceConditions>
+								<dcc:influenceCondition refType="gp_gasTemperature">
+									<dcc:name>
+										<dcc:content lang="de">Referenzwert Gastemperatur</dcc:content>
+										<dcc:content lang="en">Reference value gas temperature</dcc:content>
+									</dcc:name>
+									<dcc:data>
+										<dcc:quantity>
+											<si:hybrid>
+												<si:realListXMLList>
+													<si:valueXMLList>293.15 293.15 293.15 293.15 293.15 293.15 293.15</si:valueXMLList>
+													<si:unitXMLList>\kelvin</si:unitXMLList>
+													<si:dateTimeXMLList>2021-07-27T06:00:01 2021-07-27T09:30:00 2021-07-27T13:00:00 2021-07-27T16:30:00 2021-07-27T20:00:00 2021-07-27T23:30:00 2021-07-28T03:00:00</si:dateTimeXMLList>
+												</si:realListXMLList>
+												<si:realListXMLList>
+													<si:valueXMLList>20.0 20.0 20.0 20.0 20.0 20.0 20.0</si:valueXMLList>
+													<si:unitXMLList>\degreecelsius</si:unitXMLList>
+												</si:realListXMLList>
+											</si:hybrid>
+										</dcc:quantity>
+									</dcc:data>
+								</dcc:influenceCondition> 
+							</dcc:influenceConditions>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
+			</dcc:results>
+		</dcc:measurementResult>
+	</dcc:measurementResults>
+</dcc:digitalCalibrationCertificate>
+
+
+
+
+
+
+
+
