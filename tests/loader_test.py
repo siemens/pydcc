@@ -94,6 +94,8 @@ class DxxXmlValidatorTest(unittest.TestCase):
 
     def cleanup_workspace(self, workspace):
         for f in os.listdir(workspace):
+            if "Readme.md" in f:
+                continue
             os.remove(os.path.join(workspace, f))
 
 
