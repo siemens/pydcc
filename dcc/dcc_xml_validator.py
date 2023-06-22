@@ -27,7 +27,7 @@ project/module directory.
 import requests
 import json
 import os
-from typing import List, Optional, Callable
+from typing import List, Optional
 import platform
 import xmlschema
 import xml.etree.ElementTree as ET
