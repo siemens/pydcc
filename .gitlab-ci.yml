@@ -34,6 +34,7 @@ test:
   - pip install -e .  
   - pip install pytest
   - pip install pytest-cov
+  - pip install flask
   - cd tests
   - pytest --cov=dcc -cov-branch --cov-report term-missing 
 

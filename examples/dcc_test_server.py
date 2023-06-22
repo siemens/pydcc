@@ -18,7 +18,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route('/dcc/123')
+@app.route('/dcc/123', methods=['GET'])
 def dcc_test_service():
     xml_file_name = "../data/dcc/dcc_gp_temperature_typical_v12.xml"
     with open(xml_file_name, "rb") as file:

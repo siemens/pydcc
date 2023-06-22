@@ -11,3 +11,5 @@
 # See the LICENSE file in the top-level directory.
 #
 from .dcc import DCC
+from .dcc import DCCStatusType
+from .dcc import DCCStatusReport

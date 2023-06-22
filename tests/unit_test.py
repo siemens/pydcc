@@ -12,16 +12,34 @@
 # See the LICENSE file in the top-level directory.
 #
 
+from dcc import DCCStatusType
 from dcc import DCC
 import datetime
 import unittest
 from cryptography import x509
 from dcc.dcc import DCCTrustStore
 from dcc.dcc import DCCSignatureError
+from flask import Flask
+from multiprocessing import Process
+import time
+
 
 xml_file_name_gp = 'dcc_gp_temperature_typical_v12.xml'
 xml_file_path_gp = '../data/dcc/' + xml_file_name_gp
 dcco_gp = DCC(xml_file_path_gp)
+
+
+app = Flask(__name__)
+
+@app.route('/dcc/123', methods=['GET'])
+def dcc_test_service():
+    with open(xml_file_path_gp, "rb") as file:
+        byte_array = file.read()
+    return byte_array
+
+def service_thread():
+    global app
+    app.run(host='127.0.0.1', debug=False, port=8085)
 
 
 class TestBaseFunctions(unittest.TestCase):
@@ -43,6 +61,24 @@ class TestBaseFunctions(unittest.TestCase):
 
         dcc_from_compressed_byte_array = DCC(compressed_dcc=dcc_compressed)  # Load DCC and crate DCC object
         self.assertTrue(dcc_from_compressed_byte_array.is_loaded())
+
+    def test_loading_form_server(self):
+
+        # Create local server for test purposes only
+        tserv = Process(target=service_thread)
+        tserv.start()
+
+        # Give Flask some time to get ready. It would be better to ask Flask for being ready.
+        time.sleep(2)
+
+        # Load from server
+        dcc_from_server = DCC(url="http://127.0.0.1:8085/dcc/123")
+
+        # Terminate server
+        tserv.terminate()
+        tserv.join()
+
+        self.assertTrue(dcc_from_server.is_loaded())
 
     def test_mandatoryLang(self):
         lang = dcco_gp.mandatory_language()
@@ -156,6 +192,15 @@ class TestBaseFunctions(unittest.TestCase):
         xml_file_name_wrong_schema = '../data/siliziumkugel_wrong_schema.xml'# Example from PTB
         dcco_wrong_schema = DCC(xml_file_name_wrong_schema)
         self.assertFalse(dcco_wrong_schema.verify_dcc_xml(online=False))
+
+    def test_status_summary(self):
+        result = dcco_gp.status_report.get_status_summary()
+        self.assertFalse(result)
+
+    def test_status_summary_ignore_list(self):
+        result = dcco_gp.status_report.get_status_summary(ignore_list=[DCCStatusType.VALID_SCHEMA, DCCStatusType.IS_SIGNED, DCCStatusType.VALID_SIGNATURE])
+        self.assertTrue(result)
+
 
 # Work in progress
 
