@@ -264,7 +264,7 @@ class DCCXMLValidator:
         """
 
         if online:
-            return xmlschema.is_valid(xml_document=dcc_etree, use_location_hints=True)
+            return xmlschema.is_valid(xml_document=dcc_etree)
         else:
 
             if dcc_version in self.previous_used_schmas:
@@ -295,7 +295,7 @@ class DCCXMLValidator:
                         local_schema_locations[
                             local_available_schema.targetNamespace] = local_available_schema.location_local_abs
 
-            schema = xmlschema.XMLSchema(schema_file, build=True, allow="sandbox",
+            schema = xmlschema.XMLSchema(schema_file, allow="sandbox",
                                          base_url=self.path_workspace,
                                          locations=local_schema_locations)
 
