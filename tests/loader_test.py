@@ -1,4 +1,8 @@
-from dcc import *
+from dcc.dcc_xml_validator import DCCXMLValidator
+from dcc.dcc_xml_validator import WORKSPACE_STATUS_OK
+from dcc.dcc_xml_validator import get_imports_from_xml
+from dcc.dcc_xml_validator import get_target_namespace_from_xml
+from dcc.dcc_xml_validator import get_schema_version
 import unittest
 import xml.etree.ElementTree as ET
 import os
