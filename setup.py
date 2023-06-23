@@ -18,14 +18,14 @@ with open('next_version.txt', 'r') as file:
     current_version = file.read()
 
 setup(
-    name = "pydcc",
-    version = current_version,
-    author = "Andreas Tobola",
-    author_email = "andreas.tobola@siemens.com",
-    description = ("Library for handling digital calibration certificates (DCC). "),
-    license = "MIT License",
-    keywords = "digital calibration certificate measurement uncertainty precision GUM DCC",
-    url = "https://gitlab.com/gemimeg/pydcc",
+    name="pydcc",
+    version=current_version,
+    author="Andreas Tobola",
+    author_email="andreas.tobola@siemens.com",
+    description=("Library for handling digital calibration certificates (DCC). "),
+    license="MIT License",
+    keywords="digital calibration certificate measurement uncertainty precision GUM DCC",
+    url="https://gitlab.com/gemimeg/pydcc",
     packages=['dcc'],
     include_package_data=True,
     long_description=long_description,
@@ -39,8 +39,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-   'xmlschema > 1.5', 'requests', 'signxml >= 3.1.0', 'certvalidator', 'asn1crypto', 'cryptography'
+        'xmlschema > 1.5', 'requests', 'signxml >= 3.1.0', 'certvalidator', 'asn1crypto', 'cryptography', 'pydantic'
     ]
 )
-
-

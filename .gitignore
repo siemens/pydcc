@@ -9,3 +9,7 @@ build
 .vscode
 .idea
 data/temp
+
+# Data that is temporarily downloaded for tests. Some should not be committed for licensing reasons.
+tests/data/test_workspace/*
+!tests/data/test_workspace/Readme.md

@@ -13,34 +13,247 @@
 #
 
 """
-This module downloads the DCC schemas provided by the Physikalisch-Technische Bundesanstalt.
-All available versions are stored and made available by a function call.
-Additionally the D-SI schemas are stored and also made available by a function call.
+This module can be used to validate a Digital Calibration Certificate (DCC). The DCCXMLValidator class is used to
+perform the validation. The Physikalisch-Technische Bundesanstalt provides a Json document. This document lists
+all current DCC schemas. The class DCCXMLValidator downloads all schemas listed in the json file. For validation
+the function dcc_is_valid_against_schema can be used. The user specifies whether the previously downloaded schemas
+are used or the schemaLocations in the DCC-xml file are used.
+
+The DCC schemas and all other dependencies are stored in a workspace. This is usually located in a specified folder.
+However, the user can define the workspace himself. For licensing reasons, the schemas cannot be stored in the
+project/module directory.
 """
 
 import requests
-# import urllib.request as urlib_requests
 import json
 import os
-from typing import List, Dict
-from xml.sax import make_parser, handler
+from typing import List, Optional
+import platform
 import xmlschema
-import xml.etree.ElementTree
+import xml.etree.ElementTree as ET
+from pydantic import BaseModel, ValidationError
+from datetime import datetime
 
 # "url to load a json documents that hold information about the DCC versions"
 url_dcc_schema_releases = "https://www.ptb.de/dcc/releases.json"
 
-# the json document with dcc releases store uri's to download xsd files. These patterns are used to validate the uri's
-mandatory_uri_pattern: List[str] = ["https", "ptb.de", "xsd"]
+
+class DccXmlValidator(Exception):
+    """General exception."""
+
+
+class DccSchemaNotAvailableLocal(DccXmlValidator):
+    """No locally available schema was found for the DCC to be validated."""
+
+
+def get_standard_workspace_path() -> os.path:
+    # Get the system the programm is running on to decide what folder should be used
+
+    system = platform.system()
+    if system == "Windows":
+        appdata_path = os.getenv('APPDATA')
+    elif system == "Linux":
+        appdata_path = os.path.expanduser('~')
+    elif system == "Darwin":
+        appdata_path = os.path.expanduser('~/Library/Application Support')
+    else:
+        return None
+
+    folder_path = os.path.join(appdata_path, 'pydcc')
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    return folder_path
+
+
+def get_imports_from_xml(xml_string: str):
+    root = ET.fromstring(xml_string)
+
+    # Find all elements with the tag "import"
+    import_elements = root.findall(".//{*}import")
+    dependencys: List[str] = []
+
+    # Iterate over each import element
+    for element in import_elements:
+        if "schemaLocation" in element.attrib:
+            dependencys.append(element.attrib["schemaLocation"])
+
+    return dependencys
+
+
+def get_target_namespace_from_xml(xml_string: str):
+    root = ET.fromstring(xml_string)
+    if "targetNamespace" in root.attrib:
+        return root.attrib.get("targetNamespace")
+    return ""
+
+
+def get_schema_version(xml_string: str):
+    root = ET.fromstring(xml_string)
+    if "schemaVersion" in root.attrib:
+        return root.attrib.get("schemaVersion")
+    if "version" in root.attrib:
+        return root.attrib.get("version")
+    return ""
+
+
+class Schema(BaseModel):
+    # Data to describe the schema
+    targetNamespace: str = ""
+    filename: str = ""
+    version_str: str = ""
+    location_local_abs: str = ""
+    online_schemaLocation: str = ""
+
+    # dependencies
+    dependencys: List[str] = []
+
+
+class DCCRelease(BaseModel):
+    """
+    used subelement to parse json file from  https://www.ptb.de/dcc/releases.json
+    """
+    version: str = ""
+    url: str = ""
+    type: str = ""
+
+
+class DCCOnlineReleases(BaseModel):
+    """
+    parse json file from  https://www.ptb.de/dcc/releases.json
+    """
+    description: str = ""
+    releases: List[DCCRelease] = DCCRelease()
+
+
+class Data(BaseModel):
+    """
+    store information about downloaded schemas
+    """
+    online_available_releases: DCCOnlineReleases = DCCOnlineReleases()
+    local_available_schemas: List[Schema] = []
+    last_update: datetime = datetime.now()
+
+
+WORKSPACE_STATUS_OK = 0
+WORKSPACE_PATH_DOES_NOT_EXIST = 1
+WORKSPACE_NO_README = 2
+WORKSPACE_STATUS_NO_DATA_FILE = 3
+WORKSPACE_STATUS_MISSING_SCHEMA_FILES = 4
+WORKSPACE_STATUS_JSON_FILE_CORRUPTED = 5
 
 
 class DCCXMLValidator:
 
-    def __init__(self, path_to_workspace: os.path = os.path.join(os.path.dirname(__file__), "schemas")):
-        self.path_to_workspace = path_to_workspace
+    def __init__(self, path_to_workspace: Optional[str] = None, workspace_init: bool = True):
+        """
+        DCCXMLValidator can be used to validate the DCC against the schema. Online validation is supported,
+        where the dcc schema is downloaded from the source specified in the dcc. It is also possible to validate
+        the dcc against locally stored schemas. These are stored in a workspace.
 
-    def dcc_is_valid_against_schema(self, dcc_etree: xml.etree.ElementTree, dcc_version: str,
-                                    online: bool = False) -> bool:
+        :param path_to_workspace: set path to workspace, if not set then a default workspace path is used.
+            Path depends on os.
+        :type path_to_workspace: string
+        :param workspace_init:  Init the workspace if it has not yet been
+            initiated or is not valid.
+        :type workspace_init: bool
+        """
+
+        #  set workspace where schemas will be stored locally on the machine. Used to perform offline schema validation
+        if path_to_workspace is None:
+            self.path_workspace = get_standard_workspace_path()
+        else:
+            self.path_workspace = path_to_workspace
+
+        self.path_data_file = os.path.join(self.path_workspace, "data.json")
+
+        # check if workspace is valid
+        self.workspace_status = self.__get_workspace_status()
+
+        self.data: Optional[Data] = None
+
+        # if workspace is not valid try to initiate it
+        if workspace_init and not self.workspace_status == WORKSPACE_STATUS_OK:
+            self.__init_workspace()
+            self.workspace_status = self.__get_workspace_status()
+
+        # if workspace is valid load data.json. These file contains alls local available schemas
+        if self.workspace_status == WORKSPACE_STATUS_OK:
+            with open(self.path_data_file, mode="r", encoding="utf-8") as file:
+                self.data = Data(**json.load(file))
+
+        self.previous_used_schmas = {}
+
+    def __init_workspace(self):
+        # Create a Readme.txt file inside the Folder with some information about the usage.
+
+        content = "This directory was created by the pyDCC software.\nIt is used to store downloaded xml schemas." \
+                  "\nThese are used for the validation of the DCCs." + "\n\n" + "Created on: " + \
+                  str(datetime.now())
+        path_readme = os.path.join(self.path_workspace, 'Readme.txt')
+        if not os.path.exists(path_readme):
+            with open(path_readme, mode="w") as file:
+                file.write(content)
+
+        self.__download_list_with_available_releases()
+
+        self.__download_schemas_referenced_by_list()
+
+        self.__download_dependencys()
+
+        if self.data is not None:
+            with open(self.path_data_file, mode="w") as file:
+                file.write(self.data.json(indent=4))
+
+    def __get_workspace_status(self) -> int:
+        """
+        Check the workspace.
+
+        1. Test if the path to the workspace folder exists and user have access
+        2. Test if there is a Readme.txt file inside the workspace
+        3. Test if there is a data.json file insode the workspace
+        4. Try to parse the data.json file
+        5. Test if all loacal xsd files referenced ba data.json exists
+
+        :return: Status of workspace (WORKSPACE_STATUS_OK,WORKSPACE_PATH_DOES_NOT_EXIST,WORKSPACE_NO_README
+        ,WORKSPACE_STATUS_NO_DATA_FILE,WORKSPACE_STATUS_MISSING_SCHEMA_FILES,WORKSPACE_STATUS_JSON_FILE_CORRUPTED)
+        :rtype: int
+        """
+
+        # 1. Test if the path to the workspace folder exists
+        if not os.path.exists(self.path_workspace):
+            return WORKSPACE_PATH_DOES_NOT_EXIST
+
+        if not os.access(self.path_workspace, os.W_OK | os.R_OK):
+            raise PermissionError("Check the choosen workspace directory " + "\"" + str(
+                self.path_workspace) + "\"" + " but the current user has no access rights")
+
+        # 2. Test if there is a Readme.txt file inside the workspace
+        if not os.path.isfile(os.path.join(self.path_workspace, "Readme.txt")):
+            return WORKSPACE_NO_README
+
+        # 3. Test if there is a data.json file insode the workspace
+        if not os.path.isfile(os.path.join(self.path_workspace, "data.json")):
+            return WORKSPACE_STATUS_NO_DATA_FILE
+
+        # 4. Try to parse the data.json file
+        with open(self.path_data_file, mode="r", encoding="utf-8") as file:
+            try:
+                self.data = Data(**json.load(file))
+            except ValidationError:
+                return WORKSPACE_STATUS_JSON_FILE_CORRUPTED
+
+            # return "can not parse data.json file"
+
+        # 5. Test if all local xsd files referenced ba data.json exists
+        for local_schema in self.data.local_available_schemas:
+            if not os.path.isfile(local_schema.location_local_abs):
+                return WORKSPACE_STATUS_MISSING_SCHEMA_FILES
+
+        return WORKSPACE_STATUS_OK
+
+    def dcc_is_valid_against_schema(self, dcc_etree: ET, dcc_version: str,
+                                    online: bool) -> bool:
         """
         Validate DCC against the dcc schema
 
@@ -49,356 +262,118 @@ class DCCXMLValidator:
         :param online: download referenced dcc schemas using location hints or use local stored xsd files
         :return: true if dcc is valid
         """
-        is_valid: bool = False
 
         if online:
-            is_valid = xmlschema.is_valid(xml_document=dcc_etree, use_location_hints=True)
+            return xmlschema.is_valid(xml_document=dcc_etree)
         else:
-            with open(self.get_abs_local_dcc_shema_path(dcc_version=dcc_version), 'r') as file:
+
+            if dcc_version in self.previous_used_schmas:
+                schema = self.previous_used_schmas[dcc_version]
+                return xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
+
+            schema_info: Optional[Schema] = None
+
+            if self.data is not None:
+                for local_available_schema in self.data.local_available_schemas:
+                    if local_available_schema.version_str == dcc_version:
+                        schema_info = local_available_schema
+                        break
+            else:
+                raise DccSchemaNotAvailableLocal
+
+            if schema_info is None:
+                raise DccSchemaNotAvailableLocal
+
+            with open(schema_info.location_local_abs, 'r') as file:
                 schema_file = file.read()
 
-            locations = {"https://ptb.de/dcc": str(self.get_abs_local_dcc_shema_path(dcc_version=dcc_version)),
-                         "https://ptb.de/si": str(self.get_abs_local_dsi_schema_path(dcc_version=dcc_version))}
-            # TODO load all imports -> dcc 3.2.0
-            if dcc_version == "3.2.0":
-                locations["http://www.w3.org/2000/09/xmldsig#"] = str(
-                    os.path.join(os.path.dirname(__file__), "schemas", "ds_0_1.xsd"))
+            local_schema_locations = {"https://ptb.de/dcc": schema_info.location_local_abs}
 
-            schema = xmlschema.XMLSchema(schema_file, build=True, allow="sandbox",
-                                         base_url=os.path.join(os.path.dirname(__file__), "schemas"),
-                                         locations=locations)
+            for dependency in schema_info.dependencys:
+                for local_available_schema in self.data.local_available_schemas:
+                    if local_available_schema.online_schemaLocation == dependency:
+                        local_schema_locations[
+                            local_available_schema.targetNamespace] = local_available_schema.location_local_abs
 
-            is_valid = xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
-        return is_valid
+            schema = xmlschema.XMLSchema(schema_file, allow="sandbox",
+                                         base_url=self.path_workspace,
+                                         locations=local_schema_locations)
 
-    def update_schemas(self, raise_errors: bool = False) -> bool:
-        """
-        Download all online available dcc schemas and make them available via get path functions.
-        Based on the downloaded dcc schemas the required dsi schemas are downloaded.
-        The dsi schemas are also available via corresponding get path function.
+            self.previous_used_schmas[dcc_version] = schema
 
-        :param raise_errors: Deactivates error messages and returns only False on failure
-        :return: On success True is returned and on failure False
-        """
+            return xmlschema.is_valid(xml_document=dcc_etree, schema=schema, use_location_hints=False)
 
-        if not self.get_actual_list_ddc_xsd_releases_from_server(url=url_dcc_schema_releases,
-                                                                 raise_errors=raise_errors):
-            return False
+    def __download_list_with_available_releases(self):
 
-        if "error" in self.download_dcc_schemas(raise_errors=raise_errors)[0]:
-            return False
+        download = requests.get(url_dcc_schema_releases, allow_redirects=True)
+        self.data = Data()
+        self.data.online_available_releases = DCCOnlineReleases(**(download.json()))
 
-        if not self.download_dsi_shemas_referenced_by_downloaded_dcc_schemas(raise_errors=raise_errors):
-            return False
+    def __download_schemas_referenced_by_list(self):
 
-        return True
-
-    def get_dsi_info_from_dcc_schema(self, dcc_xsd_path: str, raise_errors: bool = False) -> dict:
-        """
-        Parses a dcc schemas and searches for the required dsi version
-
-        :param dcc_xsd_path: path to dcc schemas
-        :param raise_errors: Deactivates error messages and returns empty {} on failure
-        :return: return version
-        """
-
-        parser = make_parser()
-        dsi_version_handler = _HandlerDCCDSIVersion()
-        parser.setContentHandler(dsi_version_handler)
-        try:
-            parser.parse(dcc_xsd_path)
-        except _FinishedParsing:
-            pass
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return {}
-
-        return {"version": dsi_version_handler.version, "schemaLocation": dsi_version_handler.schemaLocation}
-
-    def get_dsi_info_from_dsi_schema(self, dsi_xsd_path: str, raise_errors: bool = False) -> str:
-        """
-        Parses a dsi schemas and searches for the required dsi version
-
-        :param dsi_xsd_path: path to dsi schemas
-        :param raise_errors: Deactivates error messages and returns "error" on failure
-        :return: version of dsi schemas or "error"
-        """
-
-        parser = make_parser()
-        dsi_version_handler = _HandlerDSIVersion()
-        parser.setContentHandler(dsi_version_handler)
-        try:
-            parser.parse(dsi_xsd_path)
-        except _FinishedParsing:
-            pass
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return "error"
-
-        return dsi_version_handler.version
-
-    def get_actual_list_ddc_xsd_releases_from_server(self, url: str, raise_errors: bool = True) -> bool:
-        """
-        Download a file with information and URI about the current schemas releases. The file will be saved in the
-        Files folder.
-
-        :param url: address for downloading the json file with the information about current releases.
-        :param raise_errors: If False, error messages are suppressed and a False is returned.
-        :return: On success True is returned and on failure False
-        """
-
-        """Download json document with releases"""
-        try:
-            data = requests.get(url, allow_redirects=True)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return False
-
-        """Save downloaded file"""
-        try:
-            open(os.path.join(self.path_to_workspace, "dcc_releases.json"), 'wb').write(data.content)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return False
-
-        return True
-
-    def download_dcc_schemas(self, raise_errors: bool = False) -> List[str]:
-        """
-        Download all dcc schemas specified by the dcc_releases.json file with release type "stable"
-
-        :param raise_errors: If False, error messages are suppressed and ["error"] is returned.
-        :return: a list wih downloaded dcc schemas versions on success
-        """
-
-        try:
-            with open(os.path.join(self.path_to_workspace, "dcc_releases.json")) as f_obj:
-                release_list = json.load(f_obj).get("releases")
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return ["error"]
-
-        """prepare content template for creating dcc_version_info.json file"""
-        dcc_version_info = {
-            "description": "mapping dcc schemas versions to local dcc, dsi schemas files",
-            "dcc_xsd_file": {},
-            "dcc_dsi_match": {}
-        }
-
-        downloaded_schemas: List[str] = []
-
-        for release in release_list:
-            if release.get("type") == "stable":
-
-                url = release.get("url")
-
-                """validate schemaLocation URI with pattern"""
-                for pattern in mandatory_uri_pattern:
-                    if pattern not in url:
-                        if raise_errors:
-                            raise ValueError("one of the patterns was not found in the schemaLocation URI")
-                        continue
-
-                data = requests.get(url, allow_redirects=True)
-
-                filename = "dcc_" + release.get("version").replace(".", "_") + ".xsd"
-
-                dcc_version_info["dcc_xsd_file"][release.get("version")] = filename
-
-                open(os.path.join(self.path_to_workspace, filename), 'wb').write(data.content)
-                downloaded_schemas.append(filename)
-
-        """store which dcc version was saved under which filename"""
-
-        try:
-            with open(os.path.join(self.path_to_workspace, "dcc_version_info.json"), "w") as outfile:
-                json.dump(dcc_version_info, outfile, indent=4)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return ["error"]
-
-        return downloaded_schemas
-
-    def download_dsi_shemas_referenced_by_downloaded_dcc_schemas(self, raise_errors: bool = False) -> bool:
-        """
-        Based on the downloaded dcc schemas, the required dsi schemas are downloaded.
-        The combination of dcc schemas version and dsi schemas file are saved for later use.
-
-        :param raise_errors: If False, error messages are suppressed and a False is returned.
-        :return: On success True is returned and on failure False
-        """
-        dcc_version_info = self.load_dcc_version_info_file_to_dict(raise_errors=raise_errors)
-
-        if dcc_version_info == {}:
-            if raise_errors:
-                raise Exception('Can not load dcc version info')
-            return False
-
-        dcc_version_info["dcc_dsi_match"] = {}
-
-        for key in dcc_version_info["dcc_xsd_file"]:
-
-            path = os.path.join(self.path_to_workspace, dcc_version_info["dcc_xsd_file"][key])
-            dsi_info = self.get_dsi_info_from_dcc_schema(path)
-
-            if dsi_info == {}:
+        for release in self.data.online_available_releases.releases:
+            if release.type != "stable":
                 continue
 
-            """validate schemaLocation URI with pattern"""
-            for pattern in mandatory_uri_pattern:
-                if pattern not in dsi_info["schemaLocation"]:
-                    # TODO Raise exception and set tag about download status in json file
-                    print(dsi_info["schemaLocation"])
-                    print("violate pattern")
+            download = requests.get(release.url, allow_redirects=True)
+
+            # save downloaded xsd schema content to file
+            filename = "dcc_" + release.version.replace(".", "_") + ".xsd"
+            with open(os.path.join(self.path_workspace, filename), mode="wb") as file:
+                file.write(download.content)
+
+            schema = Schema(targetNamespace=get_target_namespace_from_xml((download.content.decode("utf-8"))),
+                            filename=filename,
+                            version_str=release.version,
+                            location_local_abs=str(os.path.join(self.path_workspace, filename)),
+                            online_schemaLocation=release.url,
+                            dependencys=get_imports_from_xml((download.content.decode("utf-8"))))
+
+            self.data.local_available_schemas.append(schema)
+
+    def __download_dependencys(self):
+
+        # The schemas are uniquely identified by their schemaLocation. However, the generated filename cannot be
+        # unique if the schemaLocation changes but the schema does not. For this reason an uid was introduced.
+        # Another solution would be the use of a hash value.
+        uid = 0
+
+        for local_dcc_schema in self.data.local_available_schemas:
+            for dependecny in local_dcc_schema.dependencys:
+                try:
+                    download = requests.get(dependecny, allow_redirects=True)
+                except Exception as e:
+                    print(e)
+                    continue
+                # save downloaded xsd schema content to file
+                # check for xml content
+                if "<?xml" not in download.content.decode("utf-8")[0:10]:
                     continue
 
-            """Try to download dsi document with releases"""
-            try:
-                print(dsi_info["schemaLocation"])
-                data = requests.get(dsi_info["schemaLocation"], allow_redirects=True)
-            except Exception as e:
-                if raise_errors:
-                    raise e
-                continue
+                target_namespace = get_target_namespace_from_xml(download.content.decode("utf-8"))
+                version = get_schema_version(download.content.decode("utf-8"))
 
-            """check if its really an xsd file or the download link was broken"""
-            if "<?xml" not in data.text[:10]:
-                print("no xml")
-                continue
+                uid += 1
+                filename = target_namespace.split("/")[-1] + "_" + version.replace(".", "__") + str(uid) + ".xsd"
+                with open(os.path.join(self.path_workspace, filename), mode="wb") as file:
+                    file.write(download.content)
 
-            """search dsi for version and compare it with the extracted version from dcc"""
+                new_schema = Schema(targetNamespace=target_namespace,
+                                    filename=filename,
+                                    version_str=version.replace(".", "_"),
+                                    location_local_abs=str(os.path.join(self.path_workspace, filename)),
+                                    online_schemaLocation=dependecny)
 
-            dsi_filename = "dsi_" + str(dsi_info["version"]).replace(".", "_") + ".xsd"
+                # INFO: if you have to download the dependencies of the dependencies (and so on)
+                # add dependencys=get_imports_from_xml((download.content.decode("utf-8")) and
+                # run this loop until now more schemas will be downloaded
 
-            dsi_filepath = os.path.join(self.path_to_workspace, dsi_filename)
+                already_added = False
 
-            try:
-                open(dsi_filepath, 'wb').write(data.content)
-            except Exception as e:
-                if raise_errors:
-                    raise e
-                return False
+                for schema in self.data.local_available_schemas:
+                    if schema.online_schemaLocation == new_schema.online_schemaLocation:
+                        already_added = True
+                        break
 
-            version = self.get_dsi_info_from_dsi_schema(dsi_filepath)
-
-            if version != str(dsi_info["version"]):
-                if os.path.exists(dsi_filepath):
-                    print(version)
-                    print("wrong version")
-                    os.remove(dsi_filepath)
-
-            dcc_version_info["dcc_dsi_match"][key] = dsi_filename
-
-            with open(os.path.join(self.path_to_workspace, "dcc_version_info.json"), "w") as outfile:
-                json.dump(dcc_version_info, outfile, indent=4)
-
-        return True
-
-    def get_abs_local_dcc_shema_path(self, dcc_version: str = "3.1.1", raise_errors: bool = False) -> os.path:
-        """
-        Returns a path to an DCC xsd file corresponding to the given dcc version.
-        If the version was not found locally None is returned.
-
-        :param dcc_version: version dcc.xsd schemas for example "3.1.1"
-        :param raise_errors: Deactivates error messages and returns only None on failure
-        :return: absolute path to the local stored dcc.xsd file if search for version was succesfull
-        """
-        dcc_version_info = self.load_dcc_version_info_file_to_dict()
-
-        try:
-            filename = dcc_version_info["dcc_xsd_file"][dcc_version]
-        except KeyError as e:
-            if raise_errors:
-                raise e
-            return None
-
-        return os.path.join(self.path_to_workspace, filename)
-
-    def get_abs_local_dsi_schema_path(self, dcc_version: str = "3.1.1", raise_errors: bool = False) -> os.path:
-        """
-        Returns a path to an D-SI xsd file corresponding to the given dcc version.
-        If the version was not found locally None is returned.
-
-        :param dcc_version: version dcc.xsd schemas for example "3.1.1"
-        :param raise_errors: Deactivates error messages and returns only None on failure
-        :return: absolute path to the local stored dcc.xsd file if search for version was succesfull
-        """
-        dcc_version_info = self.load_dcc_version_info_file_to_dict()
-
-        try:
-            filename = dcc_version_info["dcc_dsi_match"][dcc_version]
-        except KeyError as e:
-            if raise_errors:
-                raise e
-            return None
-
-        return os.path.join(self.path_to_workspace, filename)
-
-    def load_dcc_version_info_file_to_dict(self, raise_errors: bool = False) -> Dict:
-        """
-        Loads the dcc_version_info file and returns it as python dictionary
-
-        :param raise_errors: If False, error messages are suppressed and a False is returned.
-        :return: dcc_version_info file as dictionary
-        """
-        try:
-            with open(os.path.join(self.path_to_workspace, "dcc_version_info.json"), "r") as f_obj:
-                dcc_version_info = json.load(f_obj)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            return {}
-
-        return dcc_version_info
-
-
-class _FinishedParsing(Exception):
-    """
-    Error to stop parsing wit sax parser
-    """
-    pass
-
-
-class _HandlerDCCDSIVersion(handler.ContentHandler):
-    """
-    Customized content handler for SAX perser and use with dcc schemas
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.version: str = ""
-        self.schemaLocation: str = ""
-
-    def startElement(self, name, attrs):
-        if "import" in name:
-            if "si" in attrs["namespace"]:
-                self.schemaLocation = attrs["schemaLocation"]
-                temp = self.schemaLocation.split("/")
-                for element in temp:
-                    if len(element) > 0:
-                        if element[0] == "v":
-                            self.version = element[1:]
-                raise _FinishedParsing
-
-
-class _HandlerDSIVersion(handler.ContentHandler):
-    """
-    Customized content handler for SAX perser and use with dsi schemas
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.version: str = ""
-
-    def startElement(self, name, attrs):
-        if "schema" in name:
-            try:
-                self.version = attrs["version"]
-            except KeyError:
-                raise _FinishedParsing
+                if not already_added:
+                    self.data.local_available_schemas.append(new_schema)
