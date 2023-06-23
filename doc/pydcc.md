@@ -89,15 +89,37 @@ dcco.verify_dcc_xml(online=False)
 ## Signature verification
 
 The signature verification is executed automatically if not deactivate explicitly in the constructor.
-However, make sure to provide a trust store before creating the DCC object.
+However, make sure to provide a trust store before creating the DCC object, for example:
 ```python
 trust_store = DCCTrustStore()
 trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
 trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
 dcco = DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed.xml', trust_store=trust_store)
 ```
-The trust store object can be reused for loading any other DCCs.
+The trust store object can be reused for loading any other DCCs. The trust stores in the examples can not be used for your own signed DCCs. You have to use your respective trusted certificates. 
 
+Remarks concerning signature verification:
+
+- A XADES Baseline-B, Baseline-T or Baseline-LT signature is expected.
+- In case of Baseline-T or Baseline-LT signatures the timestamp is currently not verified.
+- The signature verification is performed based on chain model, i.e. the signing time is used as verification time. This means that all certificates in the certificate path must be valid at signing time.
+- The signature verification currently does not support counter signatures or parallel signatures.
+- After signature verification was performed, the variable 'root' contains the verified DCC without the signature element. The signature element is stored in the variable 'signature_section'.
+
+If the DCC does not have a digital signature, no signature verification is performed.
+
+If the signature verification fails e.g. due to an invalid signature, an invalid certificate chain, a revoked certificate etc. a DCCSignatureError is raised.
+
+## Signer certificate
+Returns the X.509 public key certificate corresponding to the private key that was used to sign the DCC. 
+```python
+dcco.get_signer_certificate()
+```
+## Signing time
+Returns the signing time of the DCC. 
+```python
+dcco.get_signing_time()
+```
 
 ## Calibration Date
 
