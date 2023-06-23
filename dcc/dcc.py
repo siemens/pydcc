@@ -19,6 +19,7 @@ import binascii
 from collections import defaultdict
 import requests
 from dataclasses import dataclass
+
 from signxml import InvalidCertificate, InvalidSignature, InvalidInput
 from certvalidator import CertificateValidator, errors, ValidationContext
 from signxml.xades import XAdESVerifier
@@ -27,6 +28,7 @@ from cryptography import x509
 from typing import Optional
 
 from .dcc_xml_validator import DCCXMLValidator
+
 
 
 class DCCStatusType:
@@ -171,6 +173,8 @@ class DCC:
                     self.__verify_signature()
 
     def __verify_signature(self):
+        if len(self.__find_signatures()) > 1:
+            raise DCCSignatureError("Counter signatures and parallel signatures are currently not supported.")
 
         # Step 0: Check if there is a trust store with root and intermediate CA certificates
         if self.trust_store is None:
@@ -193,17 +197,37 @@ class DCC:
         else:
             validation_time = datetime.datetime.now()
 
-        # end_entity_cert works, signingCert does not work
-        context = ValidationContext(trust_roots=self.trust_store.trust_roots, moment=validation_time)
+        # Get revocation information, if there are any
+        crls = None
+        ocsps = None
+        revocation_mode = "soft-fail"
+        crl_infos = self.root.findall(".//xades:EncapsulatedCRLValue", self.name_space)
+        if len(crl_infos) > 0:
+            crls =[]
+            revocation_mode = "require"
+            for crl_info in crl_infos:
+                crls.append(binascii.a2b_base64(str.encode(crl_info.text)))
+
+        ocsp_infos = self.root.findall(".//xades:EncapsulatedOCSPValue", self.name_space)
+        if len(ocsp_infos) > 0:
+            ocsps = []
+            revocation_mode = "require"
+            for ocsp_info in ocsp_infos:
+                ocsps.append(binascii.a2b_base64(str.encode(ocsp_info.text)))
+
+        context = ValidationContext(trust_roots=self.trust_store.trust_roots, moment=validation_time, crls=crls, ocsps=ocsps, revocation_mode=revocation_mode)
         validator = CertificateValidator(
             pem.armor('CERTIFICATE', binascii.a2b_base64(str.encode(signing_cert))),
             validation_context=context, intermediate_certs=self.trust_store.intermediates)
         try:
             validator.validate_usage(set())
-        except errors.PathValidationError:
+        except errors.RevokedError as e:
+            self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
+            raise DCCSignatureError("Revocation error.  Original exception message was: " + str(e)) from None  # PEP 409 supress original exception
+        except errors.PathValidationError as e:
             # The certificate could not be validated
             self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
-            raise DCCSignatureError("Could not validate certificate path.")
+            raise DCCSignatureError("Could not validate certificate path.  Original exception message was: " + str(e)) from None
 
         # Step 2: Validate DCC signature
 
@@ -215,31 +239,34 @@ class DCC:
                 "Expected signed DCC as XadES - but < 2 references are found in the signature (violating ETSI EN 319 "
                 "132-1 -> see Table 2)")
 
-        # try to verify signature using the provided certificate chain (RootCA + SubCA) - signer certificate is
-        # parsed from the XML signature
-        # caution: at the moment this validation  routine does not include CRL or OCSP validation for the
-        # signer certificate or issuing CA -
-        # to do: this validation should be implemented in the future to avoid trusting revoked certificates.
+        # try to verify signature using signer certificate which is parsed from the XML signature
         data_to_verify = self.root_byte
         try:
             data = XAdESVerifier().verify(data_to_verify, x509_cert=signing_cert_pem,
                                           expect_references=num_refs)  # expect references due to XADES signature format
-        except InvalidCertificate:
+        except InvalidCertificate as e:
             self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
-            raise DCCSignatureError("Signing certificate invalid.")
-        except InvalidSignature:
+            raise DCCSignatureError("Signing certificate invalid. Original exception message was: " + str(e)) from None
+        except InvalidSignature as e:
             self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
-            raise DCCSignatureError("Signature is invalid.")
-        except InvalidInput:
+            raise DCCSignatureError("Signature is invalid. Original exception message was: " + str(e)) from None
+        except InvalidInput as e:
             self.status_report.report(DCCStatusType.VALID_SIGNATURE, False)
-            raise DCCSignatureError("Provided XML does not include enveloped signature.")
+            raise DCCSignatureError("Provided XML does not include enveloped signature. Original exception message was: " + str(e)) from None
 
         # Store signed data from DCC (without enveloped signature) in root element
-        # To do: Check if [0] is really the dcc element
-        self.root = data[0].signed_xml
+        found_dcc_elem = False
+        for data_elem in data:
+            if data_elem.signed_xml.tag == '{https://ptb.de/dcc}digitalCalibrationCertificate':
+                found_dcc_elem = True
+                # Store signature from verified xml in signature element
+                self.root = data_elem.signed_xml
+                # Store signature from verified xml in signature element
+                self.signature_section = data_elem.signature_xml
+                break
 
-        # Store signature from verified xml in signature element
-        self.signature_section = data[0].signature_xml
+        if not found_dcc_elem:
+            raise DCCSignatureError("DCC element was not found in VerifyResults of signature validation")
 
         # Signature was valid
         self.status_report.report(DCCStatusType.VALID_SIGNATURE, True)
@@ -306,11 +333,13 @@ class DCC:
         self.status_report.report(DCCStatusType.VALID_SCHEMA, valid_xml)
         return valid_xml
 
+    def __find_signatures(self):
+        return self.root.findall("ds:Signature", self.name_space)
+
     def __is_signed(self):
         # Is the DCC signed?
-        elem = self.root.find("ds:Signature", self.name_space)
-        is_signed = not elem == None
-        return is_signed
+        if len(self.__find_signatures()) > 0:
+            return True
 
     def calibration_date(self):
         # Return calibration date (endPerformanceDate)
@@ -505,3 +534,4 @@ class DCC:
 
 class DCCSignatureError(Exception):
     """ this exception is raised if any problem with the validation of the DCC signature occurs"""
+
