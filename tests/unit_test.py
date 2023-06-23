@@ -201,12 +201,6 @@ class TestBaseFunctions(unittest.TestCase):
         result = dcco_gp.status_report.get_status_summary(ignore_list=[DCCStatusType.VALID_SCHEMA, DCCStatusType.IS_SIGNED, DCCStatusType.VALID_SIGNATURE])
         self.assertTrue(result)
 
-
-# Work in progress
-
-# def test_is_signature_valid(self):
-#    self.assertFalse(dcco.is_signature_valid())
-
     def test_valid_signature(self):
         trust_store = DCCTrustStore()
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
@@ -219,7 +213,7 @@ class TestBaseFunctions(unittest.TestCase):
         trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
         trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
         with self.assertRaises(DCCSignatureError):
-            DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_signed_manipulated.xml',
+            DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed_manipulated.xml',
                 trust_store=trust_store)
 
     def test_get_signing_time(self):
@@ -239,6 +233,15 @@ class TestBaseFunctions(unittest.TestCase):
             expected_cert_bytes = file.read()
             expected_cert = x509.load_pem_x509_certificate(expected_cert_bytes)
             self.assertEqual(dcco.get_signer_certificate(), expected_cert)
+
+    def test_revoked_signer(self):
+        trust_store = DCCTrustStore()
+        trust_store.load_trusted_root_from_file("../data/trusted_certs/root.crt")
+        trust_store.load_intermediate_from_file("../data/trusted_certs/sub.crt")
+        with self.assertRaises(DCCSignatureError):
+            DCC(xml_file_name='../data/dcc/dcc_gp_temperature_typical_v12_v3.2.0_signed_lt_revoked.xml',
+                trust_store=trust_store)
+
 
 if __name__ == '__main__':
     unittest.main()
