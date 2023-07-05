@@ -203,7 +203,7 @@ class DCCXMLValidator:
 
         if self.data is not None:
             with open(self.path_data_file, mode="w") as file:
-                file.write(self.data.json(indent=4))
+                file.write(self.data.json())
 
     def __get_workspace_status(self) -> int:
         """
