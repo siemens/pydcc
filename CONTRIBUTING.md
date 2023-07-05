@@ -1,7 +1,12 @@
 # Contributing
 
-In general, please feel free to contact the maintainers of the software via E-Mail. 
-## Contributing Code  
+We welcome contributions in several forms, e.g.
+
+- Sponsoring
+- Documenting
+- Testing
+- Coding
+- etc.
 
 Please read [14 Ways to Contribute to Open Source without Being a Programming Genius or a Rock Star](https://smartbear.com/blog/test-and-monitor/14-ways-to-contribute-to-open-source-without-being/ ).
 
@@ -13,7 +18,7 @@ We use the [Feature Branch Workflow](https://www.atlassian.com/git/tutorials/com
 
 We appreciate any contributions, so please use the [Forking Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).
 
-For fast feedback, before submiting your contribution execute the unit test and make sure it was passed successfully. However, the test will be executed in the GitLab pipeline after commiting to any branch including master.
+For fast feedback, before submitting your contribution execute the unit test and ensure it was passed successfully. However, the test will be executed in the GitLab pipeline after committing to any branch, including the master.
 ```bash
 cd tests
 pytest --cov=dcc unit_test.py
@@ -32,10 +37,10 @@ setuptools
 
 ## Additional Workflow when changing the API
 
-In case of new API features it is mendatory to
+In the case of new API features, it is mandatory to
 * Add a new entry to the doc/mydcc.md in the section API
-* Add an unit test to tests/unit_test.py
+* Add a unit test to tests/unit_test.py
 * Implement a new API function.
-* Make sure passing the all test including the new API test.
+* Make sure to pass all the tests, including the new API test.
 
 
