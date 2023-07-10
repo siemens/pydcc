@@ -32,6 +32,19 @@ Consider reading the [user guide](doc/pydcc.md) for more details, including API 
 
 Further, the [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
 
+## Contributors
+
+This project was started in January 2021 with an initial team of developers.
+
+* [Andreas Tobola](@tobola), [Siemens AG](https://siemens.com)
+* [Kai Mienert](@mienertPTB), [PTB](https://www.ptb.de)
+* [Katharina Janzen](@katharina.janzen), [PTB](https://www.ptb.de)
+* [Anupam Prasad Vedurmudi](@vedurmudiPTB), [PTB](https://www.ptb.de)
+* [Caroline Bender](@cbender), [Deutsche Telekom Security GmbH](https://www.telesec.de)
+* [Robin Fay](@FayR-DTSEC), [Deutsche Telekom Security GmbH](https://www.telesec.de)
+* [Tobias Messinger](@tobias.messinger), Digiraster (affiliation until April 2022)
+* [Andreas Mucha](@andreas.mucha), [Siemens AG](https://siemens.com)
+
 ## References
 
 [1] The official release of the digital calibration certificate (DCC) in version 2.4.0 https://www.ptb.de/dcc/v2.4.0/de/
