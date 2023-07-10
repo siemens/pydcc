@@ -10,7 +10,7 @@ Out of scope: PyDCC is not intended to modify or generate DCCs.
 
 This software module is a joint initiative driven by the project [GEMIMEG-II.](https://www.digitale-technologien.de/DT/Navigation/DE/ProgrammeProjekte/AktuelleStrategischeEinzelprojekte/gemimeg2/gemimeg2.html)
 
-Maintainer: [Andreas Tobola](mailto:andreas.tobola@siemens.com), Siemens AG
+Maintainer: [Andreas Tobola](mailto:pydcc.t@siemens.com), Siemens AG
 
 Contributors: Contributors will be listed here. If you want to be listed, contact andreas.tobola@siemens.com. The workflow was defined in the [contribution guide](CONTRIBUTING.md). We appreciate any contributions.
 

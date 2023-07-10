@@ -3,7 +3,7 @@
 # Copyright (c) Siemens AG, 2021
 #
 # Authors:
-#  Andreas Tobola <andreas.tobola@siemens.com>
+#  Andreas Tobola, Siemens AG
 #
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
@@ -21,7 +21,7 @@ setup(
     name="pydcc",
     version=current_version,
     author="Andreas Tobola",
-    author_email="andreas.tobola@siemens.com",
+    author_email="pydcc.t@siemens.com",
     description=("Library for handling digital calibration certificates (DCC). "),
     license="MIT License",
     keywords="digital calibration certificate measurement uncertainty precision GUM DCC",
