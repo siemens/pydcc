@@ -11,16 +11,33 @@
 #
 set -eux    # abort on error
 
-python3 increase_version.py
-pip install -e .
-
-python3 setup.py bdist_wheel
-
+# Run tests
 cd tests
 pytest --cov dcc --cov-branch --cov-report term-missing --cov-report html
 cd ..
 
+# Install locally
+pip install -e
+
+# Run minimal example
 cd examples
 python3 minimal_working_example.py
 cd ..
 
+# Upgarde or install dev tools
+pip install --upgrade  -r .\dev_requirements.txt
+
+# Increase version
+python increase_version.py
+
+# Cleanup old package files
+rm dist/*.*
+
+# Create packages
+python setup.py sdist bdist_wheel --universal
+
+# Upload
+twine upload dist/* # --verbose
+
+# Install from package
+pip install --upgrade pydcc
