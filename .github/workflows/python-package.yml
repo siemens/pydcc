@@ -1,5 +1,13 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# CI module for PyDCC
+#
+# Copyright (c) Siemens AG, 2023
+#
+# Authors:
+#  Andreas Tobola, Siemens AG
+#
+# This work is licensed under the terms of the MIT License. 
+# See the LICENSEle in the top-level directory.
+#
 
 name: Python package
 
@@ -39,3 +47,5 @@ jobs:
       run: |
         cd tests      
         pytest --cov=dcc -cov-branch --cov-report term-missing  
+
+
