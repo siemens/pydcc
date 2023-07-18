@@ -484,33 +484,48 @@ class DCC:
         return res
 
     def __etree_to_dict(self, t):
+        """
+        This method was adapted from a post at Stackoverflow
+        URL: https://stackoverflow.com/a/10077069
+        This method is licensed under a Creative Commons Attribution ShareAlike 3.0 (CC-BY-SA 3.0) License
+        URL: http://creativecommons.org/licenses/by/3.0/deed.en_US
+        """
         # method to recursively traverse the xml tree from a specified point and to return the elemnts in dictionary form
         tkey = t.tag.rpartition('}')[2]
-        d = {tkey: {} if t.attrib else None}
+        tree_dict = {tkey: {} if t.attrib else None}
         children = list(t)
         if children:
-            dd = defaultdict(list)
+            subdict = defaultdict(list)
             for dc in map(self.__etree_to_dict, children):
-                for k, v in dc.items():
-                    dd[k].append(v)
-            d = {tkey: {k: v[0] if len(v) == 1 else v
-                        for k, v in dd.items()}}
+                for key, val in dc.items():
+                    subdict[key].append(val)
+            tree_dict = {tkey: {k: v[0] if len(v) == 1 else v
+                        for k, v in subdict.items()}}
         if t.attrib:
-            d[tkey].update(('@' + k, v)
+            tree_dict[tkey].update(('@' + k, v)
                            for k, v in t.attrib.items())
         if t.text:
             text = t.text.strip()
             if children or t.attrib:
                 if text:
-                    d[tkey]['#text'] = text
+                    tree_dict[tkey]['#text'] = text
             else:
-                d[tkey] = text
-        return d
+                tree_dict[tkey] = text
+        return tree_dict
 
     def item_id(self):
         # Retrieve list of items in DCC and return as a dictionary with identifier type as key
         id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
         return self.__etree_to_dict(id_list)
+
+    def item_id_new(self):
+        # Retrieve list of items in DCC and return as a dictionary with identifier type as key
+        id_list = self.root.find("dcc:administrativeData/dcc:items/dcc:item/dcc:identifications", self.name_space)
+        item_id_dict = {'identifications': []}
+        ids = list(id_list)
+        for id in ids:
+            item_id_dict['identifications'].append(self.etree_to_dict(id))
+        return item_id_dict
 
     def get_item_id_by_name(self, searched_name, searched_language = None, searched_issuer = None):
         id_list = self.item_id()['identifications']['identification']
