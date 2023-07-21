@@ -36,7 +36,7 @@ Consider reading the [user guide](doc/pydcc.md) for more details, including API 
 
 Further, the [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
 
-## Contributors
+## Initial Contributors
 
 This project was started in January 2021 with an initial team of developers.
 
@@ -48,6 +48,13 @@ This project was started in January 2021 with an initial team of developers.
 * [Robin Fay](@FayR-DTSEC), [Deutsche Telekom Security GmbH](https://www.telesec.de)
 * [Tobias Messinger](@tobias.messinger), Digiraster (affiliation until April 2022)
 * [Andreas Mucha](@andreas.mucha), [Siemens AG](https://siemens.com)
+
+Besides coding, the weekly team discussions were essential for achieving our goals. 
+Additional discussion supporters were:
+
+* Daniel Heißelmann, [PTB](https://www.ptb.de)
+* Benjamin Gloger, [PTB](https://www.ptb.de)
+
 
 ## References
 
