@@ -24,10 +24,6 @@ The software was generally licensed under the [MIT License](LICENSE). Therefore,
 
 The digital calibration certificate (DCC) is the machine-readable counterpart of the previous calibration certificate. The DCC was released by the Physikalisch-Technische Bundesanstalt (PTB) [1]. The DCC has a hierarchical structure comprising regulated areas whose information must meet specific requirements. The DCC exists in Extensible Markup Language (XML). 
 
-## Official Repository
-
-We are moving our repository to another site. We will announce the new site until August 2023.
-
 ## Aim of this software library
 
 Python is a programming language widely used in science and cloud computing applications. This software library extends Python by capabilities of handling DCC, in particular, loading DCCs from XML-Files, and operating on regulated areas of the DCC. Regulated areas in DCC are (1) administrative data and (2) measurement results. 
@@ -35,6 +31,16 @@ Python is a programming language widely used in science and cloud computing appl
 Consider reading the [user guide](doc/pydcc.md) for more details, including API documentation.
 
 Further, the [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
+
+## Installation
+
+```
+pip install pydcc
+```
+
+## Official Code Repository
+
+We are moving our repository to another site. We will announce the new site until August 2023.
 
 ## Initial Contributors
 
@@ -54,7 +60,6 @@ Additional discussion supporters were:
 
 * Daniel Heißelmann, [PTB](https://www.ptb.de)
 * Benjamin Gloger, [PTB](https://www.ptb.de)
-
 
 ## References
 
