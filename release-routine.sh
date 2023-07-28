@@ -17,7 +17,7 @@ pytest --cov dcc --cov-branch --cov-report term-missing --cov-report html
 cd ..
 
 # Install locally
-pip install -e
+pip install -e .
 
 # Run minimal example
 cd examples
