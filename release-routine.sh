@@ -9,6 +9,9 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+#
+# SPDX-License-Identifier:  MIT
+#
 set -eux    # abort on error
 
 # Run tests

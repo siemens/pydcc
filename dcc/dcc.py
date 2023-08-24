@@ -11,6 +11,8 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+# SPDX-License-Identifier:  MIT
+#
 
 import datetime
 import xml.etree.ElementTree as ET

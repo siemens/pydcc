@@ -1,3 +1,19 @@
+# Unit tests for PyDCC
+#
+# Python module for processing of digital calibration certificates (DCC)
+# according to https://www.ptb.de/dcc/
+#
+# Copyright (c) Siemens AG, 2021
+#
+# Authors:
+#     Kai Mienert, PTB
+#
+# This work is licensed under the terms of the MIT License.
+# See the LICENSE file in the top-level directory.
+#
+# SPDX-License-Identifier:  MIT
+#
+
 from dcc.dcc_xml_validator import DCCXMLValidator
 from dcc.dcc_xml_validator import WORKSPACE_STATUS_OK
 from dcc.dcc_xml_validator import get_imports_from_xml

@@ -8,6 +8,8 @@
 # This work is licensed under the terms of the MIT License. 
 # See the LICENSEle in the top-level directory.
 #
+# SPDX-License-Identifier:  MIT
+#
 
 # https://hub.docker.com/r/library/python/tags/
 image: "python:3.8" 

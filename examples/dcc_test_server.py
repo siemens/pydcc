@@ -10,6 +10,8 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+# SPDX-License-Identifier:  MIT
+#
 # Important note:
 # This server is for testing purpose only.
 # It is not recommended to run this server in a productive environment.

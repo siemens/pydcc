@@ -10,6 +10,8 @@
 # This work is licensed under the terms of the MIT License.
 # See the LICENSE file in the top-level directory.
 #
+# SPDX-License-Identifier:  MIT
+#
 # This example simulates a machinally verification of uncertainty values.
 # Pretending a new calibration has been executed. Usually, the calibration
 # results have to be verified if they meet the requirements for a certain application.
