@@ -296,12 +296,12 @@ class DCC:
         # Load DCC from file
         with open(self.xml_file_name, "rb") as file:
             byte_array = file.read()
-            self.root_byte = byte_array
             self.__load_dcc_from_byte_array(byte_array)
 
     def __load_dcc_from_byte_array(self, byte_array):
         # Load DCC from file
         self.dcc_xml_raw_data = byte_array
+        self.root_byte = byte_array
         self.root = ET.fromstring(byte_array)
 
     def __load_dcc_from_public_server(self, server_url, server_port=8085, dcc_id=None, item_id=None):
