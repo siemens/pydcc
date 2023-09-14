@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dcc:digitalCalibrationCertificate
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v2.4.0/dcc.xsd"
+        xmlns:dcc="https://ptb.de/dcc"
+        xmlns:si="https://ptb.de/si"
+        schemaVersion="2.4.0">
+
+    <!--
+    Copyright (c) 2019 - Physikalisch-Technische Bundesanstalt, alle Rechte vorbehalten - all rights reserved
+
+    Diese Software wurde in der Physikalisch-Technischen Bundesanstalt entwickelt. Die Software wird unentgeltlich,
+    wie sie ist, auf eigenes Risiko des Nutzers zur Verfügung gestellt. Die PTB übernimmt keine Haftung,
+    egal aus welchem Rechtsgrund, für die Nutzung der Software durch Andere und garantiert weder ausdrücklich noch
+    konkludent für die Qualität, Sicherheit, Zuverlässigkeit, Tauglichkeit, oder andere Merkmale der Software.
+    Soweit gesetzlich zulässig lehnt die PTB jede Haftung für direkte Schäden, indirekte Schäden oder für
+    Folgeschäden ab, die durch die Nutzung der Software entstehen.
+
+    This software was developed at the Physikalisch-Technische Bundesanstalt (PTB). The software is made available
+    “as is“ free of cost at your own risk. PTB assumes no responsibility whatsoever for its use by other parties,
+    and makes no guarantees, expressed or implied, about its quality, reliability, safety, suitability or any other
+    characteristic. As far as legally permitted PTB refuses any liability for any direct, indirect or consequential
+    damage arising in connection with the use of this software.
+
+    This project (17IND02) has received funding from the EMPIR programme co-financed by the Participating States
+    and from the European Union's Horizon 2020 research and innovation programme.
+
+    The development of minimum requirements for a digital calibration certificate (DCC) is partially funded and
+    supported by the joint research project EMPIR 17IND02 (title: SmartCom).
+    -->
+
+    <dcc:administrativeData>
+
+        <dcc:dccSoftware>
+
+            <dcc:software id="Notepad_plusplus">
+                <dcc:name>
+                    <dcc:content>Notepad++ (32-bit)</dcc:content>
+                </dcc:name>
+                <dcc:release>v7.6.6</dcc:release>
+                <dcc:description id="dcc44-1">
+                    <dcc:content lang="de">Homepage: https://notepad-plus-plus.org/</dcc:content>
+                    <dcc:content lang="de">Installierte Komponenten:</dcc:content>
+                    <dcc:content lang="de">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+                    <dcc:content lang="de">- Npp Hash Maker version 1.0 unicode 2011-07-03</dcc:content>
+                    <dcc:content lang="de">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+                    <dcc:content lang="de">- MIME Tools Version 1.7 unicode</dcc:content>
+                    <dcc:content lang="en">Homepage: https://notepad-plus-plus.org/</dcc:content>
+                    <dcc:content lang="en">Installed components:</dcc:content>
+                    <dcc:content lang="en">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+                    <dcc:content lang="en">- Npp Hash Maker version 1.0 unicode 2011-07-03</dcc:content>
+                    <dcc:content lang="en">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+                    <dcc:content lang="en">- MIME Tools Version 1.7 unicode</dcc:content>
+                </dcc:description>
+            </dcc:software>
+
+            <dcc:software id="GEMIMEG_Tool">
+                <dcc:name>
+                    <dcc:content>GEMIMEG Tool</dcc:content>
+                </dcc:name>
+                <dcc:release>0.7.1</dcc:release>
+            </dcc:software>
+
+        </dcc:dccSoftware>
+
+        <dcc:coreData>
+            <dcc:countryCodeISO3166_1>DE</dcc:countryCodeISO3166_1>
+            <dcc:usedLangCodeISO639_1>de</dcc:usedLangCodeISO639_1>
+            <dcc:usedLangCodeISO639_1>en</dcc:usedLangCodeISO639_1>
+            <dcc:mandatoryLangCodeISO639_1>de</dcc:mandatoryLangCodeISO639_1>
+            <dcc:uniqueIdentifier>PTB - 11129 18</dcc:uniqueIdentifier>
+            <dcc:identifications>
+                <dcc:identification>
+                    <dcc:issuer>calibrationLaboratory</dcc:issuer>
+                    <dcc:value>1.81-18.039</dcc:value>
+                    <dcc:description>
+                        <dcc:content lang="de">Geschäftszeichen</dcc:content>
+                        <dcc:content lang="en">Reference No.</dcc:content>
+                    </dcc:description>
+                </dcc:identification>
+            </dcc:identifications>
+            <dcc:beginPerformanceDate>2018-10-12</dcc:beginPerformanceDate>
+            <dcc:endPerformanceDate>2018-10-12</dcc:endPerformanceDate>
+        </dcc:coreData>
+
+        <dcc:items>
+
+            <dcc:name>
+                <dcc:content lang="de">Siliziumkugel</dcc:content>
+                <dcc:content lang="en">Silicon sphere</dcc:content>
+            </dcc:name>
+
+            <dcc:item>
+                <dcc:name>
+                    <dcc:content lang="de">Siliziumkugel</dcc:content>
+                    <dcc:content lang="en">Silicon sphere</dcc:content>
+                </dcc:name>
+                <dcc:description>
+                    <dcc:content lang="de">Aufbewahrung
+                        Das Massenormal befindet sich in einem Transportbehälter; das Kalibrierzeichen ist auf dem Behälter aufgebracht.
+                    </dcc:content>
+                    <dcc:content lang="en">Case
+                        The mass standard is accommodated in a transport container; the calibration mark is applied to the container.
+                    </dcc:content>
+                </dcc:description>
+
+                <dcc:manufacturer>
+                    <dcc:name>
+                        <dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+                    </dcc:name>
+                    <dcc:eMail>info@ptb.de</dcc:eMail>
+                    <dcc:location>
+                        <dcc:further id="zusatz_Manufacturer">
+                            <dcc:content lang="de">Abteilung 5 Fertigungsmesstechnik</dcc:content>
+                            <dcc:content lang="de">Fachbereich 5.5 Wissenschaftlicher Gerätebau</dcc:content>
+                            <dcc:content lang="de">Arbeitsgruppe 5.56 Fertigungstechnologie</dcc:content>
+                            <dcc:content lang="en">Division 5 Precision Engineering</dcc:content>
+                            <dcc:content lang="en">Department 5.5 Scientific Instrumentation</dcc:content>
+                            <dcc:content lang="en">Working Group 5.56 Manufacturing Technology</dcc:content>
+                        </dcc:further>
+
+                        <dcc:street>Bundesallee</dcc:street>
+                        <dcc:streetNo>100</dcc:streetNo>
+                        <dcc:postCode>38116</dcc:postCode>
+                        <dcc:city>Braunschweig</dcc:city>
+                        <dcc:countryCode>DE</dcc:countryCode>
+                    </dcc:location>
+                </dcc:manufacturer>
+
+                <dcc:identifications>
+                    <dcc:identification>
+                        <dcc:issuer>manufacturer</dcc:issuer>
+                        <dcc:value>Si28kg_03_a</dcc:value>
+                        <dcc:description>
+                            <dcc:content lang="de">Kennnummer</dcc:content>
+                            <dcc:content lang="en">Serial No.</dcc:content>
+                        </dcc:description>
+                    </dcc:identification>
+                </dcc:identifications>
+
+            </dcc:item>
+
+        </dcc:items>
+
+        <dcc:calibrationLaboratory>
+            <dcc:contact>
+                <dcc:name>
+                    <dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+                </dcc:name>
+                <dcc:eMail>info@ptb.de</dcc:eMail>
+                <dcc:location>
+                    <dcc:further id="zusatz_calLab">
+                        <dcc:content lang="de">Abteilung 1 Mechanik und Akustik</dcc:content>
+                        <dcc:content lang="de">Fachbereich 1.8 Masse – Darstellung der Einheit</dcc:content>
+                        <dcc:content lang="de">Arbeitsgruppe 1.81 Darstellung Masse</dcc:content>
+                        <dcc:content lang="en">Division 1 Mechanics and Acoustics</dcc:content>
+                        <dcc:content lang="en">Department 1.8 Mass - Realization of the Unit</dcc:content>
+                        <dcc:content lang="en">Working Group 1.81 Realization of Mass</dcc:content>
+                    </dcc:further>
+                    <dcc:street>Bundesallee</dcc:street>
+                    <dcc:streetNo>100</dcc:streetNo>
+                    <dcc:postCode>38116</dcc:postCode>
+                    <dcc:city>Braunschweig</dcc:city>
+                    <dcc:countryCode>DE</dcc:countryCode>
+                </dcc:location>
+            </dcc:contact>
+        </dcc:calibrationLaboratory>
+
+        <dcc:respPersons>
+            <dcc:respPerson id="Responsible">
+                <dcc:person>
+                    <dcc:name>
+                        <dcc:content>Vorname1 Name1</dcc:content>
+                    </dcc:name>
+                    <dcc:eMail>vorname1.name1@ptb.de</dcc:eMail>
+                </dcc:person>
+                <dcc:mainSigner>true</dcc:mainSigner>
+            </dcc:respPerson>
+            <dcc:respPerson id="Technician">
+                <dcc:person>
+                    <dcc:name>
+                        <dcc:content>Vorname2 Name2</dcc:content>
+                    </dcc:name>
+                    <dcc:eMail>vorname2.name2@ptb.de</dcc:eMail>
+                </dcc:person>
+            </dcc:respPerson>
+            <dcc:respPerson id="Signature">
+                <dcc:person>
+                    <dcc:name>
+                        <dcc:content>Vorname3 Name3</dcc:content>
+                    </dcc:name>
+                    <dcc:eMail>vorname3.name3@ptb.de</dcc:eMail>
+                </dcc:person>
+                <dcc:description>
+                    <dcc:content lang="de">Signaturstelle</dcc:content>
+                    <dcc:content lang="en">Signaturemember</dcc:content>
+                </dcc:description>
+                <dcc:cryptElectronicSignature>true</dcc:cryptElectronicSignature>
+            </dcc:respPerson>
+        </dcc:respPersons>
+
+        <dcc:customer>
+            <dcc:name>
+                <dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+            </dcc:name>
+            <dcc:eMail>info@ptb.de</dcc:eMail>
+            <dcc:location>
+                <dcc:further id="zusatz_customer">
+                    <dcc:content lang="de">Abteilung 1 Mechanik und Akustik</dcc:content>
+                    <dcc:content lang="de">Fachbereich 1.1 Masse – Weitergabe der Einheit</dcc:content>
+                    <dcc:content lang="de">Arbeitsgruppe 1.15 Metrologie in der Wägetechnik</dcc:content>
+                    <dcc:content lang="en">Division 1 Mechanics and Acoustics</dcc:content>
+                    <dcc:content lang="en">Department 1.1 Mass - Dissemination of the Unit</dcc:content>
+                    <dcc:content lang="en">Working Group 1.15 Metrology in Weighing Technology</dcc:content>
+                </dcc:further>
+                <dcc:street>Bundesallee</dcc:street>
+                <dcc:streetNo>100</dcc:streetNo>
+                <dcc:postCode>38116</dcc:postCode>
+                <dcc:city>Braunschweig</dcc:city>
+                <dcc:countryCode>DE</dcc:countryCode>
+            </dcc:location>
+        </dcc:customer>
+
+        <dcc:statements>
+            <dcc:statement id="ISO_17025_7.8.2.1_l_de">
+                <dcc:norm>DIN EN ISO/IEC 17025:2018-03</dcc:norm>
+                <dcc:reference>7.8.2.1 l)</dcc:reference>
+                <dcc:declaration>
+                    <dcc:content lang="de">Die Ergebnisse beziehen sich nur auf den in diesem DCC beschriebenen Gegenstand.</dcc:content>
+                    <dcc:content lang="en">The results refer only to the object calibrated in this DCC.</dcc:content>
+                </dcc:declaration>
+            </dcc:statement>
+
+            <dcc:statement id="MRA">
+                <dcc:convention>CIPM-MRA</dcc:convention>
+                <dcc:valid>true</dcc:valid>
+            </dcc:statement>
+
+            <dcc:statement>
+                <dcc:convention>Tracebility</dcc:convention>
+                <dcc:traceable>true</dcc:traceable>
+                <dcc:declaration>
+                    <dcc:content lang="de">Die Messung ist rückführbar</dcc:content>
+                    <dcc:content lang="en">The measurement is traceable</dcc:content>
+                </dcc:declaration>
+            </dcc:statement>
+
+            <dcc:statement>
+                <dcc:norm>DIN EN ISO/IEC 17025:2018-03</dcc:norm>
+                <dcc:reference>7.8.4.3</dcc:reference>
+                <dcc:declaration>
+                    <dcc:content lang="de">Die Ergebnisse gelten zum Zeitpunkt der Kalibrierung. Es obliegt dem Antragsteller, zu gegebener Zeit eine Rekalibrierung zu veranlassen.</dcc:content>
+                    <dcc:content lang="en">The results refer only to the object calibrated in this DCC. The measurement results are valid at the time of calibration. The applicant is responsible for arranging a recalibration in due time.</dcc:content>
+                </dcc:declaration>
+            </dcc:statement>
+        </dcc:statements>
+    </dcc:administrativeData>
+
+    <dcc:measurementResults>
+        <dcc:measurementResult>
+            <dcc:usedMethods>
+
+                <dcc:usedMethod>
+                    <dcc:name id="Unsicherheit">
+                        <dcc:content lang="de">Unsicherheit</dcc:content>
+                        <dcc:content lang="en" id="Uncertainty">Uncertainty</dcc:content>
+                    </dcc:name>
+
+                    <dcc:description>
+                        <dcc:content lang="de">Angegeben ist die erweiterte Messunsicherheit, die sich aus der Standardmessunsicherheit durch Multiplikation mit dem Erweiterungsfaktor k=2 ergibt. Sie wurde gemäß dem „Guide to the Expression of Uncertainty in Measurement (GUM)“ ermittelt. Der Wert der Messgröße liegt dann im Regelfall mit einer Wahrscheinlichkeit von annähernd 95 % im zugeordneten Überdeckungsintervall.</dcc:content>
+                        <dcc:content lang="de">Die erweiterte Messunsicherheit wurde aus Unsicherheitsanteilen der verwendeten Normale, der Wä-gungen und der Luftauftriebskorrektion berechnet. Eine Abschätzung über Langzeitveränderungen ist in der Unsicherheitsangabe nicht enthalten.</dcc:content>
+                        <dcc:content lang="en">The uncertainty stated is the expanded measurement uncertainty obtained by multiplying the standard measurement uncertainty by the
+                        coverage factor k = 2. It has been determined in accordance with the “Guide to the Expression of Uncertainty in Measurement (GUM)”. The value of the measurand then normally lies, with a probability of approximately 95 %, within the attributed coverage interval.</dcc:content>
+                        <dcc:content lang="en">The expanded uncertainty was calculated from the contributions of uncertainty originating from the standards used, from the weighings and the air buoyancy corrections. The reported uncertainty does not include an estimate of long-term variations.</dcc:content>
+                        <dcc:content lang="de">Kovarianzen werden im Allgemeinen nicht angegeben, daher sind für Kombinationen von Gewichtstücken die Unsicherheiten nach der Formel</dcc:content>
+
+                        <dcc:content lang="de" id="Unsicherheitsformel">$u_g = \sum_i{u_i}$</dcc:content>
+                        <dcc:content lang="en" id="Uncertaincyformula">$u_g = \sum_i{u_i}$</dcc:content>
+
+                        <dcc:content lang="de" id="Unsicherheitsformelbeschreibung">zu addieren. Hierbei sind u mit Index g die Gesamtunsicherheit und u mit Index i die Unsicherheiten der verwendeten Gewichtstücke.</dcc:content>
+
+                        <dcc:content lang="en" id="Uncertaincydescription">Covariances are generally not reported, therefore the uncertainties for combinations of weights must be added according to the above formula, with u with index g the total uncertainty, u wirth index i the uncertainties of the weights used.</dcc:content>
+
+                    </dcc:description>
+                </dcc:usedMethod>
+
+
+                <dcc:usedMethod>
+                    <dcc:name id="Methode">
+                        <dcc:content lang="de">Verfahren</dcc:content>
+                        <dcc:content lang="en" id="Method">Procedure</dcc:content>
+                    </dcc:name>
+
+                    <dcc:description>
+                        <dcc:content lang="de">
+                            Die Kalibrierung erfolgte durch Vergleich mit den Hauptnormalen der PTB nach der Substitutionsmethode mit Auftriebskorrektion.
+                            Das Volumen wurde durch Messungen mit dem Kugelinterferometer der PTB bestimmt (siehe Kalibrierschein PTB-541-181018 vom 2018-10-18).
+                        </dcc:content>
+                        <dcc:content lang="en">
+                            The calibration was ensued through comparison with the reference standards of PTB using the substitution method with air buoyancy correction.
+                            The volume was determined by measurements with PTB's sphere interferometer (cf. calibration certificate PTB-541-181018 dated 2018-10-18).
+                        </dcc:content>
+                    </dcc:description>
+                </dcc:usedMethod>
+
+            </dcc:usedMethods>
+
+            <dcc:influenceConditions>
+
+                <dcc:influenceCondition>
+                    <dcc:name>
+                        <dcc:content lang="de">Umgebungsbedingungen</dcc:content>
+                        <dcc:content lang="en">Ambient conditions</dcc:content>
+                    </dcc:name>
+
+                    <dcc:data>
+
+                        <dcc:list>
+                            <dcc:name>
+                                <dcc:content lang="de">Die Kalibrierung wurde bei folgenden Umgebungsbedingungen ausgeführt: </dcc:content>
+                                <dcc:content lang="en">The calibration was carried out under the following ambient conditions:</dcc:content>
+                            </dcc:name>
+
+                            <dcc:list id="temperatur">
+                                <dcc:name>
+                                    <dcc:content lang="de">Temperatur</dcc:content>
+                                    <dcc:content lang="en">temperature</dcc:content>
+                                </dcc:name>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">von</dcc:content>
+                                        <dcc:content lang="en">from</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>20.775</si:value>
+                                        <si:unit>\degreeCelsius</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.020</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">bis</dcc:content>
+                                        <dcc:content lang="en">to</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>20.778</si:value>
+                                        <si:unit>\degreeCelsius</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.020</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                            </dcc:list>
+
+                            <dcc:list>
+                                <dcc:name>
+                                    <dcc:content lang="de">rel. Luftfeuchte</dcc:content>
+                                    <dcc:content lang="en">relative humidity</dcc:content>
+                                </dcc:name>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">von</dcc:content>
+                                        <dcc:content lang="en">from</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>0.468</si:value>
+                                        <si:unit>\kilogram\tothe{1}\metre\tothe{-3}\kilogram\tothe{-1}\metre\tothe{3}</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.01</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">bis</dcc:content>
+                                        <dcc:content lang="en">to</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>0.474</si:value>
+                                        <si:unit>\kilogram\tothe{1}\metre\tothe{-3}\kilogram\tothe{-1}\metre\tothe{3}</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.01</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                            </dcc:list>
+
+                            <dcc:list>
+                                <dcc:name>
+                                    <dcc:content lang="de">Luftdruck</dcc:content>
+                                    <dcc:content lang="en">air pressure</dcc:content>
+                                </dcc:name>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">von</dcc:content>
+                                        <dcc:content lang="en">from</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>1007.38</si:value>
+                                        <si:unit>\hecto\pascal</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.06</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                                <dcc:quantity>
+                                    <dcc:name>
+                                        <dcc:content lang="de">bis</dcc:content>
+                                        <dcc:content lang="en">to</dcc:content>
+                                    </dcc:name>
+                                    <si:real>
+                                        <si:value>1007.42</si:value>
+                                        <si:unit>\hecto\pascal</si:unit>
+                                        <si:expandedUnc>
+                                            <si:uncertainty>0.06</si:uncertainty>
+                                            <si:coverageFactor>2</si:coverageFactor>
+                                            <si:coverageProbability>0.95</si:coverageProbability>
+                                        </si:expandedUnc>
+                                    </si:real>
+                                </dcc:quantity>
+                            </dcc:list>
+                        </dcc:list>
+                    </dcc:data>
+                </dcc:influenceCondition>
+            </dcc:influenceConditions>
+
+
+            <dcc:results>
+                <dcc:result>
+                    <dcc:name>
+                        <dcc:content lang="de">Masse</dcc:content>
+                        <dcc:content lang="en">mass</dcc:content>
+                    </dcc:name>
+                    <dcc:data id="Mass">
+
+                        <dcc:list>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de">Nennwert</dcc:content>
+                                    <dcc:content lang="en">nominal value</dcc:content>
+                                </dcc:name>
+                                <dcc:noQuantity>
+                                    <dcc:content>1 kg</dcc:content>
+                                </dcc:noQuantity>
+                            </dcc:quantity>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de">Kennzeichnung</dcc:content>
+                                    <dcc:content lang="en">marking</dcc:content>
+                                </dcc:name>
+                                <dcc:noQuantity>
+                                    <dcc:content lang="de">keine</dcc:content>
+                                    <dcc:content lang="en">none</dcc:content>
+                                </dcc:noQuantity>
+                            </dcc:quantity>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de" id="Masse_Spalte_3">Masse</dcc:content>
+                                    <dcc:content lang="en" id="mass_column_3">mass</dcc:content>
+                                </dcc:name>
+                                <si:real>
+                                    <si:label>1 kg + 78,41 mg</si:label>
+                                    <si:value>1.00007841</si:value>
+                                    <si:unit>\kilogram</si:unit>
+                                    <si:expandedUnc>
+                                        <si:uncertainty>0.00000005</si:uncertainty>
+                                        <si:coverageFactor>2</si:coverageFactor>
+                                        <si:coverageProbability>0.95</si:coverageProbability>
+                                    </si:expandedUnc>
+                                </si:real>
+                            </dcc:quantity>
+                        </dcc:list>
+                    </dcc:data>
+                </dcc:result>
+
+                <dcc:result>
+                    <dcc:name>
+                        <dcc:content lang="de">Volumen</dcc:content>
+                        <dcc:content lang="en">Volume</dcc:content>
+                    </dcc:name>
+                    <dcc:data id="Volume">
+
+                        <dcc:list>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de">Nennwert</dcc:content>
+                                    <dcc:content lang="en">nominal value</dcc:content>
+                                </dcc:name>
+                                <dcc:noQuantity>
+                                    <dcc:content>1 kg</dcc:content>
+                                </dcc:noQuantity>
+                            </dcc:quantity>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de">Kennzeichnung</dcc:content>
+                                    <dcc:content lang="en">marking</dcc:content>
+                                </dcc:name>
+                                <dcc:noQuantity>
+                                    <dcc:content lang="de">keine</dcc:content>
+                                    <dcc:content lang="en">none</dcc:content>
+                                </dcc:noQuantity>
+                            </dcc:quantity>
+
+                            <dcc:quantity>
+                                <dcc:name>
+                                    <dcc:content lang="de" id="Volumen_Spalte_3">Volumen bei t = 20 °C</dcc:content>
+                                    <dcc:content lang="en" id="volume_column_3">volume at t = 20 °C</dcc:content>
+                                </dcc:name>
+                                <si:real>
+                                    <si:value>431.055119</si:value>
+                                    <si:unit>\centi\metre\tothe{3}</si:unit>
+                                    <si:expandedUnc>
+                                        <si:uncertainty>0.000018</si:uncertainty>
+                                        <si:coverageFactor>2</si:coverageFactor>
+                                        <si:coverageProbability>0.95</si:coverageProbability>
+                                    </si:expandedUnc>
+                                </si:real>
+                            </dcc:quantity>
+                        </dcc:list>
+                    </dcc:data>
+                </dcc:result>
+
+            </dcc:results>
+        </dcc:measurementResult>
+    </dcc:measurementResults>
+</dcc:digitalCalibrationCertificate>

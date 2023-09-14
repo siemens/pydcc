@@ -1,0 +1,16 @@
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @global-owner1 and @global-owner2 will be requested for
+# review when someone opens a pull request.
+*       @tobola
+
+# Order is important; the last matching pattern takes the most
+# precedence. When someone opens a pull request that only
+
+# DCC variants
+data/dcc/*.xml     @tobola    # Appoint a deputy from PTB later
+
+# Example Certs
+data/trusted certs/*.xml     @tobola    # Appoint a deputy from T-Systems later

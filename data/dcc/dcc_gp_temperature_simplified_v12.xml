@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dcc:digitalCalibrationCertificate 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dcc="https://ptb.de/dcc" 
+	xmlns:si="https://ptb.de/si" 
+	xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v3.1.1/dcc.xsd" 
+	schemaVersion="3.1.1">
+	<!--        
+			DCC - Digital Calibration Certificate
+            Copyright (c) 2019 - 2022 Physikalisch-Technische Bundesanstalt
+
+            This XML dataset is free software: you can redistribute it and/or modify
+            it under the terms of the GNU Lesser General Public License as published by
+            the Free Software Foundation, version 3 of the License.
+
+            This XSD is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+            GNU Lesser General Public License for more details.
+
+            The development of minimum requirements for a digital calibration certificate (DCC) is partially funded and
+            supported by the joint research project EMPIR 17IND02 (title: SmartCom).
+            This project (17IND02) has received funding from the EMPIR programme co-financed by the Participating States
+            and from the European Union's Horizon 2020 research and innovation programme.
+            The further development of the digital calibration certificate (DCC) is partly supported by the lighthouse
+            project GEMIMEG-II (GEMIMEG 01 MT20001E) funded by the German Federal Ministry for Economic Affairs and
+            Energy (BMWi) and the project "International Standard Accident Number" (ISAN) funded by the Niedersächsiches
+            Vorab initiative of the Volkswagen Foundation (VolkswagenStiftung).
+
+
+            Documentation: https://ptb.de/dcc
+ 
+			ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION! ATTENTION!
+
+			This is not a real calibration certificate. It is invalid.
+
+			Draft Good Practise Temperature
+			
+			GP_DCC_temperature_simplified_1.2
+			=================================
+
+ -->
+	<dcc:administrativeData>
+		<dcc:dccSoftware>
+			<dcc:software>
+				<dcc:name>
+					<dcc:content>Notepad++ (32-bit)</dcc:content>
+				</dcc:name>
+				<dcc:release>v 8.2</dcc:release>
+			</dcc:software>
+		</dcc:dccSoftware>
+		<dcc:coreData>
+			<dcc:countryCodeISO3166_1>DE</dcc:countryCodeISO3166_1>
+			<dcc:usedLangCodeISO639_1>de</dcc:usedLangCodeISO639_1>
+			<dcc:usedLangCodeISO639_1>en</dcc:usedLangCodeISO639_1>
+			<dcc:mandatoryLangCodeISO639_1>de</dcc:mandatoryLangCodeISO639_1>
+			<dcc:uniqueIdentifier>GP_DCC_temperature_minimal_1.2</dcc:uniqueIdentifier>
+			<dcc:identifications>
+				<dcc:identification>
+					<dcc:issuer>calibrationLaboratory</dcc:issuer>
+					<dcc:value>string-calibrationLaboratory-coreData</dcc:value>
+					<dcc:name>
+						<dcc:content lang="de">Auftrags Nr.</dcc:content>
+						<dcc:content lang="en">Order no.</dcc:content>
+					</dcc:name>
+				</dcc:identification>
+			</dcc:identifications>
+			<dcc:beginPerformanceDate>1957-08-13</dcc:beginPerformanceDate>
+			<dcc:endPerformanceDate>1957-08-13</dcc:endPerformanceDate>
+			<dcc:performanceLocation>laboratory</dcc:performanceLocation>
+		</dcc:coreData>
+		<dcc:items>
+			<dcc:item>
+				<dcc:name>
+					<dcc:content lang="de">Temperatur-Fühler</dcc:content>
+					<dcc:content lang="en">Temperature sensor</dcc:content>
+				</dcc:name>
+				<dcc:manufacturer>
+					<dcc:name>
+						<dcc:content>String</dcc:content>
+					</dcc:name>
+				</dcc:manufacturer>
+				<dcc:model>String</dcc:model>
+				<dcc:identifications>
+					<dcc:identification>
+						<dcc:issuer>manufacturer</dcc:issuer>
+						<dcc:value>string-manufacturer-item</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Serien Nr.</dcc:content>
+							<dcc:content lang="en">Serial no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>customer</dcc:issuer>
+						<dcc:value>string-customer-item</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Messmittel Nr.</dcc:content>
+							<dcc:content lang="en">Measurement equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+					<dcc:identification>
+						<dcc:issuer>calibrationLaboratory</dcc:issuer>
+						<dcc:value>string-calibrationLaboratory-item</dcc:value>
+						<dcc:name>
+							<dcc:content lang="de">Equipment Nr.</dcc:content>
+							<dcc:content lang="en">Equipment no.</dcc:content>
+						</dcc:name>
+					</dcc:identification>
+				</dcc:identifications>
+			</dcc:item>
+		</dcc:items>
+		<dcc:calibrationLaboratory>
+			<dcc:contact>
+				<dcc:name>
+					<dcc:content>Kalibrierfirma GmbH</dcc:content>
+				</dcc:name>
+				<dcc:eMail>info@kalibrierfirma.xx</dcc:eMail>
+				<dcc:phone>+49 123 4567-89</dcc:phone>
+				<dcc:fax>+49 123 4567-90</dcc:fax>
+				<dcc:location>
+					<dcc:city>Musterstadt</dcc:city>
+					<dcc:countryCode>DE</dcc:countryCode>
+					<dcc:postCode>00900</dcc:postCode>
+					<dcc:street>Musterstraße</dcc:street>
+					<dcc:streetNo>1</dcc:streetNo>
+					<dcc:further>
+						<dcc:content>www.kalibrierfirma.xx</dcc:content>
+					</dcc:further>
+				</dcc:location>
+			</dcc:contact>
+		</dcc:calibrationLaboratory>
+		<dcc:respPersons>
+			<dcc:respPerson>
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Michaela Musterfrau</dcc:content>
+					</dcc:name>
+				</dcc:person>
+				<dcc:mainSigner>true</dcc:mainSigner>
+			</dcc:respPerson>
+			<dcc:respPerson>
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Michael Mustermann</dcc:content>
+					</dcc:name>
+				</dcc:person>
+			</dcc:respPerson>
+		</dcc:respPersons>
+		<dcc:customer>
+			<dcc:name>
+				<dcc:content>Kunde GmbH</dcc:content>
+			</dcc:name>
+			<dcc:eMail>info@kunde.xx</dcc:eMail>
+			<dcc:location>
+				<dcc:city>Musterstadt</dcc:city>
+				<dcc:countryCode>DE</dcc:countryCode>
+				<dcc:postCode>00900</dcc:postCode>
+				<dcc:further>
+					<dcc:content lang="de">Kunden Nr. 1024418</dcc:content>
+					<dcc:content lang="en">Customer ID no. 1024418</dcc:content>
+				</dcc:further>
+			</dcc:location>
+		</dcc:customer>
+		<dcc:statements>
+			<dcc:statement refType="basic_conformity">
+				<dcc:declaration>
+					<dcc:content lang="de">Die Konformitätsaussage erfolgt anhand der Vorgaben des Kunden. Sie sind im DCC mit aufgeführt.</dcc:content>
+					<dcc:content lang="en">The conformity statement is made on the basis of the customer's specifications. They are listed in the DCC.</dcc:content>
+				</dcc:declaration>
+				<dcc:respAuthority>
+					<dcc:name>
+						<dcc:content>Kunde GmbH</dcc:content>
+					</dcc:name>
+					<dcc:eMail>info@kunde.xx</dcc:eMail>
+					<dcc:location>
+						<dcc:city>Musterstadt</dcc:city>
+						<dcc:postCode>00900</dcc:postCode>
+						<dcc:countryCode>DE</dcc:countryCode>
+					</dcc:location>
+				</dcc:respAuthority>
+				<dcc:conformity>pass</dcc:conformity>
+			</dcc:statement>
+			<dcc:statement refType="basic_recalibration">
+				<dcc:declaration>
+					<dcc:content lang="de">Datum, wann nach der Festlegung durch den Kunden spätestens der Kalibriergegenstand rekalibriert werden soll:</dcc:content>
+					<dcc:content lang="de">Date when the calibration item is to be recalibrated at the latest according to the customer's specification:</dcc:content>
+				</dcc:declaration>
+				<dcc:date>1959-10-22</dcc:date>
+				<dcc:respAuthority>
+					<dcc:name>
+						<dcc:content>Kunde GmbH</dcc:content>
+					</dcc:name>
+					<dcc:eMail>info@kunde.xx</dcc:eMail>
+					<dcc:location>
+						<dcc:city>Musterstadt</dcc:city>
+						<dcc:postCode>00900</dcc:postCode>
+						<dcc:countryCode>DE</dcc:countryCode>
+					</dcc:location>
+				</dcc:respAuthority>
+			</dcc:statement>
+		</dcc:statements>
+	</dcc:administrativeData>
+	<dcc:measurementResults>
+		<dcc:measurementResult>
+			<dcc:name>
+				<dcc:content lang="de">Messergebnisse</dcc:content>
+				<dcc:content lang="en">Measurement results</dcc:content>
+			</dcc:name>
+			<dcc:usedMethods>
+				<dcc:usedMethod refType="gp_temperatureSensor">
+					<dcc:name>
+						<dcc:content lang="de">Kalibrierung von Temperaturmessfühlern</dcc:content>
+						<dcc:content lang="en">Calibration of temperature sensors</dcc:content>
+					</dcc:name>
+				</dcc:usedMethod>
+			</dcc:usedMethods>
+			<dcc:measuringEquipments>
+				<dcc:measuringEquipment refType="basic_normalUsed">
+					<dcc:name>
+						<dcc:content lang="de">Pt 100 Widerstandsthermometer</dcc:content>
+						<dcc:content lang="en">Pt 100 thermometer</dcc:content>
+					</dcc:name>
+					<dcc:identifications>
+						<dcc:identification>
+							<dcc:issuer>manufacturer</dcc:issuer>
+							<dcc:value>string-manufacturer-measuringEquipment-1</dcc:value>
+						</dcc:identification>
+					</dcc:identifications>
+				</dcc:measuringEquipment>
+			</dcc:measuringEquipments>
+			<dcc:influenceConditions>
+				<dcc:influenceCondition refType="basic_temperature">
+					<dcc:name>
+						<dcc:content lang="de">Umgebungsbedingung Temperatur</dcc:content>
+						<dcc:content lang="en">Ambient condition temperature</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Diese Werte wurden nicht gemessen, sondern wurden anhand der typischen Wetterbedingungen zu einer Jahreszeit angegeben. [^1]</dcc:content>
+						<dcc:content lang="en">These values were not measured, but were given based on typical weather conditions at a time of year. [^1]</dcc:content>
+					</dcc:description>
+					<dcc:data>
+						<dcc:quantity refType="basic_temperatureMin">
+							<dcc:name>
+								<dcc:content lang="de">Temperatur min</dcc:content>
+								<dcc:content lang="en">temperature min</dcc:content>
+							</dcc:name>
+							<si:real>
+								<si:value>293</si:value>
+								<si:unit>\kelvin</si:unit>
+							</si:real>
+						</dcc:quantity>
+						<dcc:quantity refType="basic_temperatureMax">
+							<dcc:name>
+								<dcc:content lang="de">Temperatur max</dcc:content>
+								<dcc:content lang="en">temperature max</dcc:content>
+							</dcc:name>
+							<si:real>
+								<si:value>299</si:value>
+								<si:unit>\kelvin</si:unit>
+							</si:real>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+				<dcc:influenceCondition refType="basic_humidityRelative">
+					<dcc:name>
+						<dcc:content lang="de">Umgebungsbedingung relative Luftfeuchte</dcc:content>
+						<dcc:content lang="en">Ambient condition relative humidity</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Diese Werte wurden nicht gemessen, sondern wurden anhand der typischen Wetterbedingungen zu einer Jahreszeit angegeben. [^1]</dcc:content>
+						<dcc:content lang="en">These values were not measured, but were given based on typical weather conditions at a time of year. [^1]</dcc:content>
+					</dcc:description>
+					<dcc:data>
+						<dcc:quantity refType="basic_humidityRelativeMin">
+							<dcc:name>
+								<dcc:content lang="de">Feuchte min</dcc:content>
+								<dcc:content lang="en">humidity min</dcc:content>
+							</dcc:name>
+							<si:real>
+								<si:value>0.20</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+						</dcc:quantity>
+						<dcc:quantity refType="basic_humidityRelativeMax">
+							<dcc:name>
+								<dcc:content lang="de">Feuchte max</dcc:content>
+								<dcc:content lang="en">humidity max</dcc:content>
+							</dcc:name>
+							<si:real>
+								<si:value>0.70</si:value>
+								<si:unit>\one</si:unit>
+							</si:real>
+						</dcc:quantity>
+					</dcc:data>
+				</dcc:influenceCondition>
+			</dcc:influenceConditions>
+			<dcc:results>
+				<dcc:result refType="gp_measuringResult1">
+					<dcc:name>
+						<dcc:content lang="de">Messergebnisse</dcc:content>
+						<dcc:content lang="en">Measuring results</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:list refType="gp_table1">
+							<dcc:quantity refType="basic_referenceValue">
+								<dcc:name>
+									<dcc:content lang="de">Bezugswert</dcc:content>
+									<dcc:content lang="en">Reference value</dcc:content>
+								</dcc:name>
+								<si:hybrid>
+									<si:realListXMLList>
+										<si:valueXMLList>306.248 373.121 448.253 523.319 593.154</si:valueXMLList>
+										<si:unitXMLList>\kelvin</si:unitXMLList>
+									</si:realListXMLList>
+									<si:realListXMLList>
+										<si:valueXMLList>33.098 99.971 175.103 250.169 320.004</si:valueXMLList>
+										<si:unitXMLList>\degreecelsius</si:unitXMLList>
+									</si:realListXMLList>
+								</si:hybrid>
+							</dcc:quantity>
+							<dcc:quantity refType="basic_measuredValue">
+								<dcc:name>
+									<dcc:content lang="de">Angezeigter Messwert Kalibriergegenstand</dcc:content>
+									<dcc:content lang="en">Indicated measured value probe</dcc:content>
+								</dcc:name>
+								<si:hybrid>
+									<si:realListXMLList>
+										<si:valueXMLList>306.32 373.21 448.36 523.31 593.07</si:valueXMLList>
+										<si:unitXMLList>\kelvin</si:unitXMLList>
+									</si:realListXMLList>
+									<si:realListXMLList>
+										<si:valueXMLList>33.17 100.06 175.21 250.16 319.92</si:valueXMLList>
+										<si:unitXMLList>\degreecelsius</si:unitXMLList>
+									</si:realListXMLList>
+								</si:hybrid>
+							</dcc:quantity>
+							<dcc:quantity refType="basic_measurementError">
+								<dcc:name>
+									<dcc:content lang="de">Messabweichung</dcc:content>
+									<dcc:content lang="en">Measurement error</dcc:content>
+								</dcc:name>
+								<si:realListXMLList>
+									<si:valueXMLList>0.072 0.089 0.107 -0.009 -0.084</si:valueXMLList>
+									<si:unitXMLList>\kelvin</si:unitXMLList>
+									<si:expandedUncXMLList>
+										<si:uncertaintyXMLList>0.061</si:uncertaintyXMLList>
+										<si:coverageFactorXMLList>2</si:coverageFactorXMLList>
+										<si:coverageProbabilityXMLList>0.95</si:coverageProbabilityXMLList>
+										<si:distributionXMLList>normal</si:distributionXMLList>
+									</si:expandedUncXMLList>
+								</si:realListXMLList>
+								<dcc:measurementMetaData>
+									<dcc:metaData refType="basic_conformity">
+										<dcc:declaration>
+											<dcc:name>
+												<dcc:content lang="de">Konformität</dcc:content>
+												<dcc:content lang="en">Conformity</dcc:content>
+											</dcc:name>
+										</dcc:declaration>
+										<dcc:conformityXMLList>pass</dcc:conformityXMLList>
+										<dcc:data>
+											<dcc:quantity refType="basic_acceptanceLimitLower">
+												<dcc:name>
+													<dcc:content lang="de">Unteres Akzeptanzlimit</dcc:content>
+													<dcc:content lang="en">Lower acceptance limit</dcc:content>
+												</dcc:name>
+												<si:realListXMLList>
+													<si:valueXMLList>-0.23 -0.23 -0.23 -0.30 -0.30</si:valueXMLList>
+													<si:unitXMLList>\kelvin</si:unitXMLList>
+												</si:realListXMLList>
+											</dcc:quantity>
+											<dcc:quantity refType="basic_acceptanceLimitUpper">
+												<dcc:name>
+													<dcc:content lang="de">Oberes Akzeptanzlimit</dcc:content>
+													<dcc:content lang="en">Upper acceptance limit</dcc:content>
+												</dcc:name>
+												<si:realListXMLList>
+													<si:valueXMLList>0.23 0.23 0.23 0.30 0.30</si:valueXMLList>
+													<si:unitXMLList>\kelvin</si:unitXMLList>
+												</si:realListXMLList>
+											</dcc:quantity>
+										</dcc:data>
+									</dcc:metaData>
+								</dcc:measurementMetaData>
+							</dcc:quantity>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
+			</dcc:results>
+		</dcc:measurementResult>
+	</dcc:measurementResults>
+</dcc:digitalCalibrationCertificate>

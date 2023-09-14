@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="3.2.1" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ns1="namespace1"
+           xmlns:ns2="namespace2"
+           targetNamespace="namespace1"
+           elementFormDefault="qualified">
+    <xs:import
+            namespace="namespace1"
+            schemaLocation="schemaLocation1"/>
+    <xs:import
+        namespace="namespace2"
+        schemaLocation="schemaLocation2"/>
+
+    <xs:annotation>
+        <xs:documentation>
+            Xsd file used by unittests.
+        </xs:documentation>
+    </xs:annotation>
+</xs:schema>

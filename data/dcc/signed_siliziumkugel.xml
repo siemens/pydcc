@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<dcc:digitalCalibrationCertificate xmlns:dcc="https://ptb.de/dcc"
+                                 	xmlns:si="https://ptb.de/si"
+                                 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                 	schemaVersion="2.4.0"
+                                 	xsi:schemaLocation="https://ptb.de/dcc https://ptb.de/dcc/v2.4.0/dcc.xsd">
+	<!--
+    Copyright (c) 2019 - Physikalisch-Technische Bundesanstalt, alle Rechte vorbehalten - all rights reserved
+
+    Diese Software wurde in der Physikalisch-Technischen Bundesanstalt entwickelt. Die Software wird unentgeltlich,
+    wie sie ist, auf eigenes Risiko des Nutzers zur Verfügung gestellt. Die PTB übernimmt keine Haftung,
+    egal aus welchem Rechtsgrund, für die Nutzung der Software durch Andere und garantiert weder ausdrücklich noch
+    konkludent für die Qualität, Sicherheit, Zuverlässigkeit, Tauglichkeit, oder andere Merkmale der Software.
+    Soweit gesetzlich zulässig lehnt die PTB jede Haftung für direkte Schäden, indirekte Schäden oder für
+    Folgeschäden ab, die durch die Nutzung der Software entstehen.
+
+    This software was developed at the Physikalisch-Technische Bundesanstalt (PTB). The software is made available
+    “as is“ free of cost at your own risk. PTB assumes no responsibility whatsoever for its use by other parties,
+    and makes no guarantees, expressed or implied, about its quality, reliability, safety, suitability or any other
+    characteristic. As far as legally permitted PTB refuses any liability for any direct, indirect or consequential
+    damage arising in connection with the use of this software.
+
+    This project (17IND02) has received funding from the EMPIR programme co-financed by the Participating States
+    and from the European Union's Horizon 2020 research and innovation programme.
+
+    The development of minimum requirements for a digital calibration certificate (DCC) is partially funded and
+    supported by the joint research project EMPIR 17IND02 (title: SmartCom).
+    -->
+	<dcc:administrativeData>
+		<dcc:dccSoftware>
+			<dcc:software id="Notepad_plusplus">
+				<dcc:name>
+					<dcc:content>Notepad++ (32-bit)</dcc:content>
+				</dcc:name>
+				<dcc:release>v7.6.6</dcc:release>
+				<dcc:description id="dcc44-1">
+					<dcc:content lang="de">Homepage: https://notepad-plus-plus.org/</dcc:content>
+					<dcc:content lang="de">Installierte Komponenten:</dcc:content>
+					<dcc:content lang="de">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+					<dcc:content lang="de">- Npp Hash Maker version 1.0 unicode 2011-07-03</dcc:content>
+					<dcc:content lang="de">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+					<dcc:content lang="de">- MIME Tools Version 1.7 unicode</dcc:content>
+					<dcc:content lang="en">Homepage: https://notepad-plus-plus.org/</dcc:content>
+					<dcc:content lang="en">Installed components:</dcc:content>
+					<dcc:content lang="en">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+					<dcc:content lang="en">- Npp Hash Maker version 1.0 unicode 2011-07-03</dcc:content>
+					<dcc:content lang="en">- XML Tools plugin version 2.3.2 unicode beta4 r908</dcc:content>
+					<dcc:content lang="en">- MIME Tools Version 1.7 unicode</dcc:content>
+				</dcc:description>
+			</dcc:software>
+			<dcc:software id="GEMIMEG_Tool">
+				<dcc:name>
+					<dcc:content>GEMIMEG Tool</dcc:content>
+				</dcc:name>
+				<dcc:release>0.7.1</dcc:release>
+			</dcc:software>
+		</dcc:dccSoftware>
+		<dcc:coreData>
+			<dcc:countryCodeISO3166_1>DE</dcc:countryCodeISO3166_1>
+			<dcc:usedLangCodeISO639_1>de</dcc:usedLangCodeISO639_1>
+			<dcc:usedLangCodeISO639_1>en</dcc:usedLangCodeISO639_1>
+			<dcc:mandatoryLangCodeISO639_1>de</dcc:mandatoryLangCodeISO639_1>
+			<dcc:uniqueIdentifier>PTB - 11129 18</dcc:uniqueIdentifier>
+			<dcc:identifications>
+				<dcc:identification>
+					<dcc:issuer>calibrationLaboratory</dcc:issuer>
+					<dcc:value>1.81-18.039</dcc:value>
+					<dcc:description>
+						<dcc:content lang="de">Geschäftszeichen</dcc:content>
+						<dcc:content lang="en">Reference No.</dcc:content>
+					</dcc:description>
+				</dcc:identification>
+			</dcc:identifications>
+			<dcc:beginPerformanceDate>2018-10-12</dcc:beginPerformanceDate>
+			<dcc:endPerformanceDate>2018-10-12</dcc:endPerformanceDate>
+		</dcc:coreData>
+		<dcc:items>
+			<dcc:name>
+				<dcc:content lang="de">Siliziumkugel</dcc:content>
+				<dcc:content lang="en">Silicon sphere</dcc:content>
+			</dcc:name>
+			<dcc:item>
+				<dcc:name>
+					<dcc:content lang="de">Siliziumkugel</dcc:content>
+					<dcc:content lang="en">Silicon sphere</dcc:content>
+				</dcc:name>
+				<dcc:description>
+					<dcc:content lang="de">Aufbewahrung
+						Das Massenormal befindet sich in einem Transportbehälter; das Kalibrierzeichen ist auf dem Behälter aufgebracht.
+					</dcc:content>
+					<dcc:content lang="en">Case
+						The mass standard is accommodated in a transport container; the calibration mark is applied to the container.
+					</dcc:content>
+				</dcc:description>
+				<dcc:manufacturer>
+					<dcc:name>
+						<dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+					</dcc:name>
+					<dcc:eMail>info@ptb.de</dcc:eMail>
+					<dcc:location>
+						<dcc:further id="zusatz_Manufacturer">
+							<dcc:content lang="de">Abteilung 5 Fertigungsmesstechnik</dcc:content>
+							<dcc:content lang="de">Fachbereich 5.5 Wissenschaftlicher Gerätebau</dcc:content>
+							<dcc:content lang="de">Arbeitsgruppe 5.56 Fertigungstechnologie</dcc:content>
+							<dcc:content lang="en">Division 5 Precision Engineering</dcc:content>
+							<dcc:content lang="en">Department 5.5 Scientific Instrumentation</dcc:content>
+							<dcc:content lang="en">Working Group 5.56 Manufacturing Technology</dcc:content>
+						</dcc:further>
+						<dcc:street>Bundesallee</dcc:street>
+						<dcc:streetNo>100</dcc:streetNo>
+						<dcc:postCode>38116</dcc:postCode>
+						<dcc:city>Braunschweig</dcc:city>
+						<dcc:countryCode>DE</dcc:countryCode>
+					</dcc:location>
+				</dcc:manufacturer>
+				<dcc:identifications>
+					<dcc:identification>
+						<dcc:issuer>manufacturer</dcc:issuer>
+						<dcc:value>Si28kg_03_a</dcc:value>
+						<dcc:description>
+							<dcc:content lang="de">Kennnummer</dcc:content>
+							<dcc:content lang="en">Serial No.</dcc:content>
+						</dcc:description>
+					</dcc:identification>
+				</dcc:identifications>
+			</dcc:item>
+		</dcc:items>
+		<dcc:calibrationLaboratory>
+			<dcc:contact>
+				<dcc:name>
+					<dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+				</dcc:name>
+				<dcc:eMail>info@ptb.de</dcc:eMail>
+				<dcc:location>
+					<dcc:further id="zusatz_calLab">
+						<dcc:content lang="de">Abteilung 1 Mechanik und Akustik</dcc:content>
+						<dcc:content lang="de">Fachbereich 1.8 Masse – Darstellung der Einheit</dcc:content>
+						<dcc:content lang="de">Arbeitsgruppe 1.81 Darstellung Masse</dcc:content>
+						<dcc:content lang="en">Division 1 Mechanics and Acoustics</dcc:content>
+						<dcc:content lang="en">Department 1.8 Mass - Realization of the Unit</dcc:content>
+						<dcc:content lang="en">Working Group 1.81 Realization of Mass</dcc:content>
+					</dcc:further>
+					<dcc:street>Bundesallee</dcc:street>
+					<dcc:streetNo>100</dcc:streetNo>
+					<dcc:postCode>38116</dcc:postCode>
+					<dcc:city>Braunschweig</dcc:city>
+					<dcc:countryCode>DE</dcc:countryCode>
+				</dcc:location>
+			</dcc:contact>
+		</dcc:calibrationLaboratory>
+		<dcc:respPersons>
+			<dcc:respPerson id="Responsible">
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Vorname1 Name1</dcc:content>
+					</dcc:name>
+					<dcc:eMail>vorname1.name1@ptb.de</dcc:eMail>
+				</dcc:person>
+				<dcc:mainSigner>true</dcc:mainSigner>
+			</dcc:respPerson>
+			<dcc:respPerson id="Technician">
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Vorname2 Name2</dcc:content>
+					</dcc:name>
+					<dcc:eMail>vorname2.name2@ptb.de</dcc:eMail>
+				</dcc:person>
+			</dcc:respPerson>
+			<dcc:respPerson id="Signature">
+				<dcc:person>
+					<dcc:name>
+						<dcc:content>Vorname3 Name3</dcc:content>
+					</dcc:name>
+					<dcc:eMail>vorname3.name3@ptb.de</dcc:eMail>
+				</dcc:person>
+				<dcc:description>
+					<dcc:content lang="de">Signaturstelle</dcc:content>
+					<dcc:content lang="en">Signaturemember</dcc:content>
+				</dcc:description>
+				<dcc:cryptElectronicSignature>true</dcc:cryptElectronicSignature>
+			</dcc:respPerson>
+		</dcc:respPersons>
+		<dcc:customer>
+			<dcc:name>
+				<dcc:content>Physikalisch-Technische Bundesanstalt (PTB)</dcc:content>
+			</dcc:name>
+			<dcc:eMail>info@ptb.de</dcc:eMail>
+			<dcc:location>
+				<dcc:further id="zusatz_customer">
+					<dcc:content lang="de">Abteilung 1 Mechanik und Akustik</dcc:content>
+					<dcc:content lang="de">Fachbereich 1.1 Masse – Weitergabe der Einheit</dcc:content>
+					<dcc:content lang="de">Arbeitsgruppe 1.15 Metrologie in der Wägetechnik</dcc:content>
+					<dcc:content lang="en">Division 1 Mechanics and Acoustics</dcc:content>
+					<dcc:content lang="en">Department 1.1 Mass - Dissemination of the Unit</dcc:content>
+					<dcc:content lang="en">Working Group 1.15 Metrology in Weighing Technology</dcc:content>
+				</dcc:further>
+				<dcc:street>Bundesallee</dcc:street>
+				<dcc:streetNo>100</dcc:streetNo>
+				<dcc:postCode>38116</dcc:postCode>
+				<dcc:city>Braunschweig</dcc:city>
+				<dcc:countryCode>DE</dcc:countryCode>
+			</dcc:location>
+		</dcc:customer>
+		<dcc:statements>
+			<dcc:statement id="ISO_17025_7.8.2.1_l_de">
+				<dcc:norm>DIN EN ISO/IEC 17025:2018-03</dcc:norm>
+				<dcc:reference>7.8.2.1 l)</dcc:reference>
+				<dcc:declaration>
+					<dcc:content lang="de">Die Ergebnisse beziehen sich nur auf den in diesem DCC beschriebenen Gegenstand.</dcc:content>
+					<dcc:content lang="en">The results refer only to the object calibrated in this DCC.</dcc:content>
+				</dcc:declaration>
+			</dcc:statement>
+			<dcc:statement id="MRA">
+				<dcc:convention>CIPM-MRA</dcc:convention>
+				<dcc:valid>true</dcc:valid>
+			</dcc:statement>
+			<dcc:statement>
+				<dcc:convention>Tracebility</dcc:convention>
+				<dcc:traceable>true</dcc:traceable>
+				<dcc:declaration>
+					<dcc:content lang="de">Die Messung ist rückführbar</dcc:content>
+					<dcc:content lang="en">The measurement is traceable</dcc:content>
+				</dcc:declaration>
+			</dcc:statement>
+			<dcc:statement>
+				<dcc:norm>DIN EN ISO/IEC 17025:2018-03</dcc:norm>
+				<dcc:reference>7.8.4.3</dcc:reference>
+				<dcc:declaration>
+					<dcc:content lang="de">Die Ergebnisse gelten zum Zeitpunkt der Kalibrierung. Es obliegt dem Antragsteller, zu gegebener Zeit eine Rekalibrierung zu veranlassen.</dcc:content>
+					<dcc:content lang="en">The results refer only to the object calibrated in this DCC. The measurement results are valid at the time of calibration. The applicant is responsible for arranging a recalibration in due time.</dcc:content>
+				</dcc:declaration>
+			</dcc:statement>
+		</dcc:statements>
+	</dcc:administrativeData>
+	<dcc:measurementResults>
+		<dcc:measurementResult>
+			<dcc:usedMethods>
+				<dcc:usedMethod>
+					<dcc:name id="Unsicherheit">
+						<dcc:content lang="de">Unsicherheit</dcc:content>
+						<dcc:content id="Uncertainty"
+           							lang="en">Uncertainty</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">Angegeben ist die erweiterte Messunsicherheit, die sich aus der Standardmessunsicherheit durch Multiplikation mit dem Erweiterungsfaktor k=2 ergibt. Sie wurde gemäß dem „Guide to the Expression of Uncertainty in Measurement (GUM)“ ermittelt. Der Wert der Messgröße liegt dann im Regelfall mit einer Wahrscheinlichkeit von annähernd 95 % im zugeordneten Überdeckungsintervall.</dcc:content>
+						<dcc:content lang="de">Die erweiterte Messunsicherheit wurde aus Unsicherheitsanteilen der verwendeten Normale, der Wä-gungen und der Luftauftriebskorrektion berechnet. Eine Abschätzung über Langzeitveränderungen ist in der Unsicherheitsangabe nicht enthalten.</dcc:content>
+						<dcc:content lang="en">The uncertainty stated is the expanded measurement uncertainty obtained by multiplying the standard measurement uncertainty by the
+							coverage factor k = 2. It has been determined in accordance with the “Guide to the Expression of Uncertainty in Measurement (GUM)”. The value of the measurand then normally lies, with a probability of approximately 95 %, within the attributed coverage interval.</dcc:content>
+						<dcc:content lang="en">The expanded uncertainty was calculated from the contributions of uncertainty originating from the standards used, from the weighings and the air buoyancy corrections. The reported uncertainty does not include an estimate of long-term variations.</dcc:content>
+						<dcc:content lang="de">Kovarianzen werden im Allgemeinen nicht angegeben, daher sind für Kombinationen von Gewichtstücken die Unsicherheiten nach der Formel</dcc:content>
+						<dcc:content id="Unsicherheitsformel"
+           							lang="de">$u_g = \sum_i{u_i}$</dcc:content>
+						<dcc:content id="Uncertaincyformula"
+           							lang="en">$u_g = \sum_i{u_i}$</dcc:content>
+						<dcc:content id="Unsicherheitsformelbeschreibung"
+           							lang="de">zu addieren. Hierbei sind u mit Index g die Gesamtunsicherheit und u mit Index i die Unsicherheiten der verwendeten Gewichtstücke.</dcc:content>
+						<dcc:content id="Uncertaincydescription"
+           							lang="en">Covariances are generally not reported, therefore the uncertainties for combinations of weights must be added according to the above formula, with u with index g the total uncertainty, u wirth index i the uncertainties of the weights used.</dcc:content>
+					</dcc:description>
+				</dcc:usedMethod>
+				<dcc:usedMethod>
+					<dcc:name id="Methode">
+						<dcc:content lang="de">Verfahren</dcc:content>
+						<dcc:content id="Method"
+           							lang="en">Procedure</dcc:content>
+					</dcc:name>
+					<dcc:description>
+						<dcc:content lang="de">
+							Die Kalibrierung erfolgte durch Vergleich mit den Hauptnormalen der PTB nach der Substitutionsmethode mit Auftriebskorrektion.
+							Das Volumen wurde durch Messungen mit dem Kugelinterferometer der PTB bestimmt (siehe Kalibrierschein PTB-541-181018 vom 2018-10-18).
+						</dcc:content>
+						<dcc:content lang="en">
+							The calibration was ensued through comparison with the reference standards of PTB using the substitution method with air buoyancy correction.
+							The volume was determined by measurements with PTB's sphere interferometer (cf. calibration certificate PTB-541-181018 dated 2018-10-18).
+						</dcc:content>
+					</dcc:description>
+				</dcc:usedMethod>
+			</dcc:usedMethods>
+			<dcc:influenceConditions>
+				<dcc:influenceCondition>
+					<dcc:name>
+						<dcc:content lang="de">Umgebungsbedingungen</dcc:content>
+						<dcc:content lang="en">Ambient conditions</dcc:content>
+					</dcc:name>
+					<dcc:data>
+						<dcc:list>
+							<dcc:name>
+								<dcc:content lang="de">Die Kalibrierung wurde bei folgenden Umgebungsbedingungen ausgeführt: </dcc:content>
+								<dcc:content lang="en">The calibration was carried out under the following ambient conditions:</dcc:content>
+							</dcc:name>
+							<dcc:list id="temperatur">
+								<dcc:name>
+									<dcc:content lang="de">Temperatur</dcc:content>
+									<dcc:content lang="en">temperature</dcc:content>
+								</dcc:name>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">von</dcc:content>
+										<dcc:content lang="en">from</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>20.775</si:value>
+										<si:unit>\degreeCelsius</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.020</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">bis</dcc:content>
+										<dcc:content lang="en">to</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>20.778</si:value>
+										<si:unit>\degreeCelsius</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.020</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+							</dcc:list>
+							<dcc:list>
+								<dcc:name>
+									<dcc:content lang="de">rel. Luftfeuchte</dcc:content>
+									<dcc:content lang="en">relative humidity</dcc:content>
+								</dcc:name>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">von</dcc:content>
+										<dcc:content lang="en">from</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>0.468</si:value>
+										<si:unit>\kilogram\tothe{1}\metre\tothe{-3}\kilogram\tothe{-1}\metre\tothe{3}</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.01</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">bis</dcc:content>
+										<dcc:content lang="en">to</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>0.474</si:value>
+										<si:unit>\kilogram\tothe{1}\metre\tothe{-3}\kilogram\tothe{-1}\metre\tothe{3}</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.01</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+							</dcc:list>
+							<dcc:list>
+								<dcc:name>
+									<dcc:content lang="de">Luftdruck</dcc:content>
+									<dcc:content lang="en">air pressure</dcc:content>
+								</dcc:name>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">von</dcc:content>
+										<dcc:content lang="en">from</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>1007.38</si:value>
+										<si:unit>\hecto\pascal</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.06</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+								<dcc:quantity>
+									<dcc:name>
+										<dcc:content lang="de">bis</dcc:content>
+										<dcc:content lang="en">to</dcc:content>
+									</dcc:name>
+									<si:real>
+										<si:value>1007.42</si:value>
+										<si:unit>\hecto\pascal</si:unit>
+										<si:expandedUnc>
+											<si:uncertainty>0.06</si:uncertainty>
+											<si:coverageFactor>2</si:coverageFactor>
+											<si:coverageProbability>0.95</si:coverageProbability>
+										</si:expandedUnc>
+									</si:real>
+								</dcc:quantity>
+							</dcc:list>
+						</dcc:list>
+					</dcc:data>
+				</dcc:influenceCondition>
+			</dcc:influenceConditions>
+			<dcc:results>
+				<dcc:result>
+					<dcc:name>
+						<dcc:content lang="de">Masse</dcc:content>
+						<dcc:content lang="en">mass</dcc:content>
+					</dcc:name>
+					<dcc:data id="Mass">
+						<dcc:list>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content lang="de">Nennwert</dcc:content>
+									<dcc:content lang="en">nominal value</dcc:content>
+								</dcc:name>
+								<dcc:noQuantity>
+									<dcc:content>1 kg</dcc:content>
+								</dcc:noQuantity>
+							</dcc:quantity>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content lang="de">Kennzeichnung</dcc:content>
+									<dcc:content lang="en">marking</dcc:content>
+								</dcc:name>
+								<dcc:noQuantity>
+									<dcc:content lang="de">keine</dcc:content>
+									<dcc:content lang="en">none</dcc:content>
+								</dcc:noQuantity>
+							</dcc:quantity>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content id="Masse_Spalte_3"
+           										lang="de">Masse</dcc:content>
+									<dcc:content id="mass_column_3"
+           										lang="en">mass</dcc:content>
+								</dcc:name>
+								<si:real>
+									<si:label>1 kg + 78,41 mg</si:label>
+									<si:value>1.00007841</si:value>
+									<si:unit>\kilogram</si:unit>
+									<si:expandedUnc>
+										<si:uncertainty>0.00000005</si:uncertainty>
+										<si:coverageFactor>2</si:coverageFactor>
+										<si:coverageProbability>0.95</si:coverageProbability>
+									</si:expandedUnc>
+								</si:real>
+							</dcc:quantity>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
+				<dcc:result>
+					<dcc:name>
+						<dcc:content lang="de">Volumen</dcc:content>
+						<dcc:content lang="en">Volume</dcc:content>
+					</dcc:name>
+					<dcc:data id="Volume">
+						<dcc:list>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content lang="de">Nennwert</dcc:content>
+									<dcc:content lang="en">nominal value</dcc:content>
+								</dcc:name>
+								<dcc:noQuantity>
+									<dcc:content>1 kg</dcc:content>
+								</dcc:noQuantity>
+							</dcc:quantity>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content lang="de">Kennzeichnung</dcc:content>
+									<dcc:content lang="en">marking</dcc:content>
+								</dcc:name>
+								<dcc:noQuantity>
+									<dcc:content lang="de">keine</dcc:content>
+									<dcc:content lang="en">none</dcc:content>
+								</dcc:noQuantity>
+							</dcc:quantity>
+							<dcc:quantity>
+								<dcc:name>
+									<dcc:content id="Volumen_Spalte_3"
+           										lang="de">Volumen bei t = 20 °C</dcc:content>
+									<dcc:content id="volume_column_3"
+           										lang="en">volume at t = 20 °C</dcc:content>
+								</dcc:name>
+								<si:real>
+									<si:value>431.055119</si:value>
+									<si:unit>\centi\metre\tothe{3}</si:unit>
+									<si:expandedUnc>
+										<si:uncertainty>0.000018</si:uncertainty>
+										<si:coverageFactor>2</si:coverageFactor>
+										<si:coverageProbability>0.95</si:coverageProbability>
+									</si:expandedUnc>
+								</si:real>
+							</dcc:quantity>
+						</dcc:list>
+					</dcc:data>
+				</dcc:result>
+			</dcc:results>
+		</dcc:measurementResult>
+	</dcc:measurementResults>
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+            		Id="id-b722c225c4e6e0e3ca89588982b4f59c">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+			<ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
+			<ds:Reference Id="r-id-b722c225c4e6e0e3ca89588982b4f59c-1"
+            				URI="">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/2002/06/xmldsig-filter2">
+						<dsig-filter2:XPath xmlns:dsig-filter2="http://www.w3.org/2002/06/xmldsig-filter2"
+                  							Filter="subtract">/descendant::ds:Signature</dsig-filter2:XPath>
+					</ds:Transform>
+					<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<ds:DigestValue>JMGedjkEwI62X35tU7x6iAWu+W9p3RF58Dp4rP6XknA=</ds:DigestValue>
+			</ds:Reference>
+			<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties"
+            				URI="#xades-id-b722c225c4e6e0e3ca89588982b4f59c">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<ds:DigestValue>6JBnjtb5lyjJcUy/gIfDwtlvpcljeJQz9LfoyyEEWIc=</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue Id="value-id-b722c225c4e6e0e3ca89588982b4f59c">zglp3TiDmpi8Giq1xIqBl6ufQf6UNvZAAkW379AUS2nOUGnzNXU9YyU8Zboz+/OGsFLWZ1+G2wLV/ZWmfO0bfg==</ds:SignatureValue>
+		<ds:KeyInfo>
+			<ds:X509Data>
+				<ds:X509Certificate>MIID5TCCAc2gAwIBAgIJAK68KsDmAmzTMA0GCSqGSIb3DQEBCwUAMIGYMQswCQYDVQQGEwJERTEMMAoGA1UECAwDTlJXMQ0wCwYDVQQHDARCb25uMScwJQYDVQQKDB5EZXV0c2NoZSBUZWxla29tIFNlY3VyaXR5IEdtYkgxFTATBgNVBAsMDFRydXN0IENlbnRlcjEsMCoGA1UEAwwjRFQtU2VjIFNlcnZlciBDZXJ0aWZpY2F0ZSBTdWIgQ0EgMDEwHhcNMjEwMzMxMTMzMzIzWhcNMjIwMzMxMTMzMzIzWjCBhDELMAkGA1UEBhMCREUxDDAKBgNVBAgMA05SVzENMAsGA1UEBwwEQm9ubjEXMBUGA1UECgwOS2FsaWJyaWVyIEdtYkgxITAfBgNVBAsMGFRlbXBlcmF0dXJrYWxpYnJpZXJ1bmdlbjEcMBoGA1UEAwwTVGVzdCBLYWxpYnJpZXJsYWJvcjBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABB0MqRUdnMraydhgyZ6tIYxzA3iJO1hr/T+tJXEyPjVOp2gSC5PXocgRRbe9SQAGXZEwLt/18ukUbkKtDbjLVA6jDzANMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAgEAUDjejSTfx7JQmjULRtf+t2iSJ0YW1iOWHmV2lxIR0tpG/wfxLKS29pDqlhyT/QeiXkbIzeZ5UlGSDa6/MeB5+xsje919OQqxS/nUe1oa3joppcltFcyX4LT4VU0F/ca1M2vfsHLSL3iIjGO7OFBgsP/P7+5gHj+vdjabDNd7i2X4Gz75nYY3sEMNjXSk9yEsX02C+RRZoELIoN/i/uGdwzfvh4G6uHaTbaV7Oe1+84pn2qfy8WCSJaObj050Wx5RdKSGgpKYhPpiW18MZg3U13bZTAn+6bRDQDiERW0RUi2UqiOYZ/nGTt1EZRKVky/dmsx+ZmOceiIvMJGB2ic0flj+GDwuJh9nQLWc+DUv/KCJk/7UDWax6aBWNQmiuOjlt9miUkqiIss8994DzH1XZqe5voIz9wVyy9lFt7o6pRIVh70cy5jK8hunERT8ecqWVjxrQyO6Dzu5O2/yAv+pHVOplZ/Hgz6UAg2WNc3Ejt7+/tn6XeuUSsto23R2LxvmiEEKPqtoFAkj8AAlg1L/eGSfzafb+dDm8iy8+8PjbKK+nMDT2hHPmwFxl9jZdSPZuxftprYOpxiTMrLJH3UqtxU8sizDHqS1QGRftEJ2tPLHQIl+R7E/LY7ftWEyO18vqfT4aT2hl9wVDeb9xBnmrL3vAVnRGiPBFFxYsBN1vEc=</ds:X509Certificate>
+				<ds:X509Certificate>MIIFxjCCA66gAwIBAgIJAKerdY+Vk3c2MA0GCSqGSIb3DQEBCwUAMIGGMQswCQYDVQQGEwJERTEMMAoGA1UECAwDTlJXMQ0wCwYDVQQHDARCb25uMScwJQYDVQQKDB5EZXV0c2NoZSBUZWxla29tIFNlY3VyaXR5IEdtYkgxFTATBgNVBAsMDFRydXN0IENlbnRlcjEaMBgGA1UEAwwRRFQtU2VjIFJvb3QgQ0EgMDEwHhcNMjEwMjA0MDg0OTUzWhcNMzEwMjAyMDg0OTUzWjCBmDELMAkGA1UEBhMCREUxDDAKBgNVBAgMA05SVzENMAsGA1UEBwwEQm9ubjEnMCUGA1UECgweRGV1dHNjaGUgVGVsZWtvbSBTZWN1cml0eSBHbWJIMRUwEwYDVQQLDAxUcnVzdCBDZW50ZXIxLDAqBgNVBAMMI0RULVNlYyBTZXJ2ZXIgQ2VydGlmaWNhdGUgU3ViIENBIDAxMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA5q3RL6bg8wpI001nguPCeHZdhUr4TvsK/An1x8BkLb+U0UqlxvMyOlMnhklN0FPuXG40vYHMTvx3/gclpnMOL6e1OUuP0verlmYZjrOkRo5N7x5FMcCkh6iXdH/gg/lwKsi5mCbQaxH71zFZRRlIirKDE3Q9aCdO9NzO1L5GJ+wF8gv56vbz/ohaJCthQ6030DRRYONFfhh7MuMwHE76lhxRslruIpdbkY23X/d4k270YPf+EbYYanZrRA6erXN8WdJI5yD/1ng0nHCSJdqfPQkS+9E1EQO4EadYOUTabyAR/76CcW+2Tcihf1pysOW169OGonDar+K/06auQPtmYKlKw+U7IFFUtwJuXWyhKBUdiGTZBjmMGg1HJ/a+3olZ6lAqGydjB2/5597Vv3mjK3+NZlBdVGVsNz3Vr5YkinDXkgL0iT3aloTXHGBqH1eVJmUGsuAb0MMu1uNAjHnbburudJy/g4TVedxO501apfbp3ZcmyrsXk4Iqa323pL5ys50zBwKgYTdXDV3QRgm2wcvNz7fZf9r9eGizDQdaYHAO/XVabP+lZh23JjCNmbqgvva/MFr7F82Wbbj6xxb3b1iNhWXLddP2qGAiW3Tek6Zf3wBRMM/V1Du0uqReEaZoh11Y5P+uNJDzJAS8+DJoQxUpO3Q5o9vq9tFgXj/rniUCAwEAAaMjMCEwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAYYwDQYJKoZIhvcNAQELBQADggIBAAYfsTZrpXuzNjIAXfGrrGbGnCVMP3KHGkPVDSpGA/CQQ02ACNQcz95RtfREeGyYgANRHPcMHcFi3MHvhogACCOpU/7incnSZI3gby7ZuU9T55faRXkBG1LiqfTYL0NU5MqvSpz/PjxnQ0misQO66xhJhdDEUlKAJTctdekMb0lO6BCOHs48INIAd911gPqPyF4CtqONxmRTZH/tcTPQ/mGSpwTMkCuoJzB/qrVNSuD80KWS6wcxsAB7Adw44FWmcUMZf/xFHikRoITSvK91yVmnkOv6Cu5m76FHibNO4PMnBoTHBMBjj89pd/7IYAOyGIqBVrMdlZ/0B4X3kf4Dc+l4wuvkj4WSxmNqK4NGgtMKHKKZtmMf3n9pzO/KF6OJbQ84psTXwIqJDnK+/ITZoNAxxoo57joh4/lV3NAl09YugwEOgd6DNOeWUPFRWaaPMwgFoNBZjwHfyLg8w8fAM74hKn+E3Ty2kbPYRxmOpgXF9Kq89zpwjc8T0Xk+VCB8N9lzmfZusjoRifkgU4p/tDjveRaDNbyR1IRk8l1ffvUUzZ4GTYhHOU5pi2qolhy970Dr+z4ZjvqXeSPFdPS78bKzFfk02DJYTkVPFA5qs4hD6DpFuT2b9e9hLE3UgaHI5jGywbIHR1YkBADBLK+2SXl1kPQ8HS01Gmjt/+ZFaui4</ds:X509Certificate>
+				<ds:X509Certificate>MIIFvzCCA6egAwIBAgIUd1tOFCxrUwckaxtthrgyCVJ5IsowDQYJKoZIhvcNAQELBQAwgYYxCzAJBgNVBAYTAkRFMQwwCgYDVQQIDANOUlcxDTALBgNVBAcMBEJvbm4xJzAlBgNVBAoMHkRldXRzY2hlIFRlbGVrb20gU2VjdXJpdHkgR21iSDEVMBMGA1UECwwMVHJ1c3QgQ2VudGVyMRowGAYDVQQDDBFEVC1TZWMgUm9vdCBDQSAwMTAeFw0yMTAyMDQwODM5MzZaFw00NjAxMjkwODM5MzZaMIGGMQswCQYDVQQGEwJERTEMMAoGA1UECAwDTlJXMQ0wCwYDVQQHDARCb25uMScwJQYDVQQKDB5EZXV0c2NoZSBUZWxla29tIFNlY3VyaXR5IEdtYkgxFTATBgNVBAsMDFRydXN0IENlbnRlcjEaMBgGA1UEAwwRRFQtU2VjIFJvb3QgQ0EgMDEwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCioQOH2r8Z2VYT7+ic2vrmAoAS9Mfq2RpqeTAmIFV3c+WwMFKyDihQBRolWVT+JxjmPN+xBH2SW4WVh9aegykNXBm/e10aBVw/MWMrkWaeo3Q7S3JPjgsZy+nI+rzBC92ylnnbmZmVUrYNrtQ2y407vkFB+FCy8b963oA+Y6N9Jndnt+zIKnUnweI8vefAcvg4ohquyOFYkjq/amQz49iJQDMxDWP7YpFb8H3i3SUXSLSec8Ll/r5s/g4tC1nnc11D73pbSLuPOtHmg3leicEs43nB5XdJw+mtZbxXxZ4WzOZMfy1cGbtwhRYPDemiUcxf68HJucB0wJmAk+R/399dPmsTwRqO0BNx/hjyie2bVb8Xhw7UfAZegT2MReD6aQCIt3qSUkYUByMwZDmnVkxpXwtYGcPYUEXWOjn9c9RIRO/pgFXWAhHrCYBLBfKulbqr94whh40YFp/djsUisQgzwaCKncBoIyFTXaUk7lTxn4XTLQY012T1fJ2s1VEZJGXN37qLsb8LJOAkCcUfDZjFRL57AqlWy5ow8ATSruzV3s5VbdtsD9Y8r2+rq2t+sReU6GVQ6Zt7cyCVeqFsbPfHRNEjlLAMQBFkN/ObjRzhwUvVmgpY2CcKgNnpZ3/pvN3IOVize905pMZGk/AWUl87BvqA4eG4RQOMOSQvyzq5mwIDAQABoyMwITAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsFAAOCAgEAfxpqfOtt5VUN3k1HZe28c4XlwFJL2rRSjJlhA8AzAzsNr3pvfyazfRGR96BGbcsWJeXxtCC8C5H04SfW2QqDFvPOLI+Fv1JQq8b6LebU03BgfOWTzzXylququYASLZ24KZlj480gFx35okcTvXYagBEwDZU2kUpPpx61MIvDnx/Fy9tIe6SDziZvQP1e+O+9Hk4x/4rNplmVyKWX3+KSZ8QiTqe2SvKSgYo0LixnMJGyEa7CXb6n0qMiY2OTMeZ1dst64TI2rRlCAOSNCHd41OK2MbidqoRAFMOhOD+WxhFBs2fnjtS4j6T+yeysMlw4oovbYmazIxQHpHUSRfuT1EZKqEMyH+Y1uUSgn/c3gY1NfhF4mS6DsyB7F5wgXCDJ2I9nJ74weXl2j54CJtV/QVvhL8yu1jAZz2eQaTEesfUCGWCRJZM1+e5pRPXytX+exWys8p0REk2pwNbJNVka1CKUhYAmNFWqGv2uSObzAWaN6j5CJrCyIoJ87GKABB3wwTdijS+uopeuOfAEbd/v6wh2et7UffEedzi01Dun29nsEJYxsrzEub0MEvYYFqVg2Xe6VQd1S61yXjIRxi7MPxOVfn5Fd7oYyz5QBUKVpji9JozIsg/xRKrzem256mG9oO9mQseNv/N5reZr0w5a5hw+IcUr0yHsaPFK3nO+aiU=</ds:X509Certificate>
+			</ds:X509Data>
+		</ds:KeyInfo>
+		<ds:Object>
+			<xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                          				Target="#id-b722c225c4e6e0e3ca89588982b4f59c">
+				<xades:SignedProperties Id="xades-id-b722c225c4e6e0e3ca89588982b4f59c">
+					<xades:SignedSignatureProperties>
+						<xades:SigningTime>2021-04-01T10:29:00Z</xades:SigningTime>
+						<xades:SigningCertificateV2>
+							<xades:Cert>
+								<xades:CertDigest>
+									<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+									<ds:DigestValue>UKbzJJi4IVD+Iqc9aX1t9nvpjN9zOI7dZVwrF9TVkiBqrOHMyCnvgETP0nUO4s8DK5T8aapNmoOb2g5XJiNVhQ==</ds:DigestValue>
+								</xades:CertDigest>
+								<xades:IssuerSerialV2>MIGsMIGepIGbMIGYMQswCQYDVQQGEwJERTEMMAoGA1UECAwDTlJXMQ0wCwYDVQQHDARCb25uMScwJQYDVQQKDB5EZXV0c2NoZSBUZWxla29tIFNlY3VyaXR5IEdtYkgxFTATBgNVBAsMDFRydXN0IENlbnRlcjEsMCoGA1UEAwwjRFQtU2VjIFNlcnZlciBDZXJ0aWZpY2F0ZSBTdWIgQ0EgMDECCQCuvCrA5gJs0w==</xades:IssuerSerialV2>
+							</xades:Cert>
+						</xades:SigningCertificateV2>
+					</xades:SignedSignatureProperties>
+					<xades:SignedDataObjectProperties>
+						<xades:DataObjectFormat ObjectReference="#r-id-b722c225c4e6e0e3ca89588982b4f59c-1">
+							<xades:MimeType>text/xml</xades:MimeType>
+						</xades:DataObjectFormat>
+					</xades:SignedDataObjectProperties>
+				</xades:SignedProperties>
+			</xades:QualifyingProperties>
+		</ds:Object>
+	</ds:Signature>
+</dcc:digitalCalibrationCertificate>

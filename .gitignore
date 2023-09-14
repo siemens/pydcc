@@ -1,0 +1,16 @@
+test-env
+src/pydcc.egg-info
+pydcc.egg-info
+.pypirc
+data/xml-tool
+build
+*.code-workspace
+*.pyc
+.vscode
+.idea
+data/temp
+.coverage
+
+# Data that is temporarily downloaded for tests. Some should not be committed for licensing reasons.
+tests/data/test_workspace/*
+!tests/data/test_workspace/Readme.md
