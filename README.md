@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/pydcc.svg)](https://badge.fury.io/py/pydcc) [![CI test](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml/badge.svg)]([https://badge.fury.io/py/pydcc](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml)) 
+
 # Python library for reading and evaluating digital calibration certificates (DCC) 
 
 PyDCC is a library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC release [3]. 
