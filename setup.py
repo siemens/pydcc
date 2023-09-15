@@ -27,7 +27,7 @@ setup(
     description=("Library for handling digital calibration certificates (DCC). "),
     license="MIT License",
     keywords="digital calibration certificate measurement uncertainty precision GUM DCC",
-    url="https://gitlab.com/gemimeg/pydcc",
+    url="https://github.com/siemens/pydcc",
     packages=['dcc'],
     include_package_data=True,
     long_description=long_description,
