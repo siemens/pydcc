@@ -19,17 +19,17 @@ import xml.etree.ElementTree as ET
 import zlib
 import binascii
 from collections import defaultdict
-import requests
+#import requests
 from dataclasses import dataclass
 
-from signxml import InvalidCertificate, InvalidSignature, InvalidInput
-from certvalidator import CertificateValidator, errors, ValidationContext
-from signxml.xades import XAdESVerifier
-from asn1crypto import pem
-from cryptography import x509
+#from signxml import InvalidCertificate, InvalidSignature, InvalidInput
+#from certvalidator import CertificateValidator, errors, ValidationContext
+#from signxml.xades import XAdESVerifier
+#from asn1crypto import pem
+#from cryptography import x509
 from typing import Optional
 
-from .dcc_xml_validator import DCCXMLValidator
+#from .dcc_xml_validator import DCCXMLValidator
 
 
 
@@ -142,7 +142,7 @@ class DCC:
         self.schema_sources = []
         self.signature_verification = signature_verification
         self.trust_store = trust_store
-        self.xml_validator = DCCXMLValidator()
+#        self.xml_validator = DCCXMLValidator()
 
         # Set default DCC namespaces
         self.__add_namespace('dcc', 'https://ptb.de/dcc')
@@ -483,6 +483,42 @@ class DCC:
                 else:
                     local_res = [quant[1], self.__etree_to_dict(si_node)]
                 res.append(local_res)
+        return res
+
+    def get_calibration_results_test(self, type, lang=''):
+        quantities = []
+        res = []
+        meas_result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult', self.name_space)
+
+        for meas_result in meas_result_nodes:
+            xpath = ".//"
+            xpath = self.__read_path_realted_info(meas_result, xpath)
+            xpath = xpath + " //"
+            name = ''
+            name = self.__read_name(meas_result, name, lang)
+            result_nodes = meas_result.findall('./dcc:results/dcc:result', self.name_space)
+
+            for result in result_nodes:
+                xpath_res = xpath
+                xpath_res = self.__read_path_realted_info(result, xpath_res)
+                xpath_res = xpath_res + " //"
+
+                data_node = result.find('dcc:data', self.name_space)
+                name_res = name
+                name_res = self.__read_name(result, name_res, lang)
+
+                for nodes in data_node:
+                    self.__find_quantities_in_lists(nodes, quantities, name_res, lang, xpath_res)
+
+        for quant in quantities:
+            si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
+            if si_node is not None:
+                if type == 'xpath':
+                    local_res = [quant[2], self.__etree_to_dict(si_node)]
+                else:
+                    local_res = [quant[1], self.__etree_to_dict(si_node)]
+            res.append(local_res)
+
         return res
 
     def __etree_to_dict(self, t):
