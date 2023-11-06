@@ -19,17 +19,17 @@ import xml.etree.ElementTree as ET
 import zlib
 import binascii
 from collections import defaultdict
-#import requests
+import requests
 from dataclasses import dataclass
 
-#from signxml import InvalidCertificate, InvalidSignature, InvalidInput
-#from certvalidator import CertificateValidator, errors, ValidationContext
-#from signxml.xades import XAdESVerifier
-#from asn1crypto import pem
-#from cryptography import x509
+from signxml import InvalidCertificate, InvalidSignature, InvalidInput
+from certvalidator import CertificateValidator, errors, ValidationContext
+from signxml.xades import XAdESVerifier
+from asn1crypto import pem
+from cryptography import x509
 from typing import Optional
 
-#from .dcc_xml_validator import DCCXMLValidator
+from .dcc_xml_validator import DCCXMLValidator
 
 
 
