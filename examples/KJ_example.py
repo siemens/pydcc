@@ -21,13 +21,13 @@ from dcc import DCC
 dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 
 print("alle Resultate mit Namen auf deutsch, wenn möglich")
-res = dcco.get_calibration_results_test('name', 'de')
+res = dcco.get_calibration_results('name', 'de')
 for i in res:
    print(i)
 
 
 print("alle Resultate mit  zugehörigen Xpath-Ausdrücken ")
-res = dcco.get_calibration_results_test('xpath', 'de')
+res = dcco.get_calibration_results('xpath', 'de')
 for i in res:
    print(i)
 

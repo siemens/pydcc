@@ -461,33 +461,6 @@ class DCC:
     def get_calibration_results(self, type, lang=''):
         quantities = []
         res = []
-        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
-                                         self.name_space)
-        for result in result_nodes:
-            xpath = ".//"
-            xpath = self.__read_path_realted_info(result, xpath)
-            xpath = xpath + " //"
-
-            data_node = result.find('dcc:data', self.name_space)
-            name = ''
-            name = self.__read_name(result, name, lang)
-
-            for nodes in data_node:
-                self.__find_quantities_in_lists(nodes, quantities, name, lang, xpath)
-
-        for quant in quantities:
-            si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
-            if si_node is not None:
-                if type == 'xpath':
-                    local_res = [quant[2], self.__etree_to_dict(si_node)]
-                else:
-                    local_res = [quant[1], self.__etree_to_dict(si_node)]
-                res.append(local_res)
-        return res
-
-    def get_calibration_results_test(self, type, lang=''):
-        quantities = []
-        res = []
         meas_result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult', self.name_space)
 
         for meas_result in meas_result_nodes:
