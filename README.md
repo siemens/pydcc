@@ -81,7 +81,6 @@ Additional discussion supporters were:
 
 ## Links
 
-Main page to the DCC https://www.ptb.de/dcc
-
-Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
-Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
+* Main page to the DCC https://www.ptb.de/dcc
+* Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
+* Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
