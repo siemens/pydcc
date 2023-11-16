@@ -1,10 +1,11 @@
-# Python library for reading and evaluating digital calibration certificates (DCC) 
+# Python library for reading and automated processing of digital calibration certificates (DCC) 
 
-PyDCC is a library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC release [3]. 
+PyDCC is an open-source project released under the MIT license, accelerating application development for processing Digital Calibration Certificates (DCC), according to the official DCC release [3]. 
 This collaborative work was introduced by a talk given at the 2nd DCC conference [4]. 
+Further, an introduction video [6] exists, looking briefly at the contents of a DCC and demonstrating PyDCC's essential features by implementing an example application from scratch.
 Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by Good Practice [5].
 
-Out of scope: PyDCC is not intended to modify or generate DCCs.
+Out of scope: PyDCC is not intended to modify or generate DCCs. PyDCC is a read-only library. For this purpose, other tools and libraries exist.
 
 ## General Software Information
 
@@ -72,6 +73,8 @@ Additional discussion supporters were:
 [4] Andreas Tobola, Introducing PyDCC – a Python module for the DCC, 2nd international DCC-Conference 01 - 03 March 2022 Proceedings, Publisher: Physikalisch-Technische Bundesanstalt (PTB), DOI 10.7795/820.20220411, 2022
 
 [5] Good Practice for DCC https://dccwiki.ptb.de/en/gp_home
+
+[6] Andreas Tobola, [PyDCC Introduction Video](https://www.linkedin.com/feed/update/urn:li:activity:7130481024207081472/), 2023, Brief look at the contents of a DCC and demonstrate PyDCC's essential features by implementing an example application from scratch.
 
 ## Links
 
