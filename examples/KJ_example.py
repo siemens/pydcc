@@ -30,5 +30,3 @@ print("alle Resultate mit  zugehörigen Xpath-Ausdrücken ")
 res = dcco.get_calibration_results('xpath', 'de')
 for i in res:
    print(i)
-
-

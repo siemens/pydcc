@@ -560,4 +560,3 @@ class DCC:
 
 class DCCSignatureError(Exception):
     """ this exception is raised if any problem with the validation of the DCC signature occurs"""
-

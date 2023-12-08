@@ -1,12 +1,14 @@
-[![PyPI version](https://badge.fury.io/py/pydcc.svg)](https://badge.fury.io/py/pydcc) [![CI test](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml/badge.svg)]([https://badge.fury.io/py/pydcc](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml)) 
 
-# Python library for reading and evaluating digital calibration certificates (DCC) 
+# Python library supporting automated processing of digital calibration certificates (DCC) 
 
-PyDCC is a library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC release [3]. 
+[![PyPI version](https://badge.fury.io/py/pydcc.svg)](https://badge.fury.io/py/pydcc) [![CI test](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml/badge.svg)]([https://badge.fury.io/py/pydcc](https://github.com/siemens/pydcc/actions/workflows/ci-test.yml))
+
+PyDCC is an open-source project released under the MIT license, accelerating application development for processing Digital Calibration Certificates (DCC), according to the official DCC release [3]. 
 This collaborative work was introduced by a talk given at the 2nd DCC conference [4]. 
+Further, an introduction video [6] exists, looking briefly at the contents of a DCC and demonstrating PyDCC's essential features by implementing an example application from scratch.
 Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by Good Practice [5].
 
-Out of scope: PyDCC is not intended to modify or generate DCCs.
+Out of scope: PyDCC is not intended to modify or generate DCCs. PyDCC is a read-only library. For this purpose, other tools and libraries exist.
 
 ## General Software Information
 
@@ -75,9 +77,10 @@ Additional discussion supporters were:
 
 [5] Good Practice for DCC https://dccwiki.ptb.de/en/gp_home
 
+[6] Andreas Tobola, [PyDCC Introduction Video](https://www.linkedin.com/feed/update/urn:li:activity:7130481024207081472/), 2023, Brief look at the contents of a DCC and demonstrate PyDCC's essential features by implementing an example application from scratch.
+
 ## Links
 
-Main page to the DCC https://www.ptb.de/dcc
-
-Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
-Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
+* Main page to the DCC https://www.ptb.de/dcc
+* Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
+* Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
