@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-# Python library for reading and evaluating digital calibration certificates (DCC) 
-
-PyDCC is a library for reading and evaluating digital calibration certificates (DCCs) according to the official DCC release [3]. 
-This collaborative work was introduced by a talk given at the 2nd DCC conference [4]. 
-Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by Good Practice [5].
-
-Out of scope: PyDCC is not intended to modify or generate DCCs.
-=======
 
 # Python library supporting automated processing of digital calibration certificates (DCC) 
 
@@ -18,7 +9,6 @@ Further, an introduction video [6] exists, looking briefly at the contents of a 
 Note that to process DCC automatically, data within the DCC must follow particular format requirements defined by Good Practice [5].
 
 Out of scope: PyDCC is not intended to modify or generate DCCs. PyDCC is a read-only library. For this purpose, other tools and libraries exist.
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 
 ## General Software Information
 
@@ -44,11 +34,6 @@ Python is a programming language widely used in science and cloud computing appl
 
 Consider reading the [user guide](doc/pydcc.md) for more details, including API documentation.
 
-<<<<<<< HEAD
-Further, the [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
-
-=======
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 ## Installation
 
 ```
@@ -57,13 +42,9 @@ pip install pydcc
 
 ## Official Code Repository
 
-<<<<<<< HEAD
-We are moving our repository to another site. We will announce the new site until August 2023.
-=======
 Location of the official code repository: https://github.com/siemens/pydcc/
 
 The [contibution guide](CONTRIBUTING.md) explains how one can contribute to this software module.
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 
 ## Initial Contributors
 
@@ -96,14 +77,6 @@ Additional discussion supporters were:
 
 [5] Good Practice for DCC https://dccwiki.ptb.de/en/gp_home
 
-<<<<<<< HEAD
-## Links
-
-Main page to the DCC https://www.ptb.de/dcc
-
-Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
-Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
-=======
 [6] Andreas Tobola, [PyDCC Introduction Video](https://www.linkedin.com/feed/update/urn:li:activity:7130481024207081472/), 2023, Brief look at the contents of a DCC and demonstrate PyDCC's essential features by implementing an example application from scratch.
 
 ## Links
@@ -111,4 +84,3 @@ Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-good
 * Main page to the DCC https://www.ptb.de/dcc
 * Gitlab.com repository with the scheme https://gitlab.com/ptb/dcc/xsd-dcc
 * Gitlab.com repository with the good practice https://gitlab.com/ptb/dcc/dcc-goodpractice
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc

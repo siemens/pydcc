@@ -46,11 +46,7 @@ class DxxXmlValidatorTest(unittest.TestCase):
         self.assertEqual(target_namespace, "namespace1")
 
     def test_get_schema_version(self):
-<<<<<<< HEAD
-        with open("data/dcc_gp_temperatur_resistance_v12.xml", mode="r", encoding="utf-8") as file:
-=======
         with open("../data/dcc/dcc_gp_temperatur_resistance_v12.xml", mode="r", encoding="utf-8") as file:
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
             xml_string = file.read()
 
         schema_version = get_schema_version(xml_string)
@@ -59,29 +55,6 @@ class DxxXmlValidatorTest(unittest.TestCase):
     def test_online_schema_validation(self):
         val_obj = DCCXMLValidator(workspace_init=False)
         with self.subTest():
-<<<<<<< HEAD
-            dcc_tree = ET.parse("data/dcc_gp_humidity_v1.0.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.2", online=True)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperatur_resistance_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=True)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_extensive_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=True)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_simplified_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=True)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_typical_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=True)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_typical_adjustment_v12.xml")
-=======
             dcc_tree = ET.parse("../data/dcc/dcc_gp_humidity_v1.0.xml")
             valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.2", online=True)
             self.assertEqual(valid, True)
@@ -103,36 +76,12 @@ class DxxXmlValidatorTest(unittest.TestCase):
             self.assertEqual(valid, True)
         with self.subTest():
             dcc_tree = ET.parse("../data/dcc/dcc_gp_temperature_typical_adjustment_v12.xml")
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
             valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=True)
             self.assertEqual(valid, True)
 
     def test_offline_schema_validation(self):
         val_obj = DCCXMLValidator()
         with self.subTest():
-<<<<<<< HEAD
-            dcc_tree = ET.parse("data/dcc_gp_humidity_v1.0.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.2", online=False)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperatur_resistance_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=False)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_extensive_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=False)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_simplified_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=False)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_typical_v12.xml")
-            valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=False)
-            self.assertEqual(valid, True)
-        with self.subTest():
-            dcc_tree = ET.parse("data/dcc_gp_temperature_typical_adjustment_v12.xml")
-=======
             dcc_tree = ET.parse("../data/dcc/dcc_gp_humidity_v1.0.xml")
             valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.2", online=False)
             self.assertEqual(valid, True)
@@ -154,7 +103,6 @@ class DxxXmlValidatorTest(unittest.TestCase):
             self.assertEqual(valid, True)
         with self.subTest():
             dcc_tree = ET.parse("../data/dcc/dcc_gp_temperature_typical_adjustment_v12.xml")
->>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
             valid = val_obj.dcc_is_valid_against_schema(dcc_etree=dcc_tree, dcc_version="3.1.1", online=False)
             self.assertEqual(valid, True)
 
