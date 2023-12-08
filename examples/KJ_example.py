@@ -13,6 +13,7 @@
 #
 import sys
 import zlib
+<<<<<<< HEAD
 
 sys.path.append("../dcc/")
 from dcc import DCC
@@ -48,22 +49,34 @@ dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
 #print("function that extracts si-information of a quantity with id: xz")
 #print(res)
 #dcco = DCC('C:/Users/janzen01/Documents/GEMIMEG/InputKalibrierscheine/DCC3_1_2/2D-Normal/Zweidimensionales_Normal.xml')
+=======
+import sys
+sys.path.append("../dcc")
+from dcc import DCC
+
+# (1) Load DCC and create the DCC object (dcco)
+dcco = DCC('../data/dcc/dcc_gp_temperature_typical_v12.xml')
+>>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 
 print("alle Resultate mit Namen auf deutsch, wenn möglich")
 res = dcco.get_calibration_results('name', 'de')
 for i in res:
    print(i)
 
+<<<<<<< HEAD
 print("alle Resultate mit Namen auf englisch, wenn möglich")
 res = dcco.get_calibration_results('name', 'en')
 for i in res:
    print(i)
+=======
+>>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 
 print("alle Resultate mit  zugehörigen Xpath-Ausdrücken ")
 res = dcco.get_calibration_results('xpath', 'de')
 for i in res:
    print(i)
 
+<<<<<<< HEAD
 #res = dcco.get_calibration_result_by_quantity_refType2('basic_measurementError')
 #print("2. function that extracts si-information of a quantity with refType: basic_measurementError")
 #print(res)
@@ -71,4 +84,6 @@ for i in res:
 #res = dcco.get_calibration_result_by_quantity_refType3('basic_measurementError')
 #print("3. function that extracts si-information of a quantity with refType: basic_measurementError")
 #print(res)
+=======
+>>>>>>> 57a91559fb3b244eb9db1b664da844e9620fe9cc
 

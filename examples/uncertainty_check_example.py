@@ -20,7 +20,6 @@
 import sys
 sys.path.append("../dcc/")
 from dcc import DCC
-import numpy as np
 
 
 def search_calibration_results(cres, searched_reftype):
