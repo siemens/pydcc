@@ -142,7 +142,7 @@ class DCC:
         self.schema_sources = []
         self.signature_verification = signature_verification
         self.trust_store = trust_store
-#        self.xml_validator = DCCXMLValidator()
+        self.xml_validator = DCCXMLValidator()
 
         # Set default DCC namespaces
         self.__add_namespace('dcc', 'https://ptb.de/dcc')
