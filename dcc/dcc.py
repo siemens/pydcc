@@ -461,19 +461,27 @@ class DCC:
     def get_calibration_results(self, type, lang=''):
         quantities = []
         res = []
-        result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult/dcc:results/dcc:result',
-                                         self.name_space)
-        for result in result_nodes:
+        meas_result_nodes = self.root.findall('dcc:measurementResults/dcc:measurementResult', self.name_space)
+
+        for meas_result in meas_result_nodes:
             xpath = ".//"
-            xpath = self.__read_path_realted_info(result, xpath)
+            xpath = self.__read_path_realted_info(meas_result, xpath)
             xpath = xpath + " //"
-
-            data_node = result.find('dcc:data', self.name_space)
             name = ''
-            name = self.__read_name(result, name, lang)
+            name = self.__read_name(meas_result, name, lang)
+            result_nodes = meas_result.findall('./dcc:results/dcc:result', self.name_space)
 
-            for nodes in data_node:
-                self.__find_quantities_in_lists(nodes, quantities, name, lang, xpath)
+            for result in result_nodes:
+                xpath_res = xpath
+                xpath_res = self.__read_path_realted_info(result, xpath_res)
+                xpath_res = xpath_res + " //"
+
+                data_node = result.find('dcc:data', self.name_space)
+                name_res = name
+                name_res = self.__read_name(result, name_res, lang)
+
+                for nodes in data_node:
+                    self.__find_quantities_in_lists(nodes, quantities, name_res, lang, xpath_res)
 
         for quant in quantities:
             si_node = quant[0].find('{https://ptb.de/si}*', self.name_space)
@@ -482,7 +490,8 @@ class DCC:
                     local_res = [quant[2], self.__etree_to_dict(si_node)]
                 else:
                     local_res = [quant[1], self.__etree_to_dict(si_node)]
-                res.append(local_res)
+            res.append(local_res)
+
         return res
 
     def __etree_to_dict(self, t):
@@ -551,4 +560,3 @@ class DCC:
 
 class DCCSignatureError(Exception):
     """ this exception is raised if any problem with the validation of the DCC signature occurs"""
-
