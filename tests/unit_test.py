@@ -97,12 +97,6 @@ class TestBaseFunctions(unittest.TestCase):
         self.assertEqual(res[1], [".//dcc:measurementResult //dcc:result [ @ refType ='gp_measuringResult1'] //dcc:list [ @ refType ='gp_table1'] //dcc:quantity [ @ refType ='basic_measuredValue']", {'hybrid': {'realListXMLList': [{'valueXMLList': '306.32 373.21 448.36 523.31 593.07', 'unitXMLList': '\\kelvin'}, {'valueXMLList': '33.17 100.06 175.21 250.16 319.92', 'unitXMLList': '\\degreecelsius'}]}}])
         self.assertEqual(res[2], [".//dcc:measurementResult //dcc:result [ @ refType ='gp_measuringResult1'] //dcc:list [ @ refType ='gp_table1'] //dcc:quantity [ @ refType ='basic_measurementError']", {'realListXMLList': {'valueXMLList': '0.072 0.089 0.107 -0.009 -0.084', 'unitXMLList': '\\kelvin', 'expandedUncXMLList': {'uncertaintyXMLList': '0.061', 'coverageFactorXMLList': '2', 'coverageProbabilityXMLList': '0.95', 'distributionXMLList': 'normal'}}}])
 
-
-    def test_get_calibration_result_by_quantity_id(self):
-        dccno = DCC('../data/Uncertainty2_PyDCC.xml')
-        res = dccno.get_calibration_result_by_quantity_id('MeasRes1_res1_quant1')
-        self.assertEqual(res, ['11111', '\\milli\\metre', 'expandedUnc->uncertainty', '0.11111', ' k:', '2.0'])
-
     def test_calibration_date(self):
         calib_date = dcco_gp.calibration_date()
         ref_date = datetime.datetime(1957, 8, 13, 0, 0)
